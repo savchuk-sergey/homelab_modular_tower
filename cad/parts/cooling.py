@@ -45,6 +45,77 @@ def make_top_fan_grille() -> cq.Workplane:
     return make_fan_grille("top_fan_grille", intake_filter=False)
 
 
+def make_bottom_fan_cartridge() -> cq.Workplane:
+    """Create a removable lower intake cartridge for a standard 120 mm fan."""
+    cartridge = cq.Workplane("XY").box(
+        cfg.BOTTOM_FAN_CARTRIDGE_WIDTH,
+        cfg.BOTTOM_FAN_CARTRIDGE_DEPTH,
+        cfg.BOTTOM_FAN_CARTRIDGE_HEIGHT,
+    )
+    cartridge = cartridge.faces(">Z").workplane().circle(cfg.FAN_120_AIR_OPENING_DIAMETER / 2).cutThruAll()
+
+    d = cfg.FAN_120_HOLE_SPACING / 2
+    fan_screws = [(x, y) for x in (-d, d) for y in (-d, d)]
+    cartridge = cartridge.faces(">Z").workplane().pushPoints(fan_screws).hole(cfg.FAN_120_HOLE_DIAMETER)
+
+    rail_y = cfg.BOTTOM_FAN_CARTRIDGE_DEPTH / 2 + cfg.BOTTOM_FAN_CARTRIDGE_RAIL_WIDTH / 2
+    for y in (-rail_y, rail_y):
+        cartridge = cartridge.union(
+            cq.Workplane("XY")
+            .box(
+                cfg.BOTTOM_FAN_CARTRIDGE_WIDTH,
+                cfg.BOTTOM_FAN_CARTRIDGE_RAIL_WIDTH,
+                cfg.BOTTOM_FAN_CARTRIDGE_RAIL_HEIGHT,
+            )
+            .translate((0, y, cfg.BOTTOM_FAN_CARTRIDGE_HEIGHT / 2 + cfg.BOTTOM_FAN_CARTRIDGE_RAIL_HEIGHT / 2))
+        )
+
+    handle = cq.Workplane("XY").box(
+        cfg.BOTTOM_FAN_CARTRIDGE_SERVICE_PULL,
+        cfg.BOTTOM_FAN_CARTRIDGE_RAIL_WIDTH,
+        cfg.BOTTOM_FAN_CARTRIDGE_RAIL_HEIGHT,
+    )
+    cartridge = cartridge.union(
+        handle.translate(
+            (
+                0,
+                -cfg.BOTTOM_FAN_CARTRIDGE_DEPTH / 2 - cfg.BOTTOM_FAN_CARTRIDGE_SERVICE_PULL / 2,
+                cfg.BOTTOM_FAN_CARTRIDGE_HEIGHT / 2,
+            )
+        )
+    )
+
+    mount = cfg.BOTTOM_FAN_CARTRIDGE_MOUNT_OFFSET
+    mount_points = [(x, y) for x in (-mount, mount) for y in (-mount, mount)]
+    cartridge = cartridge.faces(">Z").workplane().pushPoints(mount_points).hole(cfg.M3_CLEARANCE)
+    return cartridge.tag("bottom_fan_cartridge")
+
+
+def make_bottom_filter_frame() -> cq.Workplane:
+    frame = cq.Workplane("XY").box(
+        cfg.BOTTOM_FILTER_FRAME_WIDTH,
+        cfg.BOTTOM_FILTER_FRAME_DEPTH,
+        cfg.BOTTOM_FILTER_FRAME_HEIGHT,
+    )
+    frame = frame.faces(">Z").workplane().circle(cfg.FAN_120_AIR_OPENING_DIAMETER / 2).cutThruAll()
+    return frame.tag("bottom_filter_frame")
+
+
+def make_bottom_filter_retainer() -> cq.Workplane:
+    retainer = cq.Workplane("XY").box(
+        cfg.BOTTOM_FILTER_RETAINER_WIDTH,
+        cfg.BOTTOM_FILTER_RETAINER_DEPTH,
+        cfg.BOTTOM_FILTER_RETAINER_HEIGHT,
+    )
+    slot = cq.Workplane("XY").box(
+        cfg.BOTTOM_FILTER_FRAME_WIDTH,
+        cfg.FILTER_RAIL_WIDTH,
+        cfg.BOTTOM_FILTER_RETAINER_HEIGHT + cfg.FILLET_RADIUS,
+    )
+    retainer = retainer.cut(slot)
+    return retainer.tag("bottom_filter_retainer")
+
+
 def make_mini_pc_airflow_duct_placeholder() -> cq.Workplane:
     outer = cq.Workplane("XY").box(cfg.DUCT_WIDTH, cfg.DUCT_DEPTH, cfg.DUCT_HEIGHT)
     inner = cq.Workplane("XY").box(
@@ -76,6 +147,18 @@ def create_bottom_fan_panel() -> cq.Workplane:
 
 def create_top_fan_panel() -> cq.Workplane:
     return make_top_fan_grille()
+
+
+def create_bottom_fan_cartridge() -> cq.Workplane:
+    return make_bottom_fan_cartridge()
+
+
+def create_bottom_filter_frame() -> cq.Workplane:
+    return make_bottom_filter_frame()
+
+
+def create_bottom_filter_retainer() -> cq.Workplane:
+    return make_bottom_filter_retainer()
 
 
 def create_mini_pc_airflow_duct() -> cq.Workplane:

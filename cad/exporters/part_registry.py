@@ -1,6 +1,6 @@
 """Part registry used by export scripts."""
 
-from ..parts import cooling, feet, modules, review, service_spine, side_panels
+from ..parts import cooling, feet, modules, placeholders, review, service_spine, side_panels
 from ..parts.corner_blocks import create_corner_block
 from ..parts.frame import make_bottom_structural_frame, make_top_structural_frame
 from ..parts.rails import create_metal_guide_rail
@@ -45,11 +45,87 @@ PARTS = {
     "top_fan_grille": cooling.make_top_fan_grille,
     "bottom_fan_panel": cooling.make_bottom_fan_grille,
     "top_fan_panel": cooling.make_top_fan_grille,
+    "bottom_fan_cartridge": cooling.make_bottom_fan_cartridge,
+    "bottom_filter_frame": cooling.make_bottom_filter_frame,
+    "bottom_filter_retainer": cooling.make_bottom_filter_retainer,
+    "fan_120x120x25_placeholder": placeholders.make_fan_120_placeholder,
+    "raspberry_pi_3b_placeholder": placeholders.make_raspberry_pi_3b_placeholder,
+    "raspberry_pi_placeholder": placeholders.make_raspberry_pi_placeholder,
+    "mini_pc_placeholder": placeholders.make_mini_pc_placeholder,
+    "mikrotik_placeholder": placeholders.make_mikrotik_placeholder,
+    "ssd_placeholder": placeholders.make_external_ssd_placeholder,
+    "ssd_expansion_placeholder": placeholders.make_ssd_expansion_placeholder,
+    "ups_placeholder": placeholders.make_ups_placeholder,
     "mini_pc_airflow_duct": cooling.make_mini_pc_airflow_duct_placeholder,
     "mini_pc_airflow_duct_placeholder": cooling.make_mini_pc_airflow_duct_placeholder,
+    "bottom_intake_open_area_review": review.make_bottom_intake_open_area_review,
     "airflow_path_review": review.make_airflow_path_review,
     "mini_pc_airflow_path_review": review.make_mini_pc_airflow_path_review,
     "blocked_air_zones_review": review.make_blocked_air_zones_review,
     "stability_review": review.make_stability_review,
     "printability_layout_review": review.make_printability_layout_review,
+}
+
+
+EXPORT_CATEGORIES = {
+    "printable/plastic": {
+        "frame_top": make_top_structural_frame,
+        "frame_bottom": make_bottom_structural_frame,
+        "top_structural_frame": make_top_structural_frame,
+        "bottom_structural_frame": make_bottom_structural_frame,
+        "corner_block": create_corner_block,
+        "central_bottom_fan_frame": feet.make_central_bottom_fan_frame,
+        "left_foot_extension": feet.make_left_foot_extension,
+        "right_foot_extension": feet.make_right_foot_extension,
+        "front_stability_wing": feet.make_front_stability_wing,
+        "rear_stability_wing": feet.make_rear_stability_wing,
+        "foot_socket": feet.make_foot_socket,
+        "foot": feet.make_foot,
+        "ups_power_tray": modules.create_ups_power_tray,
+        "external_ssd_bay": modules.create_external_ssd_bay,
+        "ssd_expansion_tray": modules.create_ssd_expansion_tray,
+        "raspberry_pi_tray": modules.create_raspberry_pi_tray,
+        "mikrotik_tray": modules.create_mikrotik_tray,
+        "mini_pc_tray": modules.create_mini_pc_tray,
+        "mini_pc_tray_stop": modules.make_tray_stop,
+        "power_bus_panel": service_spine.create_power_bus_panel,
+        "power_bus_cover": service_spine.create_power_bus_cover,
+        "rear_service_spine": service_spine.create_rear_service_spine,
+        "rear_service_spine_cover": service_spine.create_rear_service_spine_cover,
+        "left_side_panel_lower": side_panels.create_left_side_panel_lower,
+        "left_side_panel_middle": side_panels.create_left_side_panel_middle,
+        "left_side_panel_upper": side_panels.create_left_side_panel_upper,
+        "right_side_panel_lower": side_panels.create_right_side_panel_lower,
+        "right_side_panel_middle": side_panels.create_right_side_panel_middle,
+        "right_side_panel_upper": side_panels.create_right_side_panel_upper,
+        "bottom_fan_grille": cooling.make_bottom_fan_grille,
+        "top_fan_grille": cooling.make_top_fan_grille,
+        "bottom_fan_cartridge": cooling.make_bottom_fan_cartridge,
+        "bottom_filter_frame": cooling.make_bottom_filter_frame,
+        "bottom_filter_retainer": cooling.make_bottom_filter_retainer,
+        "mini_pc_airflow_duct": cooling.make_mini_pc_airflow_duct_placeholder,
+    },
+    "non_printable/metal_reference": {
+        "m5_threaded_rod": create_m5_threaded_rod,
+        "metal_guide_rail": create_metal_guide_rail,
+    },
+    "placeholders/devices": {
+        "raspberry_pi_3b_placeholder": placeholders.make_raspberry_pi_3b_placeholder,
+        "mini_pc_placeholder": placeholders.make_mini_pc_placeholder,
+        "mikrotik_placeholder": placeholders.make_mikrotik_placeholder,
+        "ssd_placeholder": placeholders.make_external_ssd_placeholder,
+        "ssd_expansion_placeholder": placeholders.make_ssd_expansion_placeholder,
+        "ups_placeholder": placeholders.make_ups_placeholder,
+    },
+    "placeholders/fans": {
+        "fan_120x120x25_placeholder": placeholders.make_fan_120_placeholder,
+    },
+    "review": {
+        "bottom_intake_open_area_review": review.make_bottom_intake_open_area_review,
+        "airflow_path_review": review.make_airflow_path_review,
+        "mini_pc_airflow_path_review": review.make_mini_pc_airflow_path_review,
+        "blocked_air_zones_review": review.make_blocked_air_zones_review,
+        "stability_review": review.make_stability_review,
+        "printability_layout_review": review.make_printability_layout_review,
+    },
 }

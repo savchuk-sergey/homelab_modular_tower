@@ -38,11 +38,18 @@ From the project root:
 python -m cad.export
 ```
 
+For the current engineering revision with categorized artifacts:
+
+```powershell
+python -m cad.export --revision mk0.7
+```
+
 Generated files:
 
 - STEP parts: `exports/step/`
 - STL parts: `exports/stl/`
 - Assembly: `exports/step/assembly.step`
+- Revision export: `exports/mk0.7/printable/`, `exports/mk0.7/non_printable/`, `exports/mk0.7/placeholders/`, `exports/mk0.7/review/`, `exports/mk0.7/assemblies/`
 
 Open `exports/step/assembly.step` in FreeCAD, CAD Assistant, or another STEP viewer.
 
