@@ -60,7 +60,7 @@ def estimate_plastic_volume(revision: str) -> Path:
             row["status"] = "error"
             row["notes"] = f"{type(exc).__name__}: {exc}"
         rows.append(row)
-    return write_csv(analysis_dir(revision) / "part_volume.csv", FIELDS, rows)
+    return write_csv(analysis_dir(revision) / "plastic_estimate.csv", FIELDS, rows)
 
 
 def main() -> None:

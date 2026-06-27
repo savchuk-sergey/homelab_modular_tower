@@ -46,13 +46,13 @@ def review_package_dir(revision: str) -> Path:
 
 
 def analysis_dir(revision: str) -> Path:
-    path = review_package_dir(revision) / cfg.REVIEW_ANALYSIS_DIR_NAME
+    path = revision_dir(revision) / cfg.REVIEW_ANALYSIS_DIR_NAME
     path.mkdir(parents=True, exist_ok=True)
     return path
 
 
 def manifests_dir(revision: str) -> Path:
-    path = review_package_dir(revision) / cfg.REVIEW_MANIFEST_DIR_NAME
+    path = revision_dir(revision)
     path.mkdir(parents=True, exist_ok=True)
     return path
 
