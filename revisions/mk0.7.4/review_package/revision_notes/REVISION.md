@@ -11,6 +11,7 @@ The target is to move from `GO FOR COUPON TEST PRINT ONLY` toward `GO FOR ROUGH 
 - Fix confirmed geometry blockers from mk0.7.3 review.
 - Improve side panel, rail, and split-joint interfaces enough for coupon validation.
 - Add coupon, BOM, assembly, and print planning documents for a human mockup build.
+- Export small coupon geometry before committing to large mockup prints.
 - Keep device envelopes, power electronics, thermal validation, and final connector details as non-final placeholders.
 
 ## Non-Goals

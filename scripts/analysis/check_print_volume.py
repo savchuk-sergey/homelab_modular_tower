@@ -39,7 +39,7 @@ def check_print_volume(revision: str) -> Path:
     revision = validate_current_revision(revision)
     rows: list[dict[str, object]] = []
     volume = (cfg.BAMBU_P2S_PRINT_VOLUME_X, cfg.BAMBU_P2S_PRINT_VOLUME_Y, cfg.BAMBU_P2S_PRINT_VOLUME_Z)
-    for path in iter_export_files(revision, ".stl", "printable/plastic"):
+    for path in iter_export_files(revision, ".stl", "printable"):
         row: dict[str, object] = {
             "part_name": path.stem,
             "category": export_category(path, revision),

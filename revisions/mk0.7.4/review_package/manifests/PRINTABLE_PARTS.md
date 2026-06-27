@@ -4,6 +4,60 @@ Revision: `mk0.7.4`
 
 This manifest lists generated export artifacts. CadQuery source remains the source of truth.
 
+## coupon_bottom_filter_retainer
+
+- Category: `printable`
+- STEP: `exports/mk0.7.4/printable/coupons_petg/coupon_bottom_filter_retainer.step`
+- STL: `exports/mk0.7.4/printable/coupons_petg/coupon_bottom_filter_retainer.stl`
+
+## coupon_fan_grille_section
+
+- Category: `printable`
+- STEP: `exports/mk0.7.4/printable/coupons_petg/coupon_fan_grille_section.step`
+- STL: `exports/mk0.7.4/printable/coupons_petg/coupon_fan_grille_section.stl`
+
+## coupon_flat_petg_tile
+
+- Category: `printable`
+- STEP: `exports/mk0.7.4/printable/coupons_petg/coupon_flat_petg_tile.step`
+- STL: `exports/mk0.7.4/printable/coupons_petg/coupon_flat_petg_tile.stl`
+
+## coupon_petg_foot_socket
+
+- Category: `printable`
+- STEP: `exports/mk0.7.4/printable/coupons_petg/coupon_petg_foot_socket.step`
+- STL: `exports/mk0.7.4/printable/coupons_petg/coupon_petg_foot_socket.stl`
+
+## coupon_rail_end_mount_fit
+
+- Category: `printable`
+- STEP: `exports/mk0.7.4/printable/coupons_petg/coupon_rail_end_mount_fit.step`
+- STL: `exports/mk0.7.4/printable/coupons_petg/coupon_rail_end_mount_fit.stl`
+
+## coupon_side_panel_mount
+
+- Category: `printable`
+- STEP: `exports/mk0.7.4/printable/coupons_petg/coupon_side_panel_mount.step`
+- STL: `exports/mk0.7.4/printable/coupons_petg/coupon_side_panel_mount.stl`
+
+## coupon_split_joint_tab_socket
+
+- Category: `printable`
+- STEP: `exports/mk0.7.4/printable/coupons_petg/coupon_split_joint_tab_socket.step`
+- STL: `exports/mk0.7.4/printable/coupons_petg/coupon_split_joint_tab_socket.stl`
+
+## coupon_tray_ledge_stack
+
+- Category: `printable`
+- STEP: `exports/mk0.7.4/printable/coupons_petg/coupon_tray_ledge_stack.step`
+- STL: `exports/mk0.7.4/printable/coupons_petg/coupon_tray_ledge_stack.stl`
+
+## coupon_tpu_foot
+
+- Category: `printable`
+- STEP: `exports/mk0.7.4/printable/coupons_tpu/coupon_tpu_foot.step`
+- STL: `exports/mk0.7.4/printable/coupons_tpu/coupon_tpu_foot.stl`
+
 ## bottom_fan_cartridge
 
 - Category: `printable`

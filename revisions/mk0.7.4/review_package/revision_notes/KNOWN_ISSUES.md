@@ -4,8 +4,9 @@
 
 - Split-joint tab/socket fit is CAD-coherent but not physically validated.
 - Bottom filter retainer stiffness and filter-sheet grip are not physically validated.
-- Rail end mount engagement and screw target still require Chunk 2 work.
-- Side panel orientation and rail clearance still require Chunk 2 work.
+- Rail end mount engagement and screw target are CAD-coherent but not physically validated.
+- Side panel orientation and rail clearance are CAD-coherent but not physically validated.
+- Coupon STLs exist, but every coupon result remains `NOT TESTED` until a physical print is inspected.
 
 ## Deferred Non-Goals
 

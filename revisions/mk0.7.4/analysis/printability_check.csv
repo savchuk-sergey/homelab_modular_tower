@@ -1,4 +1,13 @@
 part_name,category,relative_path,status,size_x_mm,size_y_mm,size_z_mm,print_volume_x_mm,print_volume_y_mm,print_volume_z_mm,fits_axis_aligned,long_thin_risk,max_aspect_ratio,notes
+coupon_bottom_filter_retainer,printable/coupons_petg,exports/mk0.7.4/printable/coupons_petg/coupon_bottom_filter_retainer.stl,ok,72.000,72.000,9.000,256.000,256.000,256.000,True,False,8.000,
+coupon_fan_grille_section,printable/coupons_petg,exports/mk0.7.4/printable/coupons_petg/coupon_fan_grille_section.stl,ok,72.000,72.000,4.000,256.000,256.000,256.000,True,True,18.000,long-thin geometry risk; orientation/support review required
+coupon_flat_petg_tile,printable/coupons_petg,exports/mk0.7.4/printable/coupons_petg/coupon_flat_petg_tile.stl,ok,50.000,50.000,3.000,256.000,256.000,256.000,True,True,16.667,long-thin geometry risk; orientation/support review required
+coupon_petg_foot_socket,printable/coupons_petg,exports/mk0.7.4/printable/coupons_petg/coupon_petg_foot_socket.stl,ok,58.000,58.000,9.000,256.000,256.000,256.000,True,False,6.444,
+coupon_rail_end_mount_fit,printable/coupons_petg,exports/mk0.7.4/printable/coupons_petg/coupon_rail_end_mount_fit.stl,ok,50.000,26.000,49.000,256.000,256.000,256.000,True,False,1.923,
+coupon_side_panel_mount,printable/coupons_petg,exports/mk0.7.4/printable/coupons_petg/coupon_side_panel_mount.stl,ok,88.000,12.000,46.000,256.000,256.000,256.000,True,False,7.333,
+coupon_split_joint_tab_socket,printable/coupons_petg,exports/mk0.7.4/printable/coupons_petg/coupon_split_joint_tab_socket.stl,ok,104.000,23.400,28.000,256.000,256.000,256.000,True,False,4.444,
+coupon_tray_ledge_stack,printable/coupons_petg,exports/mk0.7.4/printable/coupons_petg/coupon_tray_ledge_stack.stl,ok,58.000,24.000,19.000,256.000,256.000,256.000,True,False,3.053,
+coupon_tpu_foot,printable/coupons_tpu,exports/mk0.7.4/printable/coupons_tpu/coupon_tpu_foot.stl,ok,34.000,34.000,32.000,256.000,256.000,256.000,True,False,1.062,
 bottom_fan_cartridge,printable/plastic,exports/mk0.7.4/printable/plastic/bottom_fan_cartridge.stl,ok,142.000,150.000,9.000,256.000,256.000,256.000,True,False,16.667,
 bottom_fan_grille,printable/plastic,exports/mk0.7.4/printable/plastic/bottom_fan_grille.stl,ok,190.000,190.000,7.000,256.000,256.000,256.000,True,False,27.143,
 bottom_filter_frame,printable/plastic,exports/mk0.7.4/printable/plastic/bottom_filter_frame.stl,ok,138.000,138.000,3.000,256.000,256.000,256.000,True,True,46.000,long-thin geometry risk; orientation/support review required
@@ -41,3 +50,4 @@ top_fan_grille,printable/plastic,exports/mk0.7.4/printable/plastic/top_fan_grill
 top_structural_frame,printable/plastic,exports/mk0.7.4/printable/plastic/top_structural_frame.stl,ok,190.000,190.000,13.000,256.000,256.000,256.000,True,False,14.615,
 tray_support_ledge,printable/plastic,exports/mk0.7.4/printable/plastic/tray_support_ledge.stl,ok,22.000,14.000,4.000,256.000,256.000,256.000,True,False,5.500,
 ups_power_tray,printable/plastic,exports/mk0.7.4/printable/plastic/ups_power_tray.stl,ok,186.500,178.700,32.000,256.000,256.000,256.000,True,False,5.828,
+foot,printable/tpu,exports/mk0.7.4/printable/tpu/foot.stl,ok,34.000,34.000,32.000,256.000,256.000,256.000,True,False,1.062,
