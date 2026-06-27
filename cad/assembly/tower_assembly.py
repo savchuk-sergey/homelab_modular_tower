@@ -226,6 +226,11 @@ def build_assembly() -> cq.Assembly:
         name="bottom_fan_120x120x25_placeholder",
         loc=cq.Location(cq.Vector(0, 0, cfg.BOTTOM_FAN_PLACEHOLDER_Z)),
     )
+    assembly.add(
+        placeholders.make_fan_120_placeholder(),
+        name="top_fan_120x120x25_placeholder",
+        loc=cq.Location(cq.Vector(0, 0, cfg.TOP_FAN_PLACEHOLDER_Z)),
+    )
     assembly.add(cooling.make_bottom_fan_grille(), name="bottom_fan_grille", loc=cq.Location(cq.Vector(0, 0, cfg.BOTTOM_FAN_PANEL_Z)))
     assembly.add(
         cooling.make_top_fan_grille(),
