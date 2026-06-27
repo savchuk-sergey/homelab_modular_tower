@@ -7,6 +7,7 @@
 - Added coupon test plan for high-risk fit and print interfaces.
 - Added explicit `MOCKUP_*` mass-reduction parameters.
 - Added rough-mockup fastener BOM and assembly sequence.
+- Added print orientation and batch plan.
 
 ## Changed
 
@@ -22,4 +23,4 @@
 
 ## Pending
 
-- Print plan.
+- Final mk0.7.4 readiness review prompt/package refresh.
