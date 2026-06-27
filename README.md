@@ -40,20 +40,37 @@ python -m cad.export
 
 Generated files:
 
-- STEP parts: `exports/mk0.1/step/`
-- STL parts: `exports/mk0.1/stl/`
-- Assembly: `exports/mk0.1/step/assembly.step`
+- STEP parts: `exports/step/`
+- STL parts: `exports/stl/`
+- Assembly: `exports/step/assembly.step`
 
-Open `exports/mk0.1/step/assembly.step` in FreeCAD, CAD Assistant, or another STEP viewer.
+Open `exports/step/assembly.step` in FreeCAD, CAD Assistant, or another STEP viewer.
+
+`exports/` and `renders/` are current generated artifacts and are ignored by Git. Recreate them from CadQuery code when needed.
 
 ## CAD Revision Workflow
 
-Each CAD revision must contain:
+The source of truth is:
 
-- a separate git branch;
-- a separate `revisions/mkX.Y` folder;
-- a separate `exports/mkX.Y` folder;
-- a separate `renders/mkX.Y` folder.
+1. CadQuery code in `cad/`;
+2. Git history;
+3. engineering revision documentation in `revisions/`.
+
+The `cad/` directory contains the current working CAD model. Do not copy the whole CAD tree into `cad/mk0.1`, `cad/mk0.2`, or similar folders for revision history.
+
+Each stable CAD revision should have:
+
+- a git branch or git tag;
+- a documentation folder `revisions/mkX.Y/`;
+- generated exports/renders recreated only when needed.
+
+Required revision documentation:
+
+- `REVISION.md`
+- `CALCULATIONS.md`
+- `DECISIONS.md`
+- `KNOWN_ISSUES.md`
+- `CHANGELOG.md`
 
 Branch naming rule:
 
@@ -70,6 +87,8 @@ Each next revision starts from the previous revision.
 Revision history is never changed retroactively.
 
 Design changes are always made in a new branch.
+
+STEP/STL files and PNG renders are derived artifacts. They are not the source of truth.
 
 ## Measurements Needed For v2
 

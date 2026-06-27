@@ -53,7 +53,7 @@ def export_part(name: str, part: cq.Workplane, step_dir: Path, stl_dir: Path) ->
     )
 
 
-def export_all(revision: str | None = cfg.CURRENT_REVISION) -> None:
+def export_all(revision: str | None = None) -> None:
     step_dir, stl_dir = ensure_export_dirs(revision)
     for name, factory in PARTS.items():
         print(f"Exporting {name}")
@@ -67,8 +67,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Export Homelab Modular Tower CAD parts.")
     parser.add_argument(
         "--revision",
-        default=cfg.CURRENT_REVISION,
-        help="Revision folder under exports, for example mk0.1. Use empty string for legacy exports/step and exports/stl.",
+        default=None,
+        help="Optional local revision folder under exports, for example mk0.1. Omit for exports/step and exports/stl.",
     )
     args = parser.parse_args()
     export_all(args.revision or None)

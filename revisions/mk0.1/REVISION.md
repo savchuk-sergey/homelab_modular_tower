@@ -6,7 +6,9 @@ Date: 2026-06-27
 
 mk0.1 freezes the current Homelab Modular Tower as the first engineering CAD revision. This revision is a historical checkpoint for the project and should not be changed retroactively.
 
-The goal of mk0.1 is to preserve the first working parametric CadQuery model with visible structural intent, modular trays, service spine, DC power placeholder, airflow placeholder, generated exports, and generated projection renders.
+The goal of mk0.1 is to preserve the first working parametric CadQuery model with visible structural intent, modular trays, service spine, DC power placeholder, airflow placeholder, and documented engineering state.
+
+The source of truth for mk0.1 is the CadQuery code in `cad/`, the git history, and this revision documentation. STEP/STL exports and renders are derived artifacts.
 
 ## Current Architecture
 
@@ -56,3 +58,15 @@ Bottom to top:
 Status: frozen as first engineering CAD revision.
 
 The model builds and exports through `python -m cad.export`. All major elements are present as first-pass parametric placeholders. mk0.1 is not a print-ready or electrically validated design.
+
+## Documentation Set
+
+The required mk0.1 revision documentation is:
+
+- `REVISION.md` - overall state of the revision.
+- `CALCULATIONS.md` - calculations, assumptions, and checks.
+- `DECISIONS.md` - engineering decisions and reasons.
+- `KNOWN_ISSUES.md` - known problems and limitations.
+- `CHANGELOG.md` - changes relative to the previous state.
+
+Supplementary notes may exist in this folder, but they do not replace the required documentation set.
