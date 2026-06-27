@@ -1,2 +1,10 @@
 __pycache__/
 *.py[cod]
+
+# Generated CAD artifacts. Recreate with:
+#   python -m cad.export --revision mk0.1
+exports/
+
+# Generated projection renders. Recreate with:
+#   python scripts/render_views.py --out renders/mk0.1 --size 1800 --tolerance 1.5
+renders/
