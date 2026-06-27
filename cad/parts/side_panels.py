@@ -1,4 +1,4 @@
-"""Removable side service panels."""
+"""Removable sectional side service panels."""
 
 import math
 
@@ -8,12 +8,22 @@ from .. import config as cfg
 
 
 def side_panel_length() -> float:
-    return cfg.OUTER_DEPTH - 2 * cfg.SIDE_PANEL_CLEARANCE
+    return cfg.OUTER_DEPTH - 2 * cfg.SIDE_PANEL_CLEARANCE - 2 * cfg.SIDE_PANEL_TILE_MARGIN
 
 
-def make_side_panel_frame() -> cq.Workplane:
-    length = side_panel_length()
-    height = cfg.SIDE_PANEL_HEIGHT
+def side_panel_tile_height(height_units: float = 1.0) -> float:
+    return cfg.SIDE_PANEL_SECTION_HEIGHT * height_units + cfg.SIDE_PANEL_GAP * (height_units - 1)
+
+
+def side_panel_tile_center_z(index: int, height_units: float = 1.0) -> float:
+    return (
+        cfg.SIDE_PANEL_BOTTOM_Z
+        + side_panel_tile_height(height_units) / 2
+        + index * (cfg.SIDE_PANEL_SECTION_HEIGHT + cfg.SIDE_PANEL_GAP)
+    )
+
+
+def _make_side_panel_frame(length: float, height: float) -> cq.Workplane:
     rail = cfg.SIDE_PANEL_FRAME_WIDTH
     y = cfg.SIDE_PANEL_THICKNESS / 2 + cfg.SIDE_PANEL_RIB_HEIGHT / 2
     top_bottom = cq.Workplane("XY")
@@ -26,13 +36,13 @@ def make_side_panel_frame() -> cq.Workplane:
     return top_bottom.union(sides)
 
 
-def make_side_panel_ribs() -> cq.Workplane:
-    length = side_panel_length() - 2 * cfg.SIDE_PANEL_FRAME_WIDTH
-    height = cfg.SIDE_PANEL_HEIGHT - 2 * cfg.SIDE_PANEL_FRAME_WIDTH
-    diagonal = (length**2 + height**2) ** 0.5
-    angle = math.degrees(math.atan2(height, length))
+def _make_side_panel_ribs(length: float, height: float) -> cq.Workplane:
+    rib_length = length - 2 * cfg.SIDE_PANEL_FRAME_WIDTH
+    rib_height = height - 2 * cfg.SIDE_PANEL_FRAME_WIDTH
+    diagonal = (rib_length**2 + rib_height**2) ** 0.5
+    angle = math.degrees(math.atan2(rib_height, rib_length))
     y = cfg.SIDE_PANEL_THICKNESS / 2 + cfg.SIDE_PANEL_RIB_HEIGHT / 2
-    envelope = cq.Workplane("XY").box(length, cfg.SIDE_PANEL_RIB_HEIGHT, height).translate((0, y, 0))
+    envelope = cq.Workplane("XY").box(rib_length, cfg.SIDE_PANEL_RIB_HEIGHT, rib_height).translate((0, y, 0))
     ribs = cq.Workplane("XY")
     for rib_angle in (-angle, angle):
         rib = (
@@ -45,36 +55,36 @@ def make_side_panel_ribs() -> cq.Workplane:
     return ribs.intersect(envelope)
 
 
-def make_side_panel_mounts() -> cq.Workplane:
-    length = side_panel_length()
-    height = cfg.SIDE_PANEL_HEIGHT
+def _mount_points(length: float, height: float) -> list[tuple[float, float]]:
     x = length / 2 - cfg.SIDE_PANEL_FRAME_WIDTH
-    z = height / 2 - cfg.CORNER_BLOCK_HEIGHT
+    z = height / 2 - cfg.SIDE_PANEL_FRAME_WIDTH
+    return [(-x, -z), (x, -z), (-x, z), (x, z)]
+
+
+def _make_side_panel_mounts(length: float, height: float) -> cq.Workplane:
     y = cfg.SIDE_PANEL_THICKNESS / 2 + cfg.SIDE_PANEL_RIB_HEIGHT / 2
     mounts = cq.Workplane("XY")
-    for px in (-x, x):
-        for pz in (-z, z):
-            boss = cq.Solid.makeCylinder(
-                cfg.SIDE_PANEL_MOUNT_BOSS_DIAMETER / 2,
-                cfg.SIDE_PANEL_RIB_HEIGHT,
-                cq.Vector(px, cfg.SIDE_PANEL_THICKNESS / 2, pz),
-                cq.Vector(0, 1, 0),
-            )
-            mounts = mounts.union(cq.Workplane("XY").add(boss))
+    for px, pz in _mount_points(length, height):
+        boss = cq.Solid.makeCylinder(
+            cfg.SIDE_PANEL_MOUNT_BOSS_DIAMETER / 2,
+            cfg.SIDE_PANEL_RIB_HEIGHT,
+            cq.Vector(px, cfg.SIDE_PANEL_THICKNESS / 2, pz),
+            cq.Vector(0, 1, 0),
+        )
+        mounts = mounts.union(cq.Workplane("XY").add(boss))
     return mounts.translate((0, y - cfg.SIDE_PANEL_THICKNESS / 2 - cfg.SIDE_PANEL_RIB_HEIGHT / 2, 0))
 
 
-def make_side_panel_vents(panel: cq.Workplane) -> cq.Workplane:
-    length = side_panel_length()
+def _cut_side_panel_vents(panel: cq.Workplane, length: float, height: float, tile_center_z: float) -> cq.Workplane:
     usable_length = length - 2 * cfg.SIDE_PANEL_FRAME_WIDTH
-    usable_height = cfg.SIDE_PANEL_HEIGHT - 2 * cfg.SIDE_PANEL_FRAME_WIDTH
+    usable_height = height - 2 * cfg.SIDE_PANEL_FRAME_WIDTH
     x_values = []
     x = -usable_length / 2 + cfg.SIDE_PANEL_VENT_SLOT_LENGTH / 2
     while x <= usable_length / 2 - cfg.SIDE_PANEL_VENT_SLOT_LENGTH / 2:
         x_values.append(x)
         x += cfg.SIDE_PANEL_VENT_SLOT_LENGTH + cfg.SIDE_PANEL_VENT_SLOT_SPACING
 
-    mini_pc_zone_center = cfg.MINIPC_DUCT_ZONE_OFFSET_Z - cfg.TOWER_HEIGHT / 2
+    mini_pc_zone_center = cfg.MINIPC_DUCT_ZONE_OFFSET_Z - tile_center_z
     mini_pc_zone_half = cfg.MINIPC_DUCT_ZONE_HEIGHT / 2 + cfg.SIDE_PANEL_MINIPC_DUCT_CLEARANCE
     points = []
     z = -usable_height / 2 + cfg.SIDE_PANEL_VENT_SLOT_SPACING
@@ -83,6 +93,8 @@ def make_side_panel_vents(panel: cq.Workplane) -> cq.Workplane:
             points.extend((x_point, z) for x_point in x_values)
         z += cfg.SIDE_PANEL_VENT_SLOT_SPACING
 
+    if not points:
+        return panel
     return (
         panel.faces(">Y")
         .workplane(centerOption="CenterOfBoundBox")
@@ -92,23 +104,56 @@ def make_side_panel_vents(panel: cq.Workplane) -> cq.Workplane:
     )
 
 
-def create_side_panel(name: str = "left_side_panel") -> cq.Workplane:
+def make_side_panel_tile(side: str, index: int, height_units: float = 1.0) -> cq.Workplane:
+    length = side_panel_length()
+    height = side_panel_tile_height(height_units)
     panel = (
         cq.Workplane("XY")
-        .box(side_panel_length(), cfg.SIDE_PANEL_THICKNESS, cfg.SIDE_PANEL_HEIGHT)
+        .box(length, cfg.SIDE_PANEL_THICKNESS, height)
         .edges("|Z")
         .chamfer(cfg.SIDE_PANEL_CORNER_RADIUS)
     )
-    panel = make_side_panel_vents(panel)
-    panel = panel.union(make_side_panel_frame()).union(make_side_panel_ribs()).union(make_side_panel_mounts())
-
-    length = side_panel_length()
-    x = length / 2 - cfg.SIDE_PANEL_FRAME_WIDTH
-    z = cfg.SIDE_PANEL_HEIGHT / 2 - cfg.CORNER_BLOCK_HEIGHT
-    mount_points = [(-x, -z), (x, -z), (-x, z), (x, z)]
-    panel = panel.faces(">Y").workplane(centerOption="CenterOfBoundBox").pushPoints(mount_points).hole(
+    panel = _cut_side_panel_vents(panel, length, height, side_panel_tile_center_z(index, height_units))
+    panel = panel.union(_make_side_panel_frame(length, height))
+    panel = panel.union(_make_side_panel_ribs(length, height))
+    panel = panel.union(_make_side_panel_mounts(length, height))
+    panel = panel.faces(">Y").workplane(centerOption="CenterOfBoundBox").pushPoints(_mount_points(length, height)).hole(
         cfg.SIDE_PANEL_MOUNT_HOLE_DIAMETER
     )
+    label = cfg.SIDE_PANEL_SECTION_LABELS[index]
+    return panel.tag(f"{side}_side_panel_{label}")
+
+
+def create_left_side_panel_lower() -> cq.Workplane:
+    return make_side_panel_tile("left", 0)
+
+
+def create_left_side_panel_middle() -> cq.Workplane:
+    return make_side_panel_tile("left", 1)
+
+
+def create_left_side_panel_upper() -> cq.Workplane:
+    return make_side_panel_tile("left", 2)
+
+
+def create_right_side_panel_lower() -> cq.Workplane:
+    return make_side_panel_tile("right", 0)
+
+
+def create_right_side_panel_middle() -> cq.Workplane:
+    return make_side_panel_tile("right", 1)
+
+
+def create_right_side_panel_upper() -> cq.Workplane:
+    return make_side_panel_tile("right", 2)
+
+
+def create_side_panel(name: str = "left_side_panel") -> cq.Workplane:
+    side = "right" if "right" in name else "left"
+    panel = cq.Workplane("XY")
+    for index in range(cfg.SIDE_PANEL_SECTION_COUNT):
+        tile = make_side_panel_tile(side, index)
+        panel = panel.union(tile.translate((0, 0, side_panel_tile_center_z(index) - cfg.TOWER_HEIGHT / 2)))
     return panel.tag(name)
 
 

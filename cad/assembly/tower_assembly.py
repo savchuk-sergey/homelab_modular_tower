@@ -3,7 +3,7 @@
 import cadquery as cq
 
 from .. import config as cfg
-from ..parts import cooling, modules, placeholders, service_spine, side_panels
+from ..parts import cooling, feet, modules, placeholders, service_spine, side_panels
 from ..parts.corner_blocks import create_corner_block
 from ..parts.frame import make_bottom_structural_frame, make_top_structural_frame
 from ..parts.rails import create_metal_guide_rail, guide_rail_positions
@@ -36,6 +36,16 @@ def _add_guide_rails(assembly: cq.Assembly) -> None:
             create_metal_guide_rail(),
             name=f"metal_guide_rail_{names[index]}",
             loc=cq.Location(cq.Vector(px, py, cfg.TOWER_HEIGHT / 2)),
+        )
+
+
+def _add_feet(assembly: cq.Assembly) -> None:
+    names = ["front_left", "front_right", "rear_right", "rear_left"]
+    for index, (px, py) in enumerate(rod_positions()):
+        assembly.add(
+            feet.make_foot(),
+            name=f"foot_{names[index]}",
+            loc=cq.Location(cq.Vector(px, py, cfg.FOOT_Z)),
         )
 
 
@@ -87,24 +97,36 @@ def _add_module_stack(assembly: cq.Assembly) -> None:
 
 def _add_side_panels(assembly: cq.Assembly) -> None:
     side_x = cfg.OUTER_WIDTH / 2 + cfg.SIDE_PANEL_THICKNESS / 2
-    assembly.add(
-        side_panels.create_left_side_panel(),
-        name="left_side_panel",
-        loc=cq.Location(
-            cq.Vector(-side_x, 0, cfg.TOWER_HEIGHT / 2),
-            cq.Vector(0, 0, 1),
-            cfg.SIDE_PANEL_ASSEMBLY_ROTATION_DEG,
+    factories = {
+        "left": (
+            -side_x,
+            (
+                side_panels.create_left_side_panel_lower,
+                side_panels.create_left_side_panel_middle,
+                side_panels.create_left_side_panel_upper,
+            ),
         ),
-    )
-    assembly.add(
-        side_panels.create_right_side_panel(),
-        name="right_side_panel",
-        loc=cq.Location(
-            cq.Vector(side_x, 0, cfg.TOWER_HEIGHT / 2),
-            cq.Vector(0, 0, 1),
-            cfg.SIDE_PANEL_ASSEMBLY_ROTATION_DEG,
+        "right": (
+            side_x,
+            (
+                side_panels.create_right_side_panel_lower,
+                side_panels.create_right_side_panel_middle,
+                side_panels.create_right_side_panel_upper,
+            ),
         ),
-    )
+    }
+    for side, (x_position, panel_factories) in factories.items():
+        for index, factory in enumerate(panel_factories):
+            label = cfg.SIDE_PANEL_SECTION_LABELS[index]
+            assembly.add(
+                factory(),
+                name=f"{side}_side_panel_{label}",
+                loc=cq.Location(
+                    cq.Vector(x_position, 0, side_panels.side_panel_tile_center_z(index)),
+                    cq.Vector(0, 0, 1),
+                    cfg.SIDE_PANEL_ASSEMBLY_ROTATION_DEG,
+                ),
+            )
 
 
 def _add_rear_service_area(assembly: cq.Assembly) -> None:
@@ -113,6 +135,17 @@ def _add_rear_service_area(assembly: cq.Assembly) -> None:
         service_spine.create_rear_service_spine(),
         name="rear_service_spine",
         loc=cq.Location(cq.Vector(0, rear_y, cfg.TOWER_HEIGHT / 2)),
+    )
+    assembly.add(
+        service_spine.create_rear_service_spine_cover(),
+        name="rear_service_spine_cover",
+        loc=cq.Location(
+            cq.Vector(
+                0,
+                rear_y + cfg.REAR_SPINE_DEPTH / 2 + cfg.SPINE_COVER_THICKNESS / 2,
+                cfg.TOWER_HEIGHT / 2,
+            )
+        ),
     )
     assembly.add(
         service_spine.create_power_bus_panel(),
@@ -139,6 +172,7 @@ def build_assembly() -> cq.Assembly:
     _add_corner_blocks(assembly)
     _add_rods(assembly)
     _add_guide_rails(assembly)
+    _add_feet(assembly)
     _add_module_stack(assembly)
     _add_side_panels(assembly)
     _add_rear_service_area(assembly)
