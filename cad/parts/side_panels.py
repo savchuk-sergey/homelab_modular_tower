@@ -113,6 +113,59 @@ def _make_side_panel_mounts(length: float, height: float, index: int) -> cq.Work
     return mounts.translate((0, y - thickness / 2 - rib_height / 2, 0))
 
 
+def side_panel_mount_y_positions() -> tuple[float, float]:
+    length = side_panel_length()
+    y = length / 2 - cfg.SIDE_PANEL_FRAME_WIDTH
+    return (-y, y)
+
+
+def side_panel_mount_z_positions() -> tuple[float, ...]:
+    positions: list[float] = []
+    for index in range(cfg.SIDE_PANEL_SECTION_COUNT):
+        height = side_panel_tile_height()
+        center = side_panel_tile_center_z(index)
+        local_z = height / 2 - cfg.SIDE_PANEL_FRAME_WIDTH
+        positions.extend((center - local_z, center + local_z))
+    return tuple(positions)
+
+
+def make_side_panel_mount_rail(index: int = 0) -> cq.Workplane:
+    """Rough mk0.7.3 vertical rail section that gives side panels a real screw target."""
+    height = side_panel_tile_height()
+    rail = (
+        cq.Workplane("XY")
+        .box(
+            cfg.SIDE_PANEL_MOUNT_RAIL_WIDTH,
+            cfg.SIDE_PANEL_MOUNT_RAIL_DEPTH,
+            height,
+        )
+        .edges("|Z")
+        .chamfer(cfg.SIDE_PANEL_CORNER_RADIUS)
+    )
+    local_z = height / 2 - cfg.SIDE_PANEL_FRAME_WIDTH
+    hole_points = [(0.0, -local_z), (0.0, local_z)]
+    rail = rail.faces(">X").workplane(centerOption="CenterOfBoundBox").pushPoints(hole_points).hole(
+        cfg.SIDE_PANEL_MOUNT_HOLE_DIAMETER
+    )
+    rail = rail.faces("<X").workplane(centerOption="CenterOfBoundBox").pushPoints(hole_points).hole(
+        cfg.SIDE_PANEL_MOUNT_HOLE_DIAMETER
+    )
+    label = cfg.SIDE_PANEL_SECTION_LABELS[index]
+    return rail.tag(f"side_panel_mount_rail_{label}")
+
+
+def make_side_panel_mount_rail_lower() -> cq.Workplane:
+    return make_side_panel_mount_rail(0)
+
+
+def make_side_panel_mount_rail_middle() -> cq.Workplane:
+    return make_side_panel_mount_rail(1)
+
+
+def make_side_panel_mount_rail_upper() -> cq.Workplane:
+    return make_side_panel_mount_rail(2)
+
+
 def _cut_side_panel_vents(panel: cq.Workplane, length: float, height: float, tile_center_z: float) -> cq.Workplane:
     usable_length = length - 2 * cfg.SIDE_PANEL_FRAME_WIDTH
     usable_height = height - 2 * cfg.SIDE_PANEL_FRAME_WIDTH

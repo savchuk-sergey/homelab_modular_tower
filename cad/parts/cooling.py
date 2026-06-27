@@ -122,6 +122,15 @@ def make_bottom_filter_retainer() -> cq.Workplane:
         cfg.BOTTOM_FILTER_RETAINER_HEIGHT + cfg.FILLET_RADIUS,
     )
     retainer = retainer.cut(slot)
+    clip_offset = cfg.BOTTOM_FILTER_FRAME_WIDTH / 2 - cfg.BOTTOM_FILTER_CORNER_CLIP_SIZE / 2
+    for x in (-clip_offset, clip_offset):
+        for y in (-clip_offset, clip_offset):
+            clip = cq.Workplane("XY").box(
+                cfg.BOTTOM_FILTER_CORNER_CLIP_SIZE,
+                cfg.BOTTOM_FILTER_CORNER_CLIP_SIZE,
+                cfg.BOTTOM_FILTER_RETAINER_HEIGHT,
+            )
+            retainer = retainer.union(clip.translate((x, y, 0)))
     return retainer.tag("bottom_filter_retainer")
 
 

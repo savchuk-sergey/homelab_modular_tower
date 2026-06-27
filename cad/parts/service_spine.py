@@ -5,6 +5,36 @@ import cadquery as cq
 from .. import config as cfg
 
 
+def _split_section(part: cq.Workplane, width: float, depth: float, height: float, section: str, name: str) -> cq.Workplane:
+    half = height / 2
+    if section == "lower":
+        cutter_z = -height / 4
+    elif section == "upper":
+        cutter_z = height / 4
+    else:
+        raise ValueError(f"Unknown split section: {section}")
+
+    cutter = cq.Workplane("XY").box(
+        width + cfg.FILLET_RADIUS * 4,
+        depth + cfg.FILLET_RADIUS * 4,
+        half + cfg.FILLET_RADIUS * 2,
+    ).translate((0, 0, cutter_z))
+    segment = part.intersect(cutter)
+
+    tab_z = 0
+    tab_y = depth / 2 + cfg.SPLIT_JOINT_TAB_DEPTH / 2
+    tab = cq.Workplane("XY").box(
+        max(width - 12.0, cfg.SPLIT_JOINT_SCREW_OFFSET_X * 2 + 8.0),
+        cfg.SPLIT_JOINT_TAB_DEPTH,
+        cfg.SPLIT_JOINT_TAB_HEIGHT,
+    ).translate((0, tab_y, tab_z))
+    segment = segment.union(tab)
+    segment = segment.faces(">Y").workplane(centerOption="CenterOfBoundBox").pushPoints(
+        [(-cfg.SPLIT_JOINT_SCREW_OFFSET_X, tab_z), (cfg.SPLIT_JOINT_SCREW_OFFSET_X, tab_z)]
+    ).hole(cfg.M3_CLEARANCE)
+    return segment.tag(name)
+
+
 def create_power_bus_panel() -> cq.Workplane:
     panel = cq.Workplane("XY").box(cfg.POWER_BUS_WIDTH, cfg.POWER_BUS_THICKNESS, cfg.POWER_BUS_HEIGHT)
     for _, z in cfg.POWER_BUS_RAIL_LABELS:
@@ -41,6 +71,28 @@ def create_power_bus_panel() -> cq.Workplane:
     return panel
 
 
+def create_power_bus_panel_lower() -> cq.Workplane:
+    return _split_section(
+        create_power_bus_panel(),
+        cfg.POWER_BUS_WIDTH,
+        cfg.POWER_BUS_THICKNESS + cfg.POWER_BUS_PAD_DEPTH + cfg.POWER_BUS_STRAIN_RELIEF_DEPTH,
+        cfg.POWER_BUS_HEIGHT,
+        "lower",
+        "power_bus_panel_lower",
+    )
+
+
+def create_power_bus_panel_upper() -> cq.Workplane:
+    return _split_section(
+        create_power_bus_panel(),
+        cfg.POWER_BUS_WIDTH,
+        cfg.POWER_BUS_THICKNESS + cfg.POWER_BUS_PAD_DEPTH + cfg.POWER_BUS_STRAIN_RELIEF_DEPTH,
+        cfg.POWER_BUS_HEIGHT,
+        "upper",
+        "power_bus_panel_upper",
+    )
+
+
 def create_power_bus_cover() -> cq.Workplane:
     cover = cq.Workplane("XY").box(
         cfg.POWER_BUS_COVER_WIDTH,
@@ -59,6 +111,28 @@ def create_power_bus_cover() -> cq.Workplane:
             [(-cfg.POWER_BUS_PAD_SCREW_OFFSET_X, z), (cfg.POWER_BUS_PAD_SCREW_OFFSET_X, z)]
         ).hole(cfg.M3_CLEARANCE)
     return cover.tag("power_bus_cover")
+
+
+def create_power_bus_cover_lower() -> cq.Workplane:
+    return _split_section(
+        create_power_bus_cover(),
+        cfg.POWER_BUS_COVER_WIDTH,
+        cfg.POWER_BUS_COVER_THICKNESS + cfg.POWER_BUS_GUARD_RAIL_DEPTH,
+        cfg.POWER_BUS_COVER_HEIGHT,
+        "lower",
+        "power_bus_cover_lower",
+    )
+
+
+def create_power_bus_cover_upper() -> cq.Workplane:
+    return _split_section(
+        create_power_bus_cover(),
+        cfg.POWER_BUS_COVER_WIDTH,
+        cfg.POWER_BUS_COVER_THICKNESS + cfg.POWER_BUS_GUARD_RAIL_DEPTH,
+        cfg.POWER_BUS_COVER_HEIGHT,
+        "upper",
+        "power_bus_cover_upper",
+    )
 
 
 def create_rear_service_spine() -> cq.Workplane:
@@ -171,6 +245,28 @@ def create_rear_service_spine() -> cq.Workplane:
     return spine.tag("rear_service_spine")
 
 
+def create_rear_service_spine_lower() -> cq.Workplane:
+    return _split_section(
+        create_rear_service_spine(),
+        cfg.REAR_SPINE_WIDTH + 2 * cfg.REAR_SPINE_SIDE_MOUNT_WIDTH + 2 * cfg.REAR_SPINE_SIDE_MOUNT_X,
+        cfg.REAR_SPINE_DEPTH + cfg.REAR_SPINE_MOUNT_TAB_DEPTH + cfg.REAR_SPINE_COVER_RAIL_DEPTH,
+        cfg.REAR_SPINE_HEIGHT,
+        "lower",
+        "rear_service_spine_lower",
+    )
+
+
+def create_rear_service_spine_upper() -> cq.Workplane:
+    return _split_section(
+        create_rear_service_spine(),
+        cfg.REAR_SPINE_WIDTH + 2 * cfg.REAR_SPINE_SIDE_MOUNT_WIDTH + 2 * cfg.REAR_SPINE_SIDE_MOUNT_X,
+        cfg.REAR_SPINE_DEPTH + cfg.REAR_SPINE_MOUNT_TAB_DEPTH + cfg.REAR_SPINE_COVER_RAIL_DEPTH,
+        cfg.REAR_SPINE_HEIGHT,
+        "upper",
+        "rear_service_spine_upper",
+    )
+
+
 def create_rear_service_spine_cover() -> cq.Workplane:
     cover = cq.Workplane("XY").box(
         cfg.REAR_SPINE_COVER_WIDTH,
@@ -182,3 +278,25 @@ def create_rear_service_spine_cover() -> cq.Workplane:
             cfg.REAR_SPINE_MOUNT_HOLE_DIAMETER
         )
     return cover.edges("|Z").chamfer(cfg.FILLET_RADIUS).tag("rear_service_spine_cover")
+
+
+def create_rear_service_spine_cover_lower() -> cq.Workplane:
+    return _split_section(
+        create_rear_service_spine_cover(),
+        cfg.REAR_SPINE_COVER_WIDTH,
+        cfg.REAR_SPINE_COVER_THICKNESS,
+        cfg.REAR_SPINE_COVER_HEIGHT,
+        "lower",
+        "rear_service_spine_cover_lower",
+    )
+
+
+def create_rear_service_spine_cover_upper() -> cq.Workplane:
+    return _split_section(
+        create_rear_service_spine_cover(),
+        cfg.REAR_SPINE_COVER_WIDTH,
+        cfg.REAR_SPINE_COVER_THICKNESS,
+        cfg.REAR_SPINE_COVER_HEIGHT,
+        "upper",
+        "rear_service_spine_cover_upper",
+    )

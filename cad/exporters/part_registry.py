@@ -3,8 +3,8 @@
 from ..parts import cooling, feet, modules, placeholders, review, service_spine, side_panels
 from ..parts.corner_blocks import create_corner_block
 from ..parts.frame import make_bottom_structural_frame, make_top_structural_frame
-from ..parts.rails import create_metal_guide_rail
-from ..parts.rods import create_m5_threaded_rod
+from ..parts.rails import create_metal_guide_rail, create_rail_end_mount, create_tray_support_ledge
+from ..parts.rods import create_m5_threaded_rod, create_m5_threaded_rod_cap
 
 
 PARTS = {
@@ -23,7 +23,10 @@ PARTS = {
     "foot": feet.make_foot,
     "wide_tpu_foot_placeholder": feet.make_wide_tpu_foot_placeholder,
     "m5_threaded_rod": create_m5_threaded_rod,
+    "m5_threaded_rod_cap": create_m5_threaded_rod_cap,
     "metal_guide_rail": create_metal_guide_rail,
+    "rail_end_mount": create_rail_end_mount,
+    "tray_support_ledge": create_tray_support_ledge,
     "ups_power_tray": modules.create_ups_power_tray,
     "external_ssd_bay": modules.create_external_ssd_bay,
     "ssd_expansion_tray": modules.create_ssd_expansion_tray,
@@ -32,9 +35,20 @@ PARTS = {
     "mini_pc_tray": modules.create_mini_pc_tray,
     "mini_pc_tray_stop": modules.make_tray_stop,
     "power_bus_panel": service_spine.create_power_bus_panel,
+    "power_bus_panel_lower": service_spine.create_power_bus_panel_lower,
+    "power_bus_panel_upper": service_spine.create_power_bus_panel_upper,
     "power_bus_cover": service_spine.create_power_bus_cover,
+    "power_bus_cover_lower": service_spine.create_power_bus_cover_lower,
+    "power_bus_cover_upper": service_spine.create_power_bus_cover_upper,
     "rear_service_spine": service_spine.create_rear_service_spine,
+    "rear_service_spine_lower": service_spine.create_rear_service_spine_lower,
+    "rear_service_spine_upper": service_spine.create_rear_service_spine_upper,
     "rear_service_spine_cover": service_spine.create_rear_service_spine_cover,
+    "rear_service_spine_cover_lower": service_spine.create_rear_service_spine_cover_lower,
+    "rear_service_spine_cover_upper": service_spine.create_rear_service_spine_cover_upper,
+    "side_panel_mount_rail_lower": side_panels.make_side_panel_mount_rail_lower,
+    "side_panel_mount_rail_middle": side_panels.make_side_panel_mount_rail_middle,
+    "side_panel_mount_rail_upper": side_panels.make_side_panel_mount_rail_upper,
     "left_side_panel_lower": side_panels.create_left_side_panel_lower,
     "left_side_panel_middle": side_panels.create_left_side_panel_middle,
     "left_side_panel_upper": side_panels.create_left_side_panel_upper,
@@ -79,6 +93,9 @@ EXPORT_CATEGORIES = {
         "front_stability_wing": feet.make_front_stability_wing,
         "rear_stability_wing": feet.make_rear_stability_wing,
         "foot_socket": feet.make_foot_socket,
+        "m5_threaded_rod_cap": create_m5_threaded_rod_cap,
+        "rail_end_mount": create_rail_end_mount,
+        "tray_support_ledge": create_tray_support_ledge,
         "ups_power_tray": modules.create_ups_power_tray,
         "external_ssd_bay": modules.create_external_ssd_bay,
         "ssd_expansion_tray": modules.create_ssd_expansion_tray,
@@ -86,10 +103,17 @@ EXPORT_CATEGORIES = {
         "mikrotik_tray": modules.create_mikrotik_tray,
         "mini_pc_tray": modules.create_mini_pc_tray,
         "mini_pc_tray_stop": modules.make_tray_stop,
-        "power_bus_panel": service_spine.create_power_bus_panel,
-        "power_bus_cover": service_spine.create_power_bus_cover,
-        "rear_service_spine": service_spine.create_rear_service_spine,
-        "rear_service_spine_cover": service_spine.create_rear_service_spine_cover,
+        "power_bus_panel_lower": service_spine.create_power_bus_panel_lower,
+        "power_bus_panel_upper": service_spine.create_power_bus_panel_upper,
+        "power_bus_cover_lower": service_spine.create_power_bus_cover_lower,
+        "power_bus_cover_upper": service_spine.create_power_bus_cover_upper,
+        "rear_service_spine_lower": service_spine.create_rear_service_spine_lower,
+        "rear_service_spine_upper": service_spine.create_rear_service_spine_upper,
+        "rear_service_spine_cover_lower": service_spine.create_rear_service_spine_cover_lower,
+        "rear_service_spine_cover_upper": service_spine.create_rear_service_spine_cover_upper,
+        "side_panel_mount_rail_lower": side_panels.make_side_panel_mount_rail_lower,
+        "side_panel_mount_rail_middle": side_panels.make_side_panel_mount_rail_middle,
+        "side_panel_mount_rail_upper": side_panels.make_side_panel_mount_rail_upper,
         "left_side_panel_lower": side_panels.create_left_side_panel_lower,
         "left_side_panel_middle": side_panels.create_left_side_panel_middle,
         "left_side_panel_upper": side_panels.create_left_side_panel_upper,
@@ -123,6 +147,10 @@ EXPORT_CATEGORIES = {
         "fan_120x120x25_placeholder": placeholders.make_fan_120_placeholder,
     },
     "review": {
+        "power_bus_panel_reference": service_spine.create_power_bus_panel,
+        "power_bus_cover_reference": service_spine.create_power_bus_cover,
+        "rear_service_spine_reference": service_spine.create_rear_service_spine,
+        "rear_service_spine_cover_reference": service_spine.create_rear_service_spine_cover,
         "bottom_intake_open_area_review": review.make_bottom_intake_open_area_review,
         "airflow_path_review": review.make_airflow_path_review,
         "mini_pc_airflow_path_review": review.make_mini_pc_airflow_path_review,
