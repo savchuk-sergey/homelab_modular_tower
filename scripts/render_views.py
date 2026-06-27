@@ -140,6 +140,10 @@ def axis_limits_from_bbox(bbox: BoundingBox, margin: float) -> tuple[tuple[float
 
 
 def _part_color(name: str) -> tuple[float, float, float, float]:
+    if "placeholder" in name:
+        return (0.95, 0.52, 0.18, 0.42)
+    if "airflow" in name:
+        return (0.20, 0.62, 0.85, 0.72)
     if "rod" in name:
         return (0.12, 0.12, 0.12, 1.0)
     if "metal_guide_rail" in name:
@@ -211,7 +215,7 @@ def _add_meshes_to_axis(ax, items: list[RenderItem]) -> None:
             facecolors=_part_color(item.name),
             edgecolors=(0.08, 0.08, 0.08, 0.35),
             linewidths=0.08,
-            alpha=1.0,
+            alpha=_part_color(item.name)[3],
         )
         ax.add_collection3d(collection)
 
@@ -521,6 +525,38 @@ def render_part_views(items: list[RenderItem], out_dir: Path, size: int, dpi: in
             )
 
 
+def render_review_views(items: list[RenderItem], out_dir: Path, size: int, dpi: int) -> None:
+    review_dir = out_dir / "review"
+    bbox = combine_bounding_boxes(item.bbox for item in items)
+    review_sets = {
+        "rear_spine_detail": [item for item in items if "spine" in item.name or "power_bus" in item.name],
+        "module_extraction": [item for item in items if "tray" in item.name or "bay" in item.name or "placeholder" in item.name],
+        "airflow_path": [item for item in items if "fan_grille" in item.name or "airflow" in item.name or "mini_pc" in item.name],
+        "exploded_modules": [item for item in items if "tray" in item.name or "bay" in item.name],
+    }
+    review_views = {
+        "rear_spine_detail": VIEWS["rear"],
+        "module_extraction": VIEWS["right"],
+        "airflow_path": VIEWS["front"],
+        "exploded_modules": VIEWS["isometric"],
+    }
+    for name, selected_items in review_sets.items():
+        if not selected_items:
+            continue
+        selected_bbox = combine_bounding_boxes(item.bbox for item in selected_items)
+        render_projection_view(
+            title=name.replace("_", " ").title(),
+            view_name=name,
+            view=review_views[name],
+            items=selected_items,
+            bbox=selected_bbox if name != "airflow_path" else bbox,
+            out_path=review_dir / f"{name}.png",
+            size=size,
+            dpi=dpi,
+            metadata_text=f"Review view: {name}\nRevision: {cfg.CURRENT_REVISION}\nItems: {len(selected_items)}",
+        )
+
+
 def render_views(
     items: list[RenderItem],
     out_dir: Path,
@@ -536,6 +572,8 @@ def render_views(
         render_assembly_views(items, out_dir, size, dpi)
     if target in ("all", "parts") or selected_part is not None:
         render_part_views(items, out_dir, size, dpi, selected_part)
+    if target == "all" and selected_part is None:
+        render_review_views(items, out_dir, size, dpi)
 
 
 def parse_args() -> argparse.Namespace:

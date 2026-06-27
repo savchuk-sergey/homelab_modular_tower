@@ -32,12 +32,28 @@ def create_frame_ring(name: str, z_height: float = cfg.FRAME_THICKNESS) -> cq.Wo
             cfg.METAL_RAIL_THICKNESS + cfg.METAL_RAIL_FRAME_CLEARANCE,
         ).cutBlind(-z_height)
 
+    rib_z = z_height / 2 + cfg.FRAME_RIB_HEIGHT / 2
+    rib_span_x = cfg.OUTER_WIDTH - 2 * cfg.FRAME_RIB_INSET
+    rib_span_y = cfg.OUTER_DEPTH - 2 * cfg.FRAME_RIB_INSET
+    for y in (-cfg.OUTER_DEPTH / 2 + cfg.FRAME_RAIL / 2, cfg.OUTER_DEPTH / 2 - cfg.FRAME_RAIL / 2):
+        ring = ring.union(cq.Workplane("XY").box(rib_span_x, cfg.FRAME_RIB_WIDTH, cfg.FRAME_RIB_HEIGHT).translate((0, y, rib_z)))
+    for x in (-cfg.OUTER_WIDTH / 2 + cfg.FRAME_RAIL / 2, cfg.OUTER_WIDTH / 2 - cfg.FRAME_RAIL / 2):
+        ring = ring.union(cq.Workplane("XY").box(cfg.FRAME_RIB_WIDTH, rib_span_y, cfg.FRAME_RIB_HEIGHT).translate((x, 0, rib_z)))
+
     return ring.edges("|Z").chamfer(cfg.FRAME_EDGE_CHAMFER).tag(name)
 
 
-def create_frame_top() -> cq.Workplane:
+def make_top_structural_frame() -> cq.Workplane:
     return create_frame_ring("frame_top")
 
 
-def create_frame_bottom() -> cq.Workplane:
+def make_bottom_structural_frame() -> cq.Workplane:
     return create_frame_ring("frame_bottom")
+
+
+def create_frame_top() -> cq.Workplane:
+    return make_top_structural_frame()
+
+
+def create_frame_bottom() -> cq.Workplane:
+    return make_bottom_structural_frame()

@@ -4,11 +4,11 @@ import cadquery as cq
 
 from .. import config as cfg
 from ..utils.geometry import rounded_box
-from .carriages import create_carriage
+from .carriages import make_module_tray
 
 
 def create_ups_power_tray() -> cq.Workplane:
-    tray = create_carriage("ups_power_tray", cfg.UPS_POWER_TRAY_UNITS, ventilation=True, front_handle=True)
+    tray = make_module_tray("ups_power_tray", cfg.UPS_POWER_TRAY_UNITS, ventilation=True, front_handle=True)
     # Placeholder zones for low-voltage UPS electronics, not exposed mains AC.
     for x, y, lx, ly, _ in cfg.UPS_COMPONENT_ZONES:
         tray = tray.union(cq.Workplane("XY").box(lx, ly, cfg.UPS_ZONE_MARKER_HEIGHT).translate((x, y, cfg.UPS_ZONE_MARKER_Z)))
@@ -22,7 +22,7 @@ def create_ups_power_tray() -> cq.Workplane:
 
 
 def create_external_ssd_bay() -> cq.Workplane:
-    tray = create_carriage("external_ssd_bay", cfg.EXTERNAL_SSD_BAY_UNITS, ventilation=True, front_handle=True)
+    tray = make_module_tray("external_ssd_bay", cfg.EXTERNAL_SSD_BAY_UNITS, ventilation=True, front_handle=True)
     pocket_outer = cq.Workplane("XY").box(
         cfg.SSD_POCKET_LENGTH + cfg.SSD_POCKET_WALL_ALLOWANCE,
         cfg.SSD_POCKET_WIDTH + cfg.SSD_POCKET_WALL_ALLOWANCE,
@@ -55,11 +55,18 @@ def create_external_ssd_bay() -> cq.Workplane:
 
 
 def create_ssd_expansion_tray() -> cq.Workplane:
-    return create_carriage("ssd_expansion_tray", cfg.SSD_EXPANSION_TRAY_UNITS, ventilation=True, front_handle=True)
+    tray = make_module_tray("ssd_expansion_tray", cfg.SSD_EXPANSION_TRAY_UNITS, ventilation=True, front_handle=True)
+    marker = rounded_box(
+        cfg.SSD_EXPANSION_PLACEHOLDER_WIDTH,
+        cfg.SSD_EXPANSION_PLACEHOLDER_DEPTH,
+        cfg.MODULE_BOARD_MARKER_HEIGHT,
+        cfg.PLACEHOLDER_CHAMFER,
+    ).translate(cfg.SSD_EXPANSION_PLACEHOLDER_LOC)
+    return tray.union(marker)
 
 
 def create_raspberry_pi_tray() -> cq.Workplane:
-    tray = create_carriage("raspberry_pi_tray", cfg.RASPBERRY_PI_TRAY_UNITS, ventilation=True, front_handle=True)
+    tray = make_module_tray("raspberry_pi_tray", cfg.RASPBERRY_PI_TRAY_UNITS, ventilation=True, front_handle=True)
     board = rounded_box(
         cfg.RASPBERRY_PI_PLACEHOLDER[0],
         cfg.RASPBERRY_PI_PLACEHOLDER[1],
@@ -74,7 +81,7 @@ def create_raspberry_pi_tray() -> cq.Workplane:
 
 
 def create_mikrotik_tray() -> cq.Workplane:
-    tray = create_carriage("mikrotik_tray", cfg.MIKROTIK_TRAY_UNITS, ventilation=True, front_handle=True)
+    tray = make_module_tray("mikrotik_tray", cfg.MIKROTIK_TRAY_UNITS, ventilation=True, front_handle=True)
     board = rounded_box(
         cfg.MIKROTIK_PLACEHOLDER[0],
         cfg.MIKROTIK_PLACEHOLDER[1],
@@ -90,7 +97,7 @@ def create_mikrotik_tray() -> cq.Workplane:
 
 
 def create_mini_pc_tray() -> cq.Workplane:
-    tray = create_carriage("mini_pc_tray", cfg.MINI_PC_TRAY_UNITS, ventilation=True, front_handle=True)
+    tray = make_module_tray("mini_pc_tray", cfg.MINI_PC_TRAY_UNITS, ventilation=True, front_handle=True)
     device = rounded_box(
         cfg.MINI_PC_PLACEHOLDER[0],
         cfg.MINI_PC_PLACEHOLDER[1],
