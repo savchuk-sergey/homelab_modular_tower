@@ -1,6 +1,14 @@
 __pycache__/
 *.py[cod]
 
+# Generated CAD/render artifacts. They must be recreated from CadQuery code.
+*.stl
+*.STL
+*.step
+*.STEP
+*.png
+*.PNG
+
 # Generated CAD artifacts. Recreate with:
 #   python -m cad.export --revision mk0.1
 exports/
@@ -8,10 +16,3 @@ exports/
 # Generated projection renders. Recreate with:
 #   python scripts/render_views.py --out renders/mk0.1 --size 1800 --tolerance 1.5
 renders/
-
-# Current-revision engineering review packages intentionally vendor generated
-# evidence snapshots for external reviewers.
-!revisions/*/review_package/exports/
-!revisions/*/review_package/exports/**
-!revisions/*/review_package/renders/
-!revisions/*/review_package/renders/**
