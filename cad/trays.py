@@ -8,6 +8,12 @@ from .parts.carriages import (
     make_carriage_front_plate,
     make_carriage_handle_cutout,
     make_carriage_lock_boss,
+    make_module_rails,
+    make_standard_tray_base,
+    make_tray_cable_exit,
+    make_tray_front_lock,
+    make_tray_handle,
+    make_tray_rear_stop,
 )
 from .parts.modules import (
     TRAY_FACTORIES,
@@ -37,4 +43,10 @@ __all__ = [
     "make_carriage_front_plate",
     "make_carriage_handle_cutout",
     "make_carriage_lock_boss",
+    "make_module_rails",
+    "make_standard_tray_base",
+    "make_tray_cable_exit",
+    "make_tray_front_lock",
+    "make_tray_handle",
+    "make_tray_rear_stop",
 ]

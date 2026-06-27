@@ -49,6 +49,17 @@ def _add_feet(assembly: cq.Assembly) -> None:
         )
 
 
+def _add_sectional_base(assembly: cq.Assembly) -> None:
+    z = cfg.BASE_STABILITY_Z
+    side_x = cfg.OUTER_WIDTH / 2 + cfg.FOOT_EXTENSION_X / 2 - cfg.BASE_WING_OVERLAP / 2
+    wing_y = cfg.OUTER_DEPTH / 2 + cfg.FOOT_EXTENSION_Y / 2 - cfg.BASE_WING_OVERLAP / 2
+    assembly.add(feet.make_central_bottom_fan_frame(), name="central_bottom_fan_frame", loc=cq.Location(cq.Vector(0, 0, z)))
+    assembly.add(feet.make_left_foot_extension(), name="left_foot_extension", loc=cq.Location(cq.Vector(-side_x, 0, z)))
+    assembly.add(feet.make_right_foot_extension(), name="right_foot_extension", loc=cq.Location(cq.Vector(side_x, 0, z)))
+    assembly.add(feet.make_front_stability_wing(), name="front_stability_wing", loc=cq.Location(cq.Vector(0, -wing_y, z)))
+    assembly.add(feet.make_rear_stability_wing(), name="rear_stability_wing", loc=cq.Location(cq.Vector(0, wing_y, z)))
+
+
 def _add_module_stack(assembly: cq.Assembly) -> None:
     placeholder_factories = {
         "ups_power_tray": (
@@ -158,6 +169,17 @@ def _add_rear_service_area(assembly: cq.Assembly) -> None:
         loc=cq.Location(cq.Vector(0, rear_y - cfg.POWER_BUS_PANEL_OFFSET_Y, cfg.TOWER_HEIGHT / 2)),
     )
     assembly.add(
+        service_spine.create_power_bus_cover(),
+        name="power_bus_cover",
+        loc=cq.Location(
+            cq.Vector(
+                0,
+                rear_y - cfg.POWER_BUS_PANEL_OFFSET_Y - cfg.POWER_BUS_THICKNESS,
+                cfg.TOWER_HEIGHT / 2,
+            )
+        ),
+    )
+    assembly.add(
         placeholders.make_power_bus_zone_placeholder(),
         name="power_bus_zone_placeholder",
         loc=cq.Location(cq.Vector(0, rear_y - cfg.POWER_BUS_PANEL_OFFSET_Y, cfg.TOWER_HEIGHT / 2)),
@@ -172,11 +194,7 @@ def _mini_pc_duct_z() -> float:
 def build_assembly() -> cq.Assembly:
     assembly = cq.Assembly(name="homelab_modular_tower_v1")
 
-    assembly.add(
-        feet.make_base_stability_plate(),
-        name="base_stability_plate",
-        loc=cq.Location(cq.Vector(0, 0, cfg.BASE_STABILITY_Z)),
-    )
+    _add_sectional_base(assembly)
     assembly.add(make_bottom_structural_frame(), name="bottom_structural_frame", loc=cq.Location(cq.Vector(0, 0, 0)))
     assembly.add(make_top_structural_frame(), name="top_structural_frame", loc=cq.Location(cq.Vector(0, 0, cfg.TOWER_HEIGHT)))
     _add_corner_blocks(assembly)

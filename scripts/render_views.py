@@ -577,6 +577,10 @@ def render_review_views(items: list[RenderItem], out_dir: Path, size: int, dpi: 
             item
             for item in items
             if "base_stability" in item.name
+            or "stability_review" in item.name
+            or "stability_wing" in item.name
+            or "foot_extension" in item.name
+            or "central_bottom_fan_frame" in item.name
             or "foot" in item.name
             or "bottom_fan" in item.name
             or "bottom_structural_frame" in item.name
@@ -593,8 +597,40 @@ def render_review_views(items: list[RenderItem], out_dir: Path, size: int, dpi: 
         ],
         "mini_pc_service_position": _mini_pc_service_review_items(items),
         "rear_spine_detail": [item for item in items if "spine" in item.name or "power_bus" in item.name],
+        "rear_service_spine_structure": [
+            item
+            for item in items
+            if "rear_service_spine" in item.name
+            or "m5_threaded_rod" in item.name
+            or "structural_frame" in item.name
+            or "corner_block" in item.name
+        ],
+        "power_bus_layout": [item for item in items if "power_bus" in item.name or "spine" in item.name],
         "module_extraction": [item for item in items if "tray" in item.name or "bay" in item.name or "placeholder" in item.name],
         "airflow_path": [item for item in items if "fan_grille" in item.name or "airflow" in item.name or "mini_pc" in item.name],
+        "mini_pc_airflow_path": [
+            item
+            for item in items
+            if "mini_pc" in item.name or "airflow_duct" in item.name or "mini_pc_airflow_path_review" in item.name
+        ],
+        "blocked_air_zones": [item for item in items if "blocked_air_zones" in item.name or "spine" in item.name],
+        "bottom_intake_clearance": [
+            item
+            for item in items
+            if "central_bottom_fan_frame" in item.name
+            or "bottom_fan" in item.name
+            or "foot" in item.name
+            or "stability_wing" in item.name
+        ],
+        "top_exhaust_clearance": [
+            item
+            for item in items
+            if "top_fan" in item.name
+            or "top_structural_frame" in item.name
+            or "mini_pc" in item.name
+            or "airflow_path_review" in item.name
+        ],
+        "printability_layout": [item for item in items if "printability_layout_review" in item.name],
         "exploded_modules": [item for item in items if "tray" in item.name or "bay" in item.name],
     }
     review_views = {
@@ -602,8 +638,15 @@ def render_review_views(items: list[RenderItem], out_dir: Path, size: int, dpi: 
         "torsion_frame": VIEWS["isometric"],
         "mini_pc_service_position": VIEWS["right"],
         "rear_spine_detail": VIEWS["rear"],
+        "rear_service_spine_structure": VIEWS["isometric"],
+        "power_bus_layout": VIEWS["rear"],
         "module_extraction": VIEWS["right"],
         "airflow_path": VIEWS["front"],
+        "mini_pc_airflow_path": VIEWS["right"],
+        "blocked_air_zones": VIEWS["rear"],
+        "bottom_intake_clearance": VIEWS["front"],
+        "top_exhaust_clearance": VIEWS["front"],
+        "printability_layout": VIEWS["top"],
         "exploded_modules": VIEWS["isometric"],
     }
     for name, selected_items in review_sets.items():
@@ -615,7 +658,7 @@ def render_review_views(items: list[RenderItem], out_dir: Path, size: int, dpi: 
             view_name=name,
             view=review_views[name],
             items=selected_items,
-            bbox=selected_bbox if name != "airflow_path" else bbox,
+            bbox=selected_bbox if name not in {"airflow_path", "mini_pc_airflow_path"} else bbox,
             out_path=review_dir / f"{name}.png",
             size=size,
             dpi=dpi,
@@ -640,7 +683,7 @@ def render_views(
     if target in ("all", "parts") or selected_part is not None:
         render_part_views(part_items, out_dir, size, dpi, selected_part)
     if target == "all" and selected_part is None:
-        render_review_views(assembly_items, out_dir, size, dpi)
+        render_review_views(part_items, out_dir, size, dpi)
 
 
 def parse_args() -> argparse.Namespace:
