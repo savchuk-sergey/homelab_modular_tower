@@ -5,6 +5,7 @@
 - Created mk0.7.4 revision documentation scaffold.
 - Added parameterized split-joint socket dimensions.
 - Added coupon test plan for high-risk fit and print interfaces.
+- Added explicit `MOCKUP_*` mass-reduction parameters.
 
 ## Changed
 
@@ -16,9 +17,8 @@
 - Increased rail end mount capture depth for rough mockup validation.
 - Added a vertical rail end mount screw path with matching frame holes.
 - Added PETG and TPU coupon exports for split joints, rail mounts, ledges, side-panel mounts, filter retention, feet, flat PETG behavior, and fan grille sections.
+- Reduced rough-mockup base, tray, side-panel rib, rear-spine, and grille mass with parameterized dimensions.
 
 ## Pending
 
-- Side panel and rail mount interface fixes.
-- Mockup mass reduction parameter set.
 - Fastener BOM, assembly sequence, and print plan.

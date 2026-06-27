@@ -31,3 +31,11 @@ Decision: add a vertical M3 screw path through the rail end mount and matching f
 Reason: mk0.7.3 had a visible rail end mount hole without a clear mating target. The new path gives the mockup bracket an explicit CAD target while preserving the metal rail clearance slot.
 
 Tradeoff: screw length is still `TBD after stack check` and must be validated with a rail-end coupon.
+
+## Rough Mockup Mass Reduction
+
+Decision: use explicit `MOCKUP_*` parameters for draft-print mass reduction instead of local thinning inside part functions.
+
+Reason: mk0.7.4 needs a printable rough mockup without making the long-term production intent ambiguous. Central base sections, stability wings, tray bodies, side-panel ribs, rear spine depth, and fan grilles are reduced for mockup economics while metal rods, metal guide rails, screw clearances, frame rings, and module spacing remain unchanged.
+
+Tradeoff: the reduced parts are suitable for fit and assembly validation, not for final load or abuse testing. Mini PC and UPS trays still require conservative handling until coupon and rough mockup results exist.

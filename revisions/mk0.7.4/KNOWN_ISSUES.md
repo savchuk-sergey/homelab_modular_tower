@@ -7,6 +7,7 @@
 - Rail end mount engagement and screw target are CAD-coherent but not physically validated.
 - Side panel orientation and rail clearance are CAD-coherent but not physically validated.
 - Coupon STLs exist, but every coupon result remains `NOT TESTED` until a physical print is inspected.
+- Mockup mass reduction is CAD/export validated only; reduced walls and ribs still need coupon and rough-assembly feedback before being treated as production geometry.
 
 ## Deferred Non-Goals
 
