@@ -30,6 +30,16 @@ def make_airflow_path_review() -> cq.Workplane:
     return review.tag("airflow_path_review")
 
 
+def make_bottom_intake_open_area_review() -> cq.Workplane:
+    intake = cq.Workplane("XY").circle(cfg.BOTTOM_INTAKE_REVIEW_DIAMETER / 2).extrude(
+        cfg.BOTTOM_INTAKE_REVIEW_HEIGHT
+    )
+    required = cq.Workplane("XY").circle(
+        (cfg.BOTTOM_INTAKE_REVIEW_DIAMETER * cfg.BOTTOM_INTAKE_MIN_OPEN_AREA_RATIO) / 2
+    ).extrude(cfg.BOTTOM_INTAKE_REVIEW_HEIGHT).translate((0, 0, cfg.BOTTOM_INTAKE_REVIEW_HEIGHT))
+    return intake.union(required).tag("bottom_intake_open_area_review")
+
+
 def make_mini_pc_airflow_path_review() -> cq.Workplane:
     return _arrow("mini_pc_airflow_path_review", cfg.AIRFLOW_ARROW_HEIGHT).rotate(
         (0, 0, 0), (1, 0, 0), 90
@@ -44,6 +54,16 @@ def make_blocked_air_zones_review() -> cq.Workplane:
             .box(cfg.BLOCKED_AIR_ZONE_WIDTH, cfg.BLOCKED_AIR_ZONE_DEPTH, cfg.BLOCKED_AIR_ZONE_HEIGHT)
             .translate((x, cfg.OUTER_DEPTH / 2 - cfg.BLOCKED_AIR_ZONE_DEPTH / 2, cfg.TOWER_HEIGHT / 2))
         )
+    bottom_band = cq.Workplane("XY").box(
+        cfg.OUTER_WIDTH - cfg.FAN_120_AIR_OPENING_DIAMETER,
+        cfg.BLOCKED_AIR_ZONE_DEPTH,
+        cfg.BLOCKED_AIR_ZONE_BOTTOM_HEIGHT,
+    )
+    for x in (
+        -(cfg.FAN_120_AIR_OPENING_DIAMETER / 2 + (cfg.OUTER_WIDTH - cfg.FAN_120_AIR_OPENING_DIAMETER) / 4),
+        cfg.FAN_120_AIR_OPENING_DIAMETER / 2 + (cfg.OUTER_WIDTH - cfg.FAN_120_AIR_OPENING_DIAMETER) / 4,
+    ):
+        zone = zone.union(bottom_band.translate((x, 0, cfg.BLOCKED_AIR_ZONE_BOTTOM_HEIGHT / 2)))
     return zone.tag("blocked_air_zones_review")
 
 

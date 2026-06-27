@@ -75,8 +75,8 @@ def _add_module_stack(assembly: cq.Assembly) -> None:
             (cfg.SSD_EXPANSION_PLACEHOLDER_LOC[0], cfg.SSD_EXPANSION_PLACEHOLDER_LOC[1], cfg.TRAY_BASE_THICKNESS + cfg.SSD_EXPANSION_PLACEHOLDER_HEIGHT / 2),
         ),
         "raspberry_pi_tray": (
-            placeholders.make_raspberry_pi_placeholder,
-            (cfg.RASPBERRY_PI_PLACEHOLDER_LOC[0], cfg.RASPBERRY_PI_PLACEHOLDER_LOC[1], cfg.TRAY_BASE_THICKNESS + cfg.RASPBERRY_PI_PLACEHOLDER_HEIGHT / 2),
+            placeholders.make_raspberry_pi_3b_placeholder,
+            (cfg.RASPBERRY_PI_PLACEHOLDER_LOC[0], cfg.RASPBERRY_PI_PLACEHOLDER_LOC[1], cfg.TRAY_BASE_THICKNESS + cfg.RPI3B_BOARD_THICKNESS / 2),
         ),
         "mikrotik_tray": (
             placeholders.make_mikrotik_placeholder,
@@ -216,6 +216,16 @@ def build_assembly() -> cq.Assembly:
     _add_side_panels(assembly)
     _add_rear_service_area(assembly)
 
+    assembly.add(
+        cooling.make_bottom_fan_cartridge(),
+        name="bottom_fan_cartridge",
+        loc=cq.Location(cq.Vector(0, 0, cfg.BOTTOM_FAN_CARTRIDGE_Z)),
+    )
+    assembly.add(
+        placeholders.make_fan_120_placeholder(),
+        name="bottom_fan_120x120x25_placeholder",
+        loc=cq.Location(cq.Vector(0, 0, cfg.BOTTOM_FAN_PLACEHOLDER_Z)),
+    )
     assembly.add(cooling.make_bottom_fan_grille(), name="bottom_fan_grille", loc=cq.Location(cq.Vector(0, 0, cfg.BOTTOM_FAN_PANEL_Z)))
     assembly.add(
         cooling.make_top_fan_grille(),
