@@ -13,10 +13,18 @@ from ..parts.rods import create_m5_threaded_rod, rod_positions
 def _add_corner_blocks(assembly: cq.Assembly) -> None:
     x = cfg.OUTER_WIDTH / 2 - cfg.CORNER_BLOCK_SIZE / 2
     y = cfg.OUTER_DEPTH / 2 - cfg.CORNER_BLOCK_SIZE / 2
-    z = cfg.TOWER_HEIGHT / 2
-    for ix, px in enumerate([-x, x]):
-        for iy, py in enumerate([-y, y]):
-            assembly.add(create_corner_block(), name=f"corner_block_{ix}_{iy}", loc=cq.Location(cq.Vector(px, py, z)))
+    z_positions = (
+        cfg.FRAME_THICKNESS / 2,
+        cfg.TOWER_HEIGHT - cfg.FRAME_THICKNESS / 2,
+    )
+    for iz, pz in enumerate(z_positions):
+        for ix, px in enumerate([-x, x]):
+            for iy, py in enumerate([-y, y]):
+                assembly.add(
+                    create_corner_block(),
+                    name=f"corner_block_{iz}_{ix}_{iy}",
+                    loc=cq.Location(cq.Vector(px, py, pz)),
+                )
 
 
 def _add_rods(assembly: cq.Assembly) -> None:
