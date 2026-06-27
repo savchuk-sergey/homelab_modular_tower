@@ -112,7 +112,33 @@ def create_mini_pc_tray() -> cq.Workplane:
         cfg.MINI_PC_POWER_WINDOW_DEPTH,
         cfg.MINI_PC_POWER_WINDOW_HEIGHT,
     ).translate((cfg.MINI_PC_POWER_WINDOW_X, cfg.TRAY_DEPTH / 2 - cfg.MINI_PC_POWER_WINDOW_REAR_INSET, cfg.MINI_PC_POWER_WINDOW_Z))
-    return tray.union(device).union(heat_zone).cut(power_window)
+    tray = tray.union(device).union(heat_zone).cut(power_window)
+    tray = tray.faces(">Z").workplane().pushPoints([(cfg.TRAY_STOP_OFFSET_X, cfg.TRAY_STOP_OFFSET_Y)]).slot2D(
+        cfg.MINI_PC_TRAY_STOP_SLOT_LENGTH,
+        cfg.TRAY_STOP_SLOT_WIDTH,
+        90,
+    ).cutThruAll()
+    return tray
+
+
+def make_tray_stop() -> cq.Workplane:
+    """Create the mk0.5 screw-and-washer stop for the Mini PC service travel."""
+    bracket = cq.Workplane("XY").box(
+        cfg.TRAY_STOP_WASHER_DIAMETER + cfg.TRAY_STOP_THICKNESS * 2,
+        cfg.TRAY_STOP_THICKNESS,
+        cfg.TRAY_STOP_HEIGHT,
+    )
+    washer = cq.Solid.makeCylinder(
+        cfg.TRAY_STOP_WASHER_DIAMETER / 2,
+        cfg.TRAY_STOP_THICKNESS,
+        cq.Vector(0, cfg.TRAY_STOP_THICKNESS / 2, cfg.TRAY_STOP_HEIGHT / 2),
+        cq.Vector(0, 1, 0),
+    )
+    stop = bracket.union(cq.Workplane("XY").add(washer))
+    stop = stop.faces(">Y").workplane(centerOption="CenterOfBoundBox").circle(
+        cfg.TRAY_STOP_SCREW_DIAMETER / 2
+    ).cutThruAll()
+    return stop.tag("tray_stop")
 
 
 TRAY_FACTORIES = {

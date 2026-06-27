@@ -41,7 +41,7 @@ def _add_guide_rails(assembly: cq.Assembly) -> None:
 
 def _add_feet(assembly: cq.Assembly) -> None:
     names = ["front_left", "front_right", "rear_right", "rear_left"]
-    for index, (px, py) in enumerate(rod_positions()):
+    for index, (px, py) in enumerate(feet.wide_foot_positions()):
         assembly.add(
             feet.make_foot(),
             name=f"foot_{names[index]}",
@@ -93,6 +93,11 @@ def _add_module_stack(assembly: cq.Assembly) -> None:
             ),
         )
         current_z += units * cfg.UNIT_HEIGHT
+
+
+def _mini_pc_tray_z() -> float:
+    lower_stack_height = sum(units for _, units in cfg.TRAY_STACK[:-1]) * cfg.UNIT_HEIGHT
+    return cfg.STACK_START_Z + lower_stack_height
 
 
 def _add_side_panels(assembly: cq.Assembly) -> None:
@@ -167,6 +172,11 @@ def _mini_pc_duct_z() -> float:
 def build_assembly() -> cq.Assembly:
     assembly = cq.Assembly(name="homelab_modular_tower_v1")
 
+    assembly.add(
+        feet.make_base_stability_plate(),
+        name="base_stability_plate",
+        loc=cq.Location(cq.Vector(0, 0, cfg.BASE_STABILITY_Z)),
+    )
     assembly.add(make_bottom_structural_frame(), name="bottom_structural_frame", loc=cq.Location(cq.Vector(0, 0, 0)))
     assembly.add(make_top_structural_frame(), name="top_structural_frame", loc=cq.Location(cq.Vector(0, 0, cfg.TOWER_HEIGHT)))
     _add_corner_blocks(assembly)
@@ -174,6 +184,17 @@ def build_assembly() -> cq.Assembly:
     _add_guide_rails(assembly)
     _add_feet(assembly)
     _add_module_stack(assembly)
+    assembly.add(
+        modules.make_tray_stop(),
+        name="mini_pc_tray_stop",
+        loc=cq.Location(
+            cq.Vector(
+                cfg.TRAY_X + cfg.TRAY_STOP_OFFSET_X,
+                cfg.TRAY_Y + cfg.TRAY_STOP_OFFSET_Y,
+                _mini_pc_tray_z() + cfg.TRAY_STOP_HEIGHT / 2,
+            )
+        ),
+    )
     _add_side_panels(assembly)
     _add_rear_service_area(assembly)
 
