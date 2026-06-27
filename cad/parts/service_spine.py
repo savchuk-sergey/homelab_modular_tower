@@ -8,7 +8,6 @@ from .. import config as cfg
 def create_power_bus_panel() -> cq.Workplane:
     panel = cq.Workplane("XY").box(cfg.POWER_BUS_WIDTH, cfg.POWER_BUS_THICKNESS, cfg.POWER_BUS_HEIGHT)
     for _, z in cfg.POWER_BUS_RAIL_LABELS:
-        # TODO: replace generic pads with exact terminal/fuse/DC-DC footprints.
         panel = panel.union(
             cq.Workplane("XY")
             .box(cfg.POWER_BUS_PAD_WIDTH, cfg.POWER_BUS_PAD_DEPTH, cfg.POWER_BUS_PAD_HEIGHT)
@@ -18,11 +17,48 @@ def create_power_bus_panel() -> cq.Workplane:
             [(-cfg.POWER_BUS_PAD_SCREW_OFFSET_X, z), (cfg.POWER_BUS_PAD_SCREW_OFFSET_X, z)]
         ).hole(cfg.M3_CLEARANCE)
     for x, z, width, height, _ in cfg.POWER_BUS_CONNECTOR_ZONES:
-        # TODO: replace these windows with exact connector retention geometry.
         panel = panel.faces("<Y").workplane(centerOption="CenterOfBoundBox").center(x, z).rect(width, height).cutBlind(
             -cfg.POWER_BUS_CONNECTOR_CUT_DEPTH
         )
+    divider = cq.Workplane("XY").box(
+        cfg.POWER_BUS_GUARD_RAIL_WIDTH,
+        cfg.POWER_BUS_GUARD_RAIL_DEPTH,
+        cfg.POWER_BUS_HEIGHT,
+    ).translate((cfg.POWER_BUS_SIGNAL_DIVIDER_X, -cfg.POWER_BUS_THICKNESS / 2, 0))
+    panel = panel.union(divider)
+    for z in cfg.POWER_BUS_STRAIN_RELIEF_Z:
+        clamp = cq.Workplane("XY").box(
+            cfg.POWER_BUS_STRAIN_RELIEF_WIDTH,
+            cfg.POWER_BUS_STRAIN_RELIEF_DEPTH,
+            cfg.POWER_BUS_STRAIN_RELIEF_HEIGHT,
+        ).translate((0, -cfg.POWER_BUS_THICKNESS, z))
+        panel = panel.union(clamp)
+        panel = panel.faces("<Y").workplane(centerOption="CenterOfBoundBox").pushPoints([(0, z)]).slot2D(
+            cfg.SPINE_CABLE_TIE_SLOT_HEIGHT,
+            cfg.SPINE_CABLE_TIE_SLOT_WIDTH,
+            0,
+        ).cutThruAll()
     return panel
+
+
+def create_power_bus_cover() -> cq.Workplane:
+    cover = cq.Workplane("XY").box(
+        cfg.POWER_BUS_COVER_WIDTH,
+        cfg.POWER_BUS_COVER_THICKNESS,
+        cfg.POWER_BUS_COVER_HEIGHT,
+    )
+    rail_x = cfg.POWER_BUS_COVER_WIDTH / 2 - cfg.POWER_BUS_GUARD_RAIL_WIDTH / 2
+    for x in (-rail_x, rail_x):
+        cover = cover.union(
+            cq.Workplane("XY")
+            .box(cfg.POWER_BUS_GUARD_RAIL_WIDTH, cfg.POWER_BUS_GUARD_RAIL_DEPTH, cfg.POWER_BUS_COVER_HEIGHT)
+            .translate((x, -cfg.POWER_BUS_COVER_THICKNESS / 2, 0))
+        )
+    for _, z in cfg.POWER_BUS_RAIL_LABELS:
+        cover = cover.faces(">Y").workplane(centerOption="CenterOfBoundBox").pushPoints([(0, z)]).hole(
+            cfg.M3_CLEARANCE
+        )
+    return cover.tag("power_bus_cover")
 
 
 def create_rear_service_spine() -> cq.Workplane:
@@ -50,11 +86,18 @@ def create_rear_service_spine() -> cq.Workplane:
     spine = spine.union(separator.translate((cfg.REAR_SPINE_POWER_ZONE_WIDTH / 2, 0, 0)))
 
     rib_y = -cfg.REAR_SPINE_DEPTH / 2 + cfg.REAR_SPINE_STRUCTURAL_WALL / 2
-    for x in (-cfg.REAR_SPINE_WIDTH / 4, cfg.REAR_SPINE_WIDTH / 4):
+    for x in cfg.REAR_SPINE_BACKBONE_RIB_X:
         spine = spine.union(
             cq.Workplane("XY")
             .box(cfg.REAR_SPINE_RIB_THICKNESS, cfg.REAR_SPINE_RIB_HEIGHT, cfg.REAR_SPINE_HEIGHT)
             .translate((x, rib_y, 0))
+        )
+
+    for z in cfg.REAR_SPINE_HORIZONTAL_TIE_Z:
+        spine = spine.union(
+            cq.Workplane("XY")
+            .box(cfg.REAR_SPINE_WIDTH, cfg.REAR_SPINE_HORIZONTAL_TIE_DEPTH, cfg.REAR_SPINE_HORIZONTAL_TIE_HEIGHT)
+            .translate((0, rib_y, z))
         )
 
     rail_x = cfg.REAR_SPINE_WIDTH / 2 - cfg.REAR_SPINE_COVER_RAIL_WIDTH / 2
@@ -86,6 +129,17 @@ def create_rear_service_spine() -> cq.Workplane:
         spine = spine.faces(">Y").workplane(centerOption="CenterOfBoundBox").pushPoints([(0, z)]).hole(
             cfg.REAR_SPINE_MOUNT_HOLE_DIAMETER
         )
+        for x in (-cfg.REAR_SPINE_SIDE_MOUNT_X, cfg.REAR_SPINE_SIDE_MOUNT_X):
+            side_tab = (
+                cq.Workplane("XY")
+                .box(
+                    cfg.REAR_SPINE_SIDE_MOUNT_WIDTH,
+                    cfg.REAR_SPINE_SIDE_MOUNT_DEPTH,
+                    cfg.REAR_SPINE_SIDE_MOUNT_HEIGHT,
+                )
+                .translate((x, cfg.REAR_SPINE_DEPTH / 2, z))
+            )
+            spine = spine.union(side_tab)
 
     for z in cfg.REAR_SPINE_FRAME_TAB_Z:
         for x in (-cfg.REAR_SPINE_WIDTH / 2, cfg.REAR_SPINE_WIDTH / 2):

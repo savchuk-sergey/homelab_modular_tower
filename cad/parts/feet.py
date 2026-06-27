@@ -31,16 +31,16 @@ def _rib(length: float, width: float, height: float, x: float, y: float) -> cq.W
     return rib.translate((x, y, -cfg.BASE_STABILITY_THICKNESS / 2 - height / 2))
 
 
-def _add_base_ribs(base: cq.Workplane) -> cq.Workplane:
+def _add_base_ribs(base: cq.Workplane, width: float, depth: float) -> cq.Workplane:
     rib_h = cfg.BASE_STABILITY_RIB_HEIGHT
     rib_t = cfg.BASE_STABILITY_RIB_THICKNESS
     inset = cfg.BASE_STABILITY_PERIMETER_RIB_INSET
-    x_len = cfg.BASE_STABILITY_WIDTH - 2 * inset
-    y_len = cfg.BASE_STABILITY_DEPTH - 2 * inset
+    x_len = width - 2 * inset
+    y_len = depth - 2 * inset
 
-    for y in (-(cfg.BASE_STABILITY_DEPTH / 2 - inset), cfg.BASE_STABILITY_DEPTH / 2 - inset):
+    for y in (-(depth / 2 - inset), depth / 2 - inset):
         base = base.union(_rib(x_len, rib_t, rib_h, 0, y))
-    for x in (-(cfg.BASE_STABILITY_WIDTH / 2 - inset), cfg.BASE_STABILITY_WIDTH / 2 - inset):
+    for x in (-(width / 2 - inset), width / 2 - inset):
         base = base.union(_rib(rib_t, y_len, rib_h, x, 0))
 
     fan = cfg.BASE_STABILITY_FAN_RIB_OFFSET
@@ -51,8 +51,87 @@ def _add_base_ribs(base: cq.Workplane) -> cq.Workplane:
     return base
 
 
+def _cut_intake(part: cq.Workplane) -> cq.Workplane:
+    intake = (
+        cq.Workplane("XY")
+        .circle(cfg.BASE_STABILITY_FAN_CLEARANCE_DIAMETER / 2)
+        .extrude(cfg.BASE_STABILITY_THICKNESS + cfg.BASE_STABILITY_RIB_HEIGHT + cfg.FILLET_RADIUS * 2)
+        .translate((0, 0, -cfg.BASE_STABILITY_RIB_HEIGHT / 2 - cfg.FILLET_RADIUS))
+    )
+    return part.cut(intake)
+
+
+def _add_frame_mounts(part: cq.Workplane) -> cq.Workplane:
+    for x, y in rod_positions():
+        part = part.faces(">Z").workplane().pushPoints([(x, y)]).hole(cfg.ROD_CLEARANCE)
+
+    frame_mounts = []
+    for x in (-cfg.BASE_STABILITY_FRAME_MOUNT_X, cfg.BASE_STABILITY_FRAME_MOUNT_X):
+        for y in (-cfg.BASE_STABILITY_FRAME_MOUNT_Y, cfg.BASE_STABILITY_FRAME_MOUNT_Y):
+            frame_mounts.append((x, y))
+    return part.faces(">Z").workplane().pushPoints(frame_mounts).hole(cfg.M3_CLEARANCE)
+
+
+def _add_wing_fasteners(part: cq.Workplane, horizontal: bool) -> cq.Workplane:
+    points = []
+    spacing = cfg.BASE_WING_FASTENER_SPACING / 2
+    edge = cfg.BASE_WING_FASTENER_OFFSET
+    if horizontal:
+        for x in (-spacing, spacing):
+            for y in (-edge, edge):
+                points.append((x, y))
+    else:
+        for x in (-edge, edge):
+            for y in (-spacing, spacing):
+                points.append((x, y))
+    return part.faces(">Z").workplane().pushPoints(points).hole(cfg.M3_CLEARANCE)
+
+
+def _make_base_section(width: float, depth: float, name: str, include_intake: bool = False) -> cq.Workplane:
+    part = (
+        cq.Workplane("XY")
+        .box(width, depth, cfg.BASE_STABILITY_THICKNESS)
+        .edges("|Z")
+        .chamfer(cfg.BASE_STABILITY_CORNER_RADIUS)
+    )
+    if include_intake:
+        part = _cut_intake(part)
+    return part.tag(name)
+
+
+def make_central_bottom_fan_frame() -> cq.Workplane:
+    section = _make_base_section(
+        cfg.BASE_CENTER_FRAME_WIDTH,
+        cfg.BASE_CENTER_FRAME_DEPTH,
+        "central_bottom_fan_frame",
+        include_intake=True,
+    )
+    section = _add_frame_mounts(section)
+    return _add_base_ribs(section, cfg.BASE_CENTER_FRAME_WIDTH, cfg.BASE_CENTER_FRAME_DEPTH)
+
+
+def make_left_foot_extension() -> cq.Workplane:
+    section = _make_base_section(cfg.FOOT_EXTENSION_X + cfg.BASE_WING_OVERLAP, cfg.OUTER_DEPTH, "left_foot_extension")
+    return _add_wing_fasteners(section, horizontal=False)
+
+
+def make_right_foot_extension() -> cq.Workplane:
+    section = _make_base_section(cfg.FOOT_EXTENSION_X + cfg.BASE_WING_OVERLAP, cfg.OUTER_DEPTH, "right_foot_extension")
+    return _add_wing_fasteners(section, horizontal=False)
+
+
+def make_front_stability_wing() -> cq.Workplane:
+    section = _make_base_section(cfg.BASE_STABILITY_WIDTH, cfg.FOOT_EXTENSION_Y + cfg.BASE_WING_OVERLAP, "front_stability_wing")
+    return _add_wing_fasteners(section, horizontal=True)
+
+
+def make_rear_stability_wing() -> cq.Workplane:
+    section = _make_base_section(cfg.BASE_STABILITY_WIDTH, cfg.FOOT_EXTENSION_Y + cfg.BASE_WING_OVERLAP, "rear_stability_wing")
+    return _add_wing_fasteners(section, horizontal=True)
+
+
 def make_base_stability_plate() -> cq.Workplane:
-    """Create mk0.5 expanded structural base without blocking the 120 mm intake."""
+    """Create assembled mk0.6 sectional stability base without blocking the 120 mm intake."""
     base = (
         cq.Workplane("XY")
         .box(cfg.BASE_STABILITY_WIDTH, cfg.BASE_STABILITY_DEPTH, cfg.BASE_STABILITY_THICKNESS)
@@ -60,22 +139,8 @@ def make_base_stability_plate() -> cq.Workplane:
         .chamfer(cfg.BASE_STABILITY_CORNER_RADIUS)
     )
 
-    intake = (
-        cq.Workplane("XY")
-        .circle(cfg.BASE_STABILITY_FAN_CLEARANCE_DIAMETER / 2)
-        .extrude(cfg.BASE_STABILITY_THICKNESS + cfg.BASE_STABILITY_RIB_HEIGHT + cfg.FILLET_RADIUS * 2)
-        .translate((0, 0, -cfg.BASE_STABILITY_RIB_HEIGHT / 2 - cfg.FILLET_RADIUS))
-    )
-    base = base.cut(intake)
-
-    for x, y in rod_positions():
-        base = base.faces(">Z").workplane().pushPoints([(x, y)]).hole(cfg.ROD_CLEARANCE)
-
-    frame_mounts = []
-    for x in (-cfg.BASE_STABILITY_FRAME_MOUNT_X, cfg.BASE_STABILITY_FRAME_MOUNT_X):
-        for y in (-cfg.BASE_STABILITY_FRAME_MOUNT_Y, cfg.BASE_STABILITY_FRAME_MOUNT_Y):
-            frame_mounts.append((x, y))
-    base = base.faces(">Z").workplane().pushPoints(frame_mounts).hole(cfg.M3_CLEARANCE)
+    base = _cut_intake(base)
+    base = _add_frame_mounts(base)
 
     for x, y in wide_foot_positions():
         socket_cut = (
@@ -92,7 +157,7 @@ def make_base_stability_plate() -> cq.Workplane:
         )
         base = base.cut(socket_cut).cut(screw_cut)
 
-    return _add_base_ribs(base).tag("base_stability_plate")
+    return _add_base_ribs(base, cfg.BASE_STABILITY_WIDTH, cfg.BASE_STABILITY_DEPTH).tag("base_stability_plate")
 
 
 def make_wide_tpu_foot_placeholder() -> cq.Workplane:

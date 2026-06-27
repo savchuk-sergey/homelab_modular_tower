@@ -118,6 +118,50 @@ def make_carriage_front_plate(plate_height: float) -> cq.Workplane:
     return plate
 
 
+def make_tray_handle(plate_height: float) -> cq.Workplane:
+    return make_carriage_front_plate(plate_height)
+
+
+def make_tray_front_lock() -> cq.Workplane:
+    return make_carriage_lock_boss()
+
+
+def make_tray_rear_stop() -> cq.Workplane:
+    return (
+        cq.Workplane("XY")
+        .box(cfg.TRAY_WIDTH - cfg.TRAY_BACK_STOP_WIDTH_INSET, cfg.TRAY_STOP_DEPTH, cfg.TRAY_BACK_STOP_HEIGHT)
+        .translate(
+            (
+                0,
+                cfg.TRAY_DEPTH / 2 - cfg.TRAY_STOP_DEPTH / 2,
+                cfg.TRAY_BASE_THICKNESS / 2 + cfg.TRAY_BACK_STOP_HEIGHT / 2,
+            )
+        )
+    )
+
+
+def make_tray_cable_exit() -> cq.Workplane:
+    cut_height = cfg.TRAY_STRUCTURAL_CLEARANCE_HEIGHT
+    cut_z = cut_height / 2 - cfg.UNIT_HEIGHT
+    return cq.Workplane("XY").box(
+        cfg.REAR_CABLE_EXIT_WIDTH,
+        cfg.TRAY_REAR_SERVICE_CUTOUT_DEPTH,
+        cut_height,
+    ).translate((0, cfg.TRAY_DEPTH / 2 - cfg.TRAY_REAR_SERVICE_CUTOUT_DEPTH / 2, cut_z))
+
+
+def make_module_rails() -> cq.Workplane:
+    rails = cq.Workplane("XY")
+    rail_z = cfg.TRAY_BASE_THICKNESS / 2 + cfg.TRAY_BASE_RIB_HEIGHT / 2
+    for x in (-cfg.RAIL_OFFSET_X, cfg.RAIL_OFFSET_X):
+        rails = rails.union(
+            cq.Workplane("XY")
+            .box(cfg.TRAY_BASE_RIB_WIDTH, cfg.TRAY_DEPTH - cfg.TRAY_BASE_RIB_LENGTH_INSET, cfg.TRAY_BASE_RIB_HEIGHT)
+            .translate((x, 0, rail_z))
+        )
+    return rails
+
+
 def cut_structural_clearances(part: cq.Workplane) -> cq.Workplane:
     """Keep carriages clear of rods, guide rails, and the rear service spine."""
     cut_height = cfg.TRAY_STRUCTURAL_CLEARANCE_HEIGHT
@@ -129,12 +173,7 @@ def cut_structural_clearances(part: cq.Workplane) -> cq.Workplane:
         for y in (-y_edge, y_edge):
             part = part.cut(cq.Workplane("XY").box(corner, corner, cut_height).translate((x, y, cut_z)))
 
-    service_cut = cq.Workplane("XY").box(
-        cfg.TRAY_REAR_SERVICE_CUTOUT_WIDTH,
-        cfg.TRAY_REAR_SERVICE_CUTOUT_DEPTH,
-        cut_height,
-    ).translate((0, cfg.TRAY_DEPTH / 2 - cfg.TRAY_REAR_SERVICE_CUTOUT_DEPTH / 2, cut_z))
-    part = part.cut(service_cut)
+    part = part.cut(make_tray_cable_exit())
 
     for x in (-cfg.METAL_RAIL_X_OFFSET, cfg.METAL_RAIL_X_OFFSET):
         for y in (cfg.METAL_RAIL_Y_FRONT, cfg.METAL_RAIL_Y_REAR):
@@ -159,18 +198,8 @@ def create_carriage(name: str, height_units: float, ventilation: bool = True, fr
     right = cq.Workplane("XY").box(cfg.TRAY_SIDE_WALL, cfg.TRAY_DEPTH, cfg.TRAY_SIDE_HEIGHT).translate(
         (cfg.TRAY_WIDTH / 2 - cfg.TRAY_SIDE_WALL / 2, 0, side_z)
     )
-    front = make_carriage_front_plate(min(tray_height, cfg.CARRIAGE_FRONT_PLATE_HEIGHT))
-    back_stops = (
-        cq.Workplane("XY")
-        .box(cfg.TRAY_WIDTH - cfg.TRAY_BACK_STOP_WIDTH_INSET, cfg.TRAY_SIDE_WALL, cfg.TRAY_BACK_STOP_HEIGHT)
-        .translate(
-            (
-                0,
-                cfg.TRAY_DEPTH / 2 - cfg.TRAY_SIDE_WALL / 2,
-                cfg.TRAY_BASE_THICKNESS / 2 + cfg.TRAY_BACK_STOP_HEIGHT / 2,
-            )
-        )
-    )
+    front = make_tray_handle(min(tray_height, cfg.CARRIAGE_FRONT_PLATE_HEIGHT))
+    back_stops = make_tray_rear_stop()
     tray = base.union(left).union(right).union(front).union(back_stops)
     tray = tray.union(make_anti_slide_tab())
 
@@ -191,13 +220,7 @@ def create_carriage(name: str, height_units: float, ventilation: bool = True, fr
         )
         tray = tray.union(connector_zone)
 
-    # Longitudinal ribs keep tray bases flat in PETG.
-    for x in cfg.TRAY_BASE_RIB_X:
-        tray = tray.union(
-            cq.Workplane("XY")
-            .box(cfg.TRAY_BASE_RIB_WIDTH, cfg.TRAY_DEPTH - cfg.TRAY_BASE_RIB_LENGTH_INSET, cfg.TRAY_BASE_RIB_HEIGHT)
-            .translate((x, 0, cfg.TRAY_BASE_RIB_Z))
-        )
+    tray = tray.union(make_module_rails())
 
     if ventilation:
         tray = cut_vent_slots(
@@ -213,6 +236,15 @@ def create_carriage(name: str, height_units: float, ventilation: bool = True, fr
     return tray.tag(name)
 
 
+def make_standard_tray_base(
+    name: str,
+    height_units: float,
+    ventilation: bool = True,
+    front_handle: bool = True,
+) -> cq.Workplane:
+    return create_carriage(name, height_units, ventilation=ventilation, front_handle=front_handle)
+
+
 def make_module_tray(name: str, height_units: float, ventilation: bool = True, front_handle: bool = True) -> cq.Workplane:
     """mk0.3 standardized blade module tray factory."""
-    return create_carriage(name, height_units, ventilation=ventilation, front_handle=front_handle)
+    return make_standard_tray_base(name, height_units, ventilation=ventilation, front_handle=front_handle)
