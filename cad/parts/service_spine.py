@@ -42,6 +42,32 @@ def create_rear_service_spine() -> cq.Workplane:
         ).translate((0, 0, z))
         spine = spine.cut(window)
 
+    separator = cq.Workplane("XY").box(
+        cfg.REAR_SPINE_WALL_THICKNESS,
+        cfg.REAR_SPINE_DEPTH - 2 * cfg.REAR_SPINE_WALL_THICKNESS,
+        cfg.REAR_SPINE_HEIGHT - cfg.REAR_SPINE_CHANNEL_HEIGHT_MARGIN,
+    )
+    spine = spine.union(separator.translate((cfg.REAR_SPINE_POWER_ZONE_WIDTH / 2, 0, 0)))
+
+    rail_x = cfg.REAR_SPINE_WIDTH / 2 - cfg.REAR_SPINE_COVER_RAIL_WIDTH / 2
+    rail_y = cfg.REAR_SPINE_DEPTH / 2 - cfg.REAR_SPINE_COVER_RAIL_DEPTH / 2
+    for x in (-rail_x, rail_x):
+        spine = spine.union(
+            cq.Workplane("XY")
+            .box(cfg.REAR_SPINE_COVER_RAIL_WIDTH, cfg.REAR_SPINE_COVER_RAIL_DEPTH, cfg.REAR_SPINE_HEIGHT)
+            .translate((x, rail_y, 0))
+        )
+
+    for x in cfg.REAR_SPINE_TIE_SLOT_X:
+        for z in cfg.REAR_SPINE_TIE_SLOT_Z:
+            spine = (
+                spine.faces(">Y")
+                .workplane(centerOption="CenterOfBoundBox")
+                .center(x, z)
+                .slot2D(cfg.REAR_SPINE_TIE_SLOT_HEIGHT, cfg.REAR_SPINE_TIE_SLOT_WIDTH, 90)
+                .cutThruAll()
+            )
+
     for z in cfg.REAR_SPINE_MOUNT_Z:
         spine = spine.faces(">Y").workplane(centerOption="CenterOfBoundBox").pushPoints([(0, z)]).hole(cfg.M3_CLEARANCE)
-    return spine
+    return spine.edges("|Y").chamfer(cfg.FILLET_RADIUS).tag("rear_service_spine")

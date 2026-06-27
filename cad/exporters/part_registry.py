@@ -2,14 +2,14 @@
 
 from ..parts import cooling, modules, service_spine, side_panels
 from ..parts.corner_blocks import create_corner_block
-from ..parts.frame import create_frame_bottom, create_frame_top
+from ..parts.frame import make_bottom_structural_frame, make_top_structural_frame
 from ..parts.rails import create_metal_guide_rail
 from ..parts.rods import create_m5_threaded_rod
 
 
 PARTS = {
-    "frame_top": create_frame_top,
-    "frame_bottom": create_frame_bottom,
+    "top_structural_frame": make_top_structural_frame,
+    "bottom_structural_frame": make_bottom_structural_frame,
     "corner_block": create_corner_block,
     "m5_threaded_rod": create_m5_threaded_rod,
     "metal_guide_rail": create_metal_guide_rail,
@@ -23,7 +23,7 @@ PARTS = {
     "rear_service_spine": service_spine.create_rear_service_spine,
     "left_side_panel": side_panels.create_left_side_panel,
     "right_side_panel": side_panels.create_right_side_panel,
-    "bottom_fan_panel": cooling.create_bottom_fan_panel,
-    "top_fan_panel": cooling.create_top_fan_panel,
-    "mini_pc_airflow_duct": cooling.create_mini_pc_airflow_duct,
+    "bottom_fan_grille": cooling.make_bottom_fan_grille,
+    "top_fan_grille": cooling.make_top_fan_grille,
+    "mini_pc_airflow_duct_placeholder": cooling.make_mini_pc_airflow_duct_placeholder,
 }

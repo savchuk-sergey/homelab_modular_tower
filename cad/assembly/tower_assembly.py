@@ -3,9 +3,9 @@
 import cadquery as cq
 
 from .. import config as cfg
-from ..parts import cooling, modules, service_spine, side_panels
+from ..parts import cooling, modules, placeholders, service_spine, side_panels
 from ..parts.corner_blocks import create_corner_block
-from ..parts.frame import create_frame_bottom, create_frame_top
+from ..parts.frame import make_bottom_structural_frame, make_top_structural_frame
 from ..parts.rails import create_metal_guide_rail, guide_rail_positions
 from ..parts.rods import create_m5_threaded_rod, rod_positions
 
@@ -20,13 +20,12 @@ def _add_corner_blocks(assembly: cq.Assembly) -> None:
 
 
 def _add_rods(assembly: cq.Assembly) -> None:
-    rod_z = -cfg.ROD_LENGTH / 2 + cfg.TOWER_HEIGHT / 2
     names = ["front_left", "front_right", "rear_right", "rear_left"]
     for index, (px, py) in enumerate(rod_positions()):
         assembly.add(
             create_m5_threaded_rod(),
             name=f"m5_threaded_rod_{names[index]}",
-            loc=cq.Location(cq.Vector(px, py, rod_z)),
+            loc=cq.Location(cq.Vector(px, py, 0)),
         )
 
 
@@ -41,10 +40,48 @@ def _add_guide_rails(assembly: cq.Assembly) -> None:
 
 
 def _add_module_stack(assembly: cq.Assembly) -> None:
+    placeholder_factories = {
+        "ups_power_tray": (
+            placeholders.make_ups_placeholder,
+            (cfg.UPS_PLACEHOLDER_LOC[0], cfg.UPS_PLACEHOLDER_LOC[1], cfg.TRAY_BASE_THICKNESS + cfg.UPS_PLACEHOLDER_HEIGHT / 2),
+        ),
+        "external_ssd_bay": (
+            placeholders.make_external_ssd_placeholder,
+            (cfg.SSD_POCKET_X, cfg.SSD_POCKET_Y, cfg.TRAY_BASE_THICKNESS + cfg.EXTERNAL_SSD_PLACEHOLDER_HEIGHT / 2),
+        ),
+        "ssd_expansion_tray": (
+            placeholders.make_ssd_expansion_placeholder,
+            (cfg.SSD_EXPANSION_PLACEHOLDER_LOC[0], cfg.SSD_EXPANSION_PLACEHOLDER_LOC[1], cfg.TRAY_BASE_THICKNESS + cfg.SSD_EXPANSION_PLACEHOLDER_HEIGHT / 2),
+        ),
+        "raspberry_pi_tray": (
+            placeholders.make_raspberry_pi_placeholder,
+            (cfg.RASPBERRY_PI_PLACEHOLDER_LOC[0], cfg.RASPBERRY_PI_PLACEHOLDER_LOC[1], cfg.TRAY_BASE_THICKNESS + cfg.RASPBERRY_PI_PLACEHOLDER_HEIGHT / 2),
+        ),
+        "mikrotik_tray": (
+            placeholders.make_mikrotik_placeholder,
+            (cfg.MIKROTIK_PLACEHOLDER_LOC[0], cfg.MIKROTIK_PLACEHOLDER_LOC[1], cfg.TRAY_BASE_THICKNESS + cfg.MIKROTIK_PLACEHOLDER_HEIGHT / 2),
+        ),
+        "mini_pc_tray": (
+            placeholders.make_mini_pc_placeholder,
+            (cfg.MINI_PC_PLACEHOLDER_LOC[0], cfg.MINI_PC_PLACEHOLDER_LOC[1], cfg.TRAY_BASE_THICKNESS + cfg.MINI_PC_PLACEHOLDER_HEIGHT / 2),
+        ),
+    }
     current_z = cfg.STACK_START_Z
     for name, units in cfg.TRAY_STACK:
         tray = modules.TRAY_FACTORIES[name]()
         assembly.add(tray, name=name, loc=cq.Location(cq.Vector(cfg.TRAY_X, cfg.TRAY_Y, current_z)))
+        placeholder_factory, local_offset = placeholder_factories[name]
+        assembly.add(
+            placeholder_factory(),
+            name=f"{name}_device_placeholder",
+            loc=cq.Location(
+                cq.Vector(
+                    cfg.TRAY_X + local_offset[0],
+                    cfg.TRAY_Y + local_offset[1],
+                    current_z + local_offset[2],
+                )
+            ),
+        )
         current_z += units * cfg.UNIT_HEIGHT
 
 
@@ -82,6 +119,11 @@ def _add_rear_service_area(assembly: cq.Assembly) -> None:
         name="power_bus_panel",
         loc=cq.Location(cq.Vector(0, rear_y - cfg.POWER_BUS_PANEL_OFFSET_Y, cfg.TOWER_HEIGHT / 2)),
     )
+    assembly.add(
+        placeholders.make_power_bus_zone_placeholder(),
+        name="power_bus_zone_placeholder",
+        loc=cq.Location(cq.Vector(0, rear_y - cfg.POWER_BUS_PANEL_OFFSET_Y, cfg.TOWER_HEIGHT / 2)),
+    )
 
 
 def _mini_pc_duct_z() -> float:
@@ -92,8 +134,8 @@ def _mini_pc_duct_z() -> float:
 def build_assembly() -> cq.Assembly:
     assembly = cq.Assembly(name="homelab_modular_tower_v1")
 
-    assembly.add(create_frame_bottom(), name="frame_bottom", loc=cq.Location(cq.Vector(0, 0, 0)))
-    assembly.add(create_frame_top(), name="frame_top", loc=cq.Location(cq.Vector(0, 0, cfg.TOWER_HEIGHT)))
+    assembly.add(make_bottom_structural_frame(), name="bottom_structural_frame", loc=cq.Location(cq.Vector(0, 0, 0)))
+    assembly.add(make_top_structural_frame(), name="top_structural_frame", loc=cq.Location(cq.Vector(0, 0, cfg.TOWER_HEIGHT)))
     _add_corner_blocks(assembly)
     _add_rods(assembly)
     _add_guide_rails(assembly)
@@ -101,15 +143,15 @@ def build_assembly() -> cq.Assembly:
     _add_side_panels(assembly)
     _add_rear_service_area(assembly)
 
-    assembly.add(cooling.create_bottom_fan_panel(), name="bottom_fan_panel", loc=cq.Location(cq.Vector(0, 0, cfg.BOTTOM_FAN_PANEL_Z)))
+    assembly.add(cooling.make_bottom_fan_grille(), name="bottom_fan_grille", loc=cq.Location(cq.Vector(0, 0, cfg.BOTTOM_FAN_PANEL_Z)))
     assembly.add(
-        cooling.create_top_fan_panel(),
-        name="top_fan_panel",
+        cooling.make_top_fan_grille(),
+        name="top_fan_grille",
         loc=cq.Location(cq.Vector(0, 0, cfg.TOWER_HEIGHT + cfg.TOP_FAN_PANEL_Z_OFFSET)),
     )
     assembly.add(
-        cooling.create_mini_pc_airflow_duct(),
-        name="mini_pc_airflow_duct",
+        cooling.make_mini_pc_airflow_duct_placeholder(),
+        name="mini_pc_airflow_duct_placeholder",
         loc=cq.Location(cq.Vector(cfg.MINI_PC_DUCT_ASSEMBLY_X, cfg.MINI_PC_DUCT_ASSEMBLY_Y, _mini_pc_duct_z())),
     )
 

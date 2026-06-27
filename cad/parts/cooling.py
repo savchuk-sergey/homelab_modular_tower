@@ -5,47 +5,47 @@ import cadquery as cq
 from .. import config as cfg
 
 
-def create_fan_panel(name: str, intake_filter: bool = False) -> cq.Workplane:
-    panel = cq.Workplane("XY").box(cfg.OUTER_WIDTH, cfg.OUTER_DEPTH, cfg.FAN_PANEL_THICKNESS)
-    panel = panel.faces(">Z").workplane().circle(cfg.FAN_SIZE / 2).cutThruAll()
+def make_fan_grille(name: str, intake_filter: bool = False) -> cq.Workplane:
+    grille = cq.Workplane("XY").box(cfg.OUTER_WIDTH, cfg.OUTER_DEPTH, cfg.FAN_GRILLE_THICKNESS)
+    grille = grille.faces(">Z").workplane().circle(cfg.FAN_SIZE / 2).cutThruAll()
 
     d = cfg.FAN_HOLE_SPACING / 2
     fan_screws = [(x, y) for x in (-d, d) for y in (-d, d)]
-    panel = panel.faces(">Z").workplane().pushPoints(fan_screws).hole(cfg.FAN_SCREW_DIAMETER)
+    grille = grille.faces(">Z").workplane().pushPoints(fan_screws).hole(cfg.FAN_SCREW_DIAMETER)
 
     for x in cfg.FAN_GRILLE_BAR_X:
-        panel = panel.union(
+        grille = grille.union(
             cq.Workplane("XY")
-            .box(cfg.FAN_GRILLE_BAR_WIDTH, cfg.FAN_SIZE - cfg.FAN_GRILLE_BAR_LENGTH_INSET, cfg.FAN_PANEL_THICKNESS)
+            .box(cfg.FAN_GRILLE_BAR_WIDTH, cfg.FAN_SIZE - cfg.FAN_GRILLE_BAR_LENGTH_INSET, cfg.FAN_GRILLE_THICKNESS)
             .translate((x, 0, 0))
         )
     for y in cfg.FAN_GRILLE_BAR_Y:
-        panel = panel.union(
+        grille = grille.union(
             cq.Workplane("XY")
-            .box(cfg.FAN_SIZE - cfg.FAN_GRILLE_BAR_LENGTH_INSET, cfg.FAN_GRILLE_BAR_WIDTH, cfg.FAN_PANEL_THICKNESS)
+            .box(cfg.FAN_SIZE - cfg.FAN_GRILLE_BAR_LENGTH_INSET, cfg.FAN_GRILLE_BAR_WIDTH, cfg.FAN_GRILLE_THICKNESS)
             .translate((0, y, 0))
         )
 
     if intake_filter:
         rail_y = cfg.FAN_SIZE / 2 + cfg.FILTER_RAIL_OFFSET
         for y in (-rail_y, rail_y):
-            panel = panel.union(
+            grille = grille.union(
                 cq.Workplane("XY")
                 .box(cfg.FAN_SIZE + cfg.FILTER_RAIL_LENGTH_ALLOWANCE, cfg.FILTER_RAIL_WIDTH, cfg.FILTER_RAIL_HEIGHT)
-                .translate((0, y, cfg.FAN_PANEL_THICKNESS / 2 + cfg.FILTER_RAIL_HEIGHT / 2))
+                .translate((0, y, cfg.FAN_GRILLE_THICKNESS / 2 + cfg.FILTER_RAIL_HEIGHT / 2))
             )
-    return panel.edges("|Z").chamfer(cfg.FAN_PANEL_EDGE_CHAMFER).tag(name)
+    return grille.edges("|Z").chamfer(cfg.FAN_PANEL_EDGE_CHAMFER).tag(name)
 
 
-def create_bottom_fan_panel() -> cq.Workplane:
-    return create_fan_panel("bottom_fan_panel", intake_filter=True)
+def make_bottom_fan_grille() -> cq.Workplane:
+    return make_fan_grille("bottom_fan_grille", intake_filter=True)
 
 
-def create_top_fan_panel() -> cq.Workplane:
-    return create_fan_panel("top_fan_panel", intake_filter=False)
+def make_top_fan_grille() -> cq.Workplane:
+    return make_fan_grille("top_fan_grille", intake_filter=False)
 
 
-def create_mini_pc_airflow_duct() -> cq.Workplane:
+def make_mini_pc_airflow_duct_placeholder() -> cq.Workplane:
     outer = cq.Workplane("XY").box(cfg.DUCT_WIDTH, cfg.DUCT_DEPTH, cfg.DUCT_HEIGHT)
     inner = cq.Workplane("XY").box(
         cfg.DUCT_WIDTH - 2 * cfg.DUCT_WALL,
@@ -64,3 +64,19 @@ def create_mini_pc_airflow_duct() -> cq.Workplane:
             [(x, -cfg.DUCT_DEPTH / 2 + cfg.DUCT_TAB_OFFSET_Y)]
         ).hole(cfg.M3_CLEARANCE)
     return duct.edges("|Z").chamfer(cfg.DUCT_EDGE_CHAMFER)
+
+
+def create_fan_panel(name: str, intake_filter: bool = False) -> cq.Workplane:
+    return make_fan_grille(name, intake_filter=intake_filter)
+
+
+def create_bottom_fan_panel() -> cq.Workplane:
+    return make_bottom_fan_grille()
+
+
+def create_top_fan_panel() -> cq.Workplane:
+    return make_top_fan_grille()
+
+
+def create_mini_pc_airflow_duct() -> cq.Workplane:
+    return make_mini_pc_airflow_duct_placeholder()

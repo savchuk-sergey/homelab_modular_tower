@@ -35,7 +35,7 @@ def make_carriage_handle_cutout() -> cq.Workplane:
 
 
 def make_carriage_lock_boss() -> cq.Workplane:
-    """Internal M3-ready boss for a future screw, TPU plug, latch, or magnet."""
+    """Internal M3 heat-set-insert boss for the standardized front lock screw."""
     boss_y = -cfg.TRAY_DEPTH / 2 + cfg.CARRIAGE_FRONT_PLATE_THICKNESS + cfg.CARRIAGE_LOCK_BOSS_THICKNESS / 2
     boss_z = cfg.TRAY_BASE_THICKNESS + cfg.CARRIAGE_LOCK_OFFSET_Y
     boss = cq.Solid.makeCylinder(
@@ -44,7 +44,33 @@ def make_carriage_lock_boss() -> cq.Workplane:
         cq.Vector(cfg.CARRIAGE_LOCK_OFFSET_X, boss_y - cfg.CARRIAGE_LOCK_BOSS_THICKNESS / 2, boss_z),
         cq.Vector(0, 1, 0),
     )
-    return cq.Workplane("XY").add(boss)
+    boss_part = cq.Workplane("XY").add(boss)
+    insert_cutter = cq.Solid.makeCylinder(
+        cfg.MODULE_LOCK_INSERT_OUTER_DIAMETER / 2,
+        cfg.MODULE_LOCK_INSERT_DEPTH,
+        cq.Vector(cfg.CARRIAGE_LOCK_OFFSET_X, boss_y - cfg.MODULE_LOCK_INSERT_DEPTH / 2, boss_z),
+        cq.Vector(0, 1, 0),
+    )
+    return boss_part.cut(cq.Workplane("XY").add(insert_cutter))
+
+
+def make_anti_slide_tab() -> cq.Workplane:
+    """Small front underside stop that resists accidental forward tray walk-out."""
+    return (
+        cq.Workplane("XY")
+        .box(
+            cfg.MODULE_LOCK_ANTI_SLIDE_TAB_WIDTH,
+            cfg.MODULE_LOCK_ANTI_SLIDE_TAB_DEPTH,
+            cfg.MODULE_LOCK_ANTI_SLIDE_TAB_HEIGHT,
+        )
+        .translate(
+            (
+                0,
+                -cfg.TRAY_DEPTH / 2 + cfg.CARRIAGE_FRONT_PLATE_THICKNESS + cfg.MODULE_LOCK_ANTI_SLIDE_TAB_DEPTH / 2,
+                -cfg.MODULE_LOCK_ANTI_SLIDE_TAB_HEIGHT / 2,
+            )
+        )
+    )
 
 
 def make_carriage_front_plate(plate_height: float) -> cq.Workplane:
@@ -89,7 +115,7 @@ def make_carriage_front_plate(plate_height: float) -> cq.Workplane:
     plate = plate.faces("<Y").workplane(centerOption="CenterOfBoundBox").pushPoints(
         [(cfg.CARRIAGE_LOCK_OFFSET_X, lock_hole_z)]
     ).hole(cfg.CARRIAGE_LOCK_HOLE_DIAMETER)
-    return plate.edges("|Y").fillet(cfg.CARRIAGE_HANDLE_FILLET)
+    return plate
 
 
 def cut_structural_clearances(part: cq.Workplane) -> cq.Workplane:
@@ -146,6 +172,7 @@ def create_carriage(name: str, height_units: float, ventilation: bool = True, fr
         )
     )
     tray = base.union(left).union(right).union(front).union(back_stops)
+    tray = tray.union(make_anti_slide_tab())
 
     if not front_handle:
         tray = tray.cut(front)
@@ -183,4 +210,9 @@ def create_carriage(name: str, height_units: float, ventilation: bool = True, fr
 
     tray = add_mounting_holes(tray)
     tray = cut_structural_clearances(tray)
-    return tray
+    return tray.tag(name)
+
+
+def make_module_tray(name: str, height_units: float, ventilation: bool = True, front_handle: bool = True) -> cq.Workplane:
+    """mk0.3 standardized blade module tray factory."""
+    return create_carriage(name, height_units, ventilation=ventilation, front_handle=front_handle)
