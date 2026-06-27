@@ -8,6 +8,8 @@
 - Side panel orientation and rail clearance are CAD-coherent but not physically validated.
 - Coupon STLs exist, but every coupon result remains `NOT TESTED` until a physical print is inspected.
 - Mockup mass reduction is CAD/export validated only; reduced walls and ribs still need coupon and rough-assembly feedback before being treated as production geometry.
+- M3 screw lengths remain `TBD after stack check`; mk0.7.4 identifies hardware classes and counts but does not claim final screw lengths.
+- Tray ledge misassembly is controlled by a table, not by a physical jig; a jig or indexed rail may still be needed after mockup feedback.
 
 ## Deferred Non-Goals
 

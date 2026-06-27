@@ -39,3 +39,11 @@ Decision: use explicit `MOCKUP_*` parameters for draft-print mass reduction inst
 Reason: mk0.7.4 needs a printable rough mockup without making the long-term production intent ambiguous. Central base sections, stability wings, tray bodies, side-panel ribs, rear spine depth, and fan grilles are reduced for mockup economics while metal rods, metal guide rails, screw clearances, frame rings, and module spacing remain unchanged.
 
 Tradeoff: the reduced parts are suitable for fit and assembly validation, not for final load or abuse testing. Mini PC and UPS trays still require conservative handling until coupon and rough mockup results exist.
+
+## Tray Ledge Assembly Control
+
+Decision: keep individual tray support ledges for mk0.7.4 and control misassembly risk with an indexed installation table rather than adding a new jig or redesigning the ledges into long support rails.
+
+Reason: Chunk 5 is intended to close rough-mockup assembly ambiguity without expanding CAD scope. A dimensioned Z table is enough for a controlled mockup and preserves the existing modular ledge standard until physical feedback exists.
+
+Tradeoff: assembly remains more error-prone than a future indexed rail or jig. If ledge placement is confusing during mockup assembly, mk0.7.5 should replace this with a printed spacing gauge or longer indexed support rail.

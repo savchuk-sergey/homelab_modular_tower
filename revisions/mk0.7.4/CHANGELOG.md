@@ -6,6 +6,7 @@
 - Added parameterized split-joint socket dimensions.
 - Added coupon test plan for high-risk fit and print interfaces.
 - Added explicit `MOCKUP_*` mass-reduction parameters.
+- Added rough-mockup fastener BOM and assembly sequence.
 
 ## Changed
 
@@ -21,4 +22,4 @@
 
 ## Pending
 
-- Fastener BOM, assembly sequence, and print plan.
+- Print plan.
