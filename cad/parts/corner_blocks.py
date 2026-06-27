@@ -21,8 +21,8 @@ def create_corner_block() -> cq.Workplane:
     )
 
     # These service holes are through-holes so side panels can be removed without disturbing the rod stack.
-    block = block.faces(">X").workplane().pushPoints(cfg.CORNER_BLOCK_PANEL_HOLE_POINTS).hole(cfg.M3_CLEARANCE)
-    block = block.faces(">Y").workplane().pushPoints(cfg.CORNER_BLOCK_PANEL_HOLE_POINTS).hole(cfg.M3_CLEARANCE)
+    for face in (">X", "<X", ">Y", "<Y"):
+        block = block.faces(face).workplane().pushPoints(cfg.CORNER_BLOCK_PANEL_HOLE_POINTS).hole(cfg.M3_CLEARANCE)
     rib_z = -cfg.CORNER_BLOCK_HEIGHT / 2 + cfg.CORNER_BLOCK_RIB_HEIGHT / 2
     block = block.union(
         cq.Workplane("XY")
@@ -42,8 +42,8 @@ def create_corner_blocks_in_place() -> cq.Assembly:
     x = cfg.OUTER_WIDTH / 2 - cfg.CORNER_BLOCK_SIZE / 2
     y = cfg.OUTER_DEPTH / 2 - cfg.CORNER_BLOCK_SIZE / 2
     z_positions = (
-        cfg.FRAME_THICKNESS / 2,
-        cfg.TOWER_HEIGHT - cfg.FRAME_THICKNESS / 2,
+        cfg.BOTTOM_CORNER_BLOCK_Z,
+        cfg.TOP_CORNER_BLOCK_Z,
     )
     for iz, pz in enumerate(z_positions):
         for ix, px in enumerate([-x, x]):

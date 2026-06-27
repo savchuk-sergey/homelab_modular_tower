@@ -7,7 +7,34 @@ from .rails import guide_rail_positions
 from .rods import rod_positions
 
 
-def create_frame_ring(name: str, z_height: float = cfg.FRAME_THICKNESS) -> cq.Workplane:
+def _add_rod_stack_seats(ring: cq.Workplane, top_nut: bool) -> cq.Workplane:
+    """Cut rod clearance plus the outer nut and inner washer seats."""
+    for x, y in rod_positions():
+        ring = ring.faces(">Z").workplane().pushPoints([(x, y)]).hole(cfg.ROD_CLEARANCE)
+        ring = ring.faces("<Z").workplane().pushPoints([(x, y)]).hole(cfg.ROD_CLEARANCE)
+
+        if top_nut:
+            ring = ring.faces(">Z").workplane().pushPoints([(x, y)]).polygon(
+                cfg.M5_NUT_SIDES, cfg.M5_NUT_FLAT_DIAMETER
+            ).cutBlind(-cfg.M5_NUT_SEAT_DEPTH)
+            ring = ring.faces("<Z").workplane().pushPoints([(x, y)]).circle(
+                cfg.M5_WASHER_DIAMETER / 2
+            ).cutBlind(-cfg.M5_WASHER_SEAT_DEPTH)
+        else:
+            ring = ring.faces(">Z").workplane().pushPoints([(x, y)]).circle(
+                cfg.M5_WASHER_DIAMETER / 2
+            ).cutBlind(-cfg.M5_WASHER_SEAT_DEPTH)
+            ring = ring.faces("<Z").workplane().pushPoints([(x, y)]).polygon(
+                cfg.M5_NUT_SIDES, cfg.M5_NUT_FLAT_DIAMETER
+            ).cutBlind(-cfg.M5_NUT_SEAT_DEPTH)
+    return ring
+
+
+def create_frame_ring(
+    name: str,
+    z_height: float = cfg.FRAME_THICKNESS,
+    top_nut: bool = False,
+) -> cq.Workplane:
     """Create the top or bottom structural rectangular ring."""
     outer = cq.Workplane("XY").box(cfg.OUTER_WIDTH, cfg.OUTER_DEPTH, z_height)
     inner = cq.Workplane("XY").box(
@@ -17,14 +44,7 @@ def create_frame_ring(name: str, z_height: float = cfg.FRAME_THICKNESS) -> cq.Wo
     )
     ring = outer.cut(inner)
 
-    for x, y in rod_positions():
-        ring = ring.faces(">Z").workplane().pushPoints([(x, y)]).hole(cfg.ROD_CLEARANCE)
-        ring = ring.faces(">Z").workplane().pushPoints([(x, y)]).circle(
-            cfg.M5_WASHER_DIAMETER / 2
-        ).cutBlind(-cfg.M5_WASHER_SEAT_DEPTH)
-        ring = ring.faces("<Z").workplane().pushPoints([(x, y)]).polygon(
-            cfg.M5_NUT_SIDES, cfg.M5_NUT_FLAT_DIAMETER
-        ).cutBlind(-cfg.M5_NUT_SEAT_DEPTH)
+    ring = _add_rod_stack_seats(ring, top_nut=top_nut)
 
     for x, y in guide_rail_positions():
         ring = ring.faces(">Z").workplane().pushPoints([(x, y)]).rect(
@@ -44,7 +64,7 @@ def create_frame_ring(name: str, z_height: float = cfg.FRAME_THICKNESS) -> cq.Wo
 
 
 def make_top_structural_frame() -> cq.Workplane:
-    return create_frame_ring("frame_top")
+    return create_frame_ring("frame_top", top_nut=True)
 
 
 def make_bottom_structural_frame() -> cq.Workplane:
