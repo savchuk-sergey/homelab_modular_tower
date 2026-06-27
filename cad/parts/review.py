@@ -11,7 +11,7 @@ def _arrow(name: str, height: float) -> cq.Workplane:
     head = cq.Solid.makeCone(
         cfg.AIRFLOW_ARROW_DIAMETER,
         0.0,
-        cfg.AIRFLOW_ARROW_DIAMETER * 1.6,
+        cfg.AIRFLOW_ARROW_DIAMETER * cfg.AIRFLOW_ARROW_HEAD_HEIGHT_RATIO,
         cq.Vector(0, 0, height),
         cq.Vector(0, 0, 1),
     )
@@ -42,7 +42,7 @@ def make_bottom_intake_open_area_review() -> cq.Workplane:
 
 def make_mini_pc_airflow_path_review() -> cq.Workplane:
     return _arrow("mini_pc_airflow_path_review", cfg.AIRFLOW_ARROW_HEIGHT).rotate(
-        (0, 0, 0), (1, 0, 0), 90
+        (0, 0, 0), (1, 0, 0), cfg.AIRFLOW_ARROW_SIDE_ROTATION_DEG
     ).translate((cfg.MINI_PC_AIRFLOW_ARROW_X, cfg.MINI_PC_AIRFLOW_ARROW_Y, cfg.STABILITY_COM_Z))
 
 

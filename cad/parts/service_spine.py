@@ -55,9 +55,9 @@ def create_power_bus_cover() -> cq.Workplane:
             .translate((x, -cfg.POWER_BUS_COVER_THICKNESS / 2, 0))
         )
     for _, z in cfg.POWER_BUS_RAIL_LABELS:
-        cover = cover.faces(">Y").workplane(centerOption="CenterOfBoundBox").pushPoints([(0, z)]).hole(
-            cfg.M3_CLEARANCE
-        )
+        cover = cover.faces(">Y").workplane(centerOption="CenterOfBoundBox").pushPoints(
+            [(-cfg.POWER_BUS_PAD_SCREW_OFFSET_X, z), (cfg.POWER_BUS_PAD_SCREW_OFFSET_X, z)]
+        ).hole(cfg.M3_CLEARANCE)
     return cover.tag("power_bus_cover")
 
 

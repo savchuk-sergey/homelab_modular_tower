@@ -14,7 +14,7 @@ else:
 
 
 MANIFEST_TARGETS = {
-    "PRINTABLE_PARTS.md": ("Printable Plastic Parts", "printable/plastic"),
+    "PRINTABLE_PARTS.md": ("Printable Parts", "printable"),
     "NON_PRINTABLE_PARTS.md": ("Non-Printable Reference Parts", "non_printable"),
     "PLACEHOLDERS.md": ("Device and Fan Placeholders", "placeholders"),
     "REVIEW_GEOMETRY.md": ("Review Geometry", "review"),

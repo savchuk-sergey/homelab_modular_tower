@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import shutil
 import sys
+import zipfile
 from pathlib import Path
 
 if __package__ in (None, ""):
@@ -52,11 +53,21 @@ else:
 
 REVISION_NOTE_FILES = (
     "REVISION.md",
+    "REVISION_NOTES.md",
     "CALCULATIONS.md",
     "DECISIONS.md",
     "KNOWN_ISSUES.md",
+    "KNOWN_LIMITATIONS.md",
     "CHANGELOG.md",
+    "CHANGELOG_FROM_MK0.7.md",
     "MANIFEST.md",
+    "REVIEW_FINDINGS_INPUT.md",
+    "MK0.7.1_SCOPE.md",
+    "MK0.7.1_SELF_CHECK.md",
+    "PRINTABLE_PARTS.md",
+    "NON_PRINTABLE_PARTS.md",
+    "PLACEHOLDERS.md",
+    "REVIEW_GEOMETRY.md",
 )
 
 
@@ -67,11 +78,9 @@ def generate_review_package(revision: str, refresh_exports: bool = False) -> Pat
     require_exports(revision)
 
     package = review_package_dir(revision)
-    if package.exists():
-        shutil.rmtree(package)
-    package.mkdir(parents=True)
+    package.mkdir(parents=True, exist_ok=True)
 
-    copytree_replace(exports_dir(revision), package / "exports")
+    _copy_optional_tree(exports_dir(revision), package / "exports")
     _copy_optional_tree(REPO_ROOT / "renders" / revision, package / "renders")
     _copy_optional_tree(REPO_ROOT / "drawings" / revision, package / "drawings")
     _copy_revision_notes(revision, package)
@@ -84,16 +93,22 @@ def generate_review_package(revision: str, refresh_exports: bool = False) -> Pat
         detect_duplicate_geometry(revision),
     ]
     manifest_outputs = generate_parts_manifest(revision)
+    _copy_analysis_outputs(csv_outputs, package)
+    _copy_manifest_outputs(manifest_outputs, package)
     checklist = _write_requirements_checklist(revision, package, csv_outputs, manifest_outputs)
     overview = _write_assembly_overview(revision, package)
     review_inputs = _write_review_inputs(revision, csv_outputs, manifest_outputs, checklist, overview)
     copy_file_if_exists(review_inputs, package / "revision_notes" / "REVIEW_INPUTS.md")
+    _write_package_zip(revision, package)
     return package
 
 
 def _copy_optional_tree(source: Path, destination: Path) -> None:
-    if source.exists():
+    if source.exists() and not destination.exists():
         copytree_replace(source, destination)
+        return
+    if source.exists():
+        _copy_missing_files(source, destination)
         return
     destination.mkdir(parents=True, exist_ok=True)
     (destination / "README.md").write_text(
@@ -102,12 +117,38 @@ def _copy_optional_tree(source: Path, destination: Path) -> None:
     )
 
 
+def _copy_missing_files(source: Path, destination: Path) -> None:
+    destination.mkdir(parents=True, exist_ok=True)
+    for path in source.rglob("*"):
+        if not path.is_file():
+            continue
+        target = destination / path.relative_to(source)
+        if target.exists():
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(path, target)
+
+
 def _copy_revision_notes(revision: str, package: Path) -> None:
     notes_dir = package / "revision_notes"
     notes_dir.mkdir(parents=True, exist_ok=True)
     source_dir = revision_dir(revision)
     for filename in REVISION_NOTE_FILES:
         copy_file_if_exists(source_dir / filename, notes_dir / filename)
+
+
+def _copy_analysis_outputs(outputs: list[Path], package: Path) -> None:
+    analysis = package / "analysis"
+    analysis.mkdir(parents=True, exist_ok=True)
+    for path in outputs:
+        copy_file_if_exists(path, analysis / path.name)
+
+
+def _copy_manifest_outputs(outputs: list[Path], package: Path) -> None:
+    manifests = package / "manifests"
+    manifests.mkdir(parents=True, exist_ok=True)
+    for path in outputs:
+        copy_file_if_exists(path, manifests / path.name)
 
 
 def _write_requirements_checklist(revision: str, package: Path, csv_outputs: list[Path], manifests: list[Path]) -> Path:
@@ -193,7 +234,7 @@ def _write_review_inputs(
         "",
         "- `part_dimensions.csv`: bounding boxes for STL and STEP exports where the file could be parsed.",
         "- `printability_check.csv`: axis-aligned printable STL dimensions compared with configured Bambu Lab P2S volume and long-thin geometry flags.",
-        "- `part_volume.csv`: mesh solid volume and PETG/PLA mass estimates from printable STL files.",
+        "- `plastic_estimate.csv`: mesh solid volume and PETG/PLA mass estimates from printable STL files.",
         "- `stl_quality.csv`: STL triangle count plus watertight/manifold indicators from edge counting.",
         "- `duplicate_geometry_check.csv`: geometry hash and near-duplicate grouping based on STL geometry, bounding box and volume.",
         "",
@@ -228,6 +269,18 @@ def _write_review_inputs(
         lines.append(f"- `{relative_to_repo(path)}`")
     output.write_text("\n".join(lines), encoding="utf-8")
     return output
+
+
+def _write_package_zip(revision: str, package: Path) -> Path:
+    zip_path = package / f"{revision}_review_package.zip"
+    if zip_path.exists():
+        zip_path.unlink()
+    with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        for path in sorted(package.rglob("*")):
+            if path == zip_path or not path.is_file():
+                continue
+            archive.write(path, path.relative_to(package))
+    return zip_path
 
 
 def main() -> None:

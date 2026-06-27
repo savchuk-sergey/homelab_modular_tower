@@ -58,7 +58,16 @@ def make_bottom_fan_cartridge() -> cq.Workplane:
     fan_screws = [(x, y) for x in (-d, d) for y in (-d, d)]
     cartridge = cartridge.faces(">Z").workplane().pushPoints(fan_screws).hole(cfg.FAN_120_HOLE_DIAMETER)
 
-    rail_y = cfg.BOTTOM_FAN_CARTRIDGE_DEPTH / 2 + cfg.BOTTOM_FAN_CARTRIDGE_RAIL_WIDTH / 2
+    rail_y = (
+        cfg.BOTTOM_FAN_CARTRIDGE_DEPTH / 2
+        + cfg.BOTTOM_FAN_CARTRIDGE_RAIL_WIDTH / 2
+        - cfg.BOTTOM_FAN_CARTRIDGE_FEATURE_OVERLAP
+    )
+    rail_z = (
+        cfg.BOTTOM_FAN_CARTRIDGE_HEIGHT / 2
+        + cfg.BOTTOM_FAN_CARTRIDGE_RAIL_HEIGHT / 2
+        - cfg.BOTTOM_FAN_CARTRIDGE_FEATURE_OVERLAP
+    )
     for y in (-rail_y, rail_y):
         cartridge = cartridge.union(
             cq.Workplane("XY")
@@ -67,7 +76,7 @@ def make_bottom_fan_cartridge() -> cq.Workplane:
                 cfg.BOTTOM_FAN_CARTRIDGE_RAIL_WIDTH,
                 cfg.BOTTOM_FAN_CARTRIDGE_RAIL_HEIGHT,
             )
-            .translate((0, y, cfg.BOTTOM_FAN_CARTRIDGE_HEIGHT / 2 + cfg.BOTTOM_FAN_CARTRIDGE_RAIL_HEIGHT / 2))
+            .translate((0, y, rail_z))
         )
 
     handle = cq.Workplane("XY").box(
@@ -79,8 +88,8 @@ def make_bottom_fan_cartridge() -> cq.Workplane:
         handle.translate(
             (
                 0,
-                -cfg.BOTTOM_FAN_CARTRIDGE_DEPTH / 2 - cfg.BOTTOM_FAN_CARTRIDGE_SERVICE_PULL / 2,
-                cfg.BOTTOM_FAN_CARTRIDGE_HEIGHT / 2,
+                -rail_y,
+                rail_z,
             )
         )
     )

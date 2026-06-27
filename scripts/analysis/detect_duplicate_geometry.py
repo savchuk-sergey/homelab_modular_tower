@@ -53,7 +53,7 @@ def detect_duplicate_geometry(revision: str) -> Path:
             stats = mesh_stats(path)
             sorted_sizes = sorted((stats.size_x, stats.size_y, stats.size_z))
             near_key = tuple(round(value / cfg.DUPLICATE_BBOX_TOLERANCE_MM) * cfg.DUPLICATE_BBOX_TOLERANCE_MM for value in sorted_sizes)
-            volume_key = round(stats.volume_mm3 / cfg.DUPLICATE_VOLUME_TOLERANCE_MM) * cfg.DUPLICATE_VOLUME_TOLERANCE_MM
+            volume_key = round(stats.volume_mm3 / cfg.DUPLICATE_VOLUME_TOLERANCE_MM3) * cfg.DUPLICATE_VOLUME_TOLERANCE_MM3
             full_near_key = (*near_key, volume_key)
             row.update(
                 {

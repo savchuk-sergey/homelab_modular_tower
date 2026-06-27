@@ -42,7 +42,18 @@ def make_fan_120_placeholder() -> cq.Workplane:
         cfg.FAN_120_HOLE_DIAMETER
     )
     hub = cq.Workplane("XY").circle(cfg.FAN_120_HUB_DIAMETER / 2).extrude(cfg.FAN_120_KEEP_OUT_HEIGHT)
-    return fan.union(hub.translate((0, 0, -cfg.FAN_120_THICKNESS / 2))).tag("fan_120x120x25_placeholder")
+    airflow_marker = cq.Solid.makeCone(
+        cfg.FAN_120_AIRFLOW_MARKER_DIAMETER,
+        0.0,
+        cfg.FAN_120_AIRFLOW_MARKER_HEIGHT,
+        cq.Vector(0, 0, cfg.FAN_120_AIRFLOW_MARKER_Z_OFFSET),
+        cq.Vector(0, 0, 1),
+    )
+    return (
+        fan.union(hub.translate((0, 0, -cfg.FAN_120_THICKNESS / 2)))
+        .union(cq.Workplane("XY").add(airflow_marker))
+        .tag("fan_120x120x25_placeholder")
+    )
 
 
 def make_raspberry_pi_3b_placeholder() -> cq.Workplane:
