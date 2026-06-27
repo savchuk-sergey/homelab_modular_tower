@@ -56,6 +56,7 @@ PARTS = {
     "ssd_placeholder": placeholders.make_external_ssd_placeholder,
     "ssd_expansion_placeholder": placeholders.make_ssd_expansion_placeholder,
     "ups_placeholder": placeholders.make_ups_placeholder,
+    "power_bus_zone_placeholder": placeholders.make_power_bus_zone_placeholder,
     "mini_pc_airflow_duct": cooling.make_mini_pc_airflow_duct_placeholder,
     "mini_pc_airflow_duct_placeholder": cooling.make_mini_pc_airflow_duct_placeholder,
     "bottom_intake_open_area_review": review.make_bottom_intake_open_area_review,
@@ -69,8 +70,6 @@ PARTS = {
 
 EXPORT_CATEGORIES = {
     "printable/plastic": {
-        "frame_top": make_top_structural_frame,
-        "frame_bottom": make_bottom_structural_frame,
         "top_structural_frame": make_top_structural_frame,
         "bottom_structural_frame": make_bottom_structural_frame,
         "corner_block": create_corner_block,
@@ -80,7 +79,6 @@ EXPORT_CATEGORIES = {
         "front_stability_wing": feet.make_front_stability_wing,
         "rear_stability_wing": feet.make_rear_stability_wing,
         "foot_socket": feet.make_foot_socket,
-        "foot": feet.make_foot,
         "ups_power_tray": modules.create_ups_power_tray,
         "external_ssd_bay": modules.create_external_ssd_bay,
         "ssd_expansion_tray": modules.create_ssd_expansion_tray,
@@ -105,6 +103,9 @@ EXPORT_CATEGORIES = {
         "bottom_filter_retainer": cooling.make_bottom_filter_retainer,
         "mini_pc_airflow_duct": cooling.make_mini_pc_airflow_duct_placeholder,
     },
+    "printable/tpu": {
+        "foot": feet.make_foot,
+    },
     "non_printable/metal_reference": {
         "m5_threaded_rod": create_m5_threaded_rod,
         "metal_guide_rail": create_metal_guide_rail,
@@ -116,6 +117,7 @@ EXPORT_CATEGORIES = {
         "ssd_placeholder": placeholders.make_external_ssd_placeholder,
         "ssd_expansion_placeholder": placeholders.make_ssd_expansion_placeholder,
         "ups_placeholder": placeholders.make_ups_placeholder,
+        "power_bus_zone_placeholder": placeholders.make_power_bus_zone_placeholder,
     },
     "placeholders/fans": {
         "fan_120x120x25_placeholder": placeholders.make_fan_120_placeholder,
