@@ -23,31 +23,67 @@ def side_panel_tile_center_z(index: int, height_units: float = 1.0) -> float:
     )
 
 
-def _make_side_panel_frame(length: float, height: float) -> cq.Workplane:
+def _is_structural_section(index: int) -> bool:
+    return index in cfg.SIDE_SHEAR_PANEL_STRUCTURAL_SECTIONS
+
+
+def _panel_thickness(index: int) -> float:
+    if _is_structural_section(index):
+        return cfg.SIDE_SHEAR_PANEL_THICKNESS
+    return cfg.SIDE_PANEL_THICKNESS
+
+
+def _rib_height(index: int) -> float:
+    if _is_structural_section(index):
+        return cfg.SIDE_SHEAR_PANEL_RIB_HEIGHT
+    return cfg.SIDE_PANEL_RIB_HEIGHT
+
+
+def _rib_width(index: int) -> float:
+    if _is_structural_section(index):
+        return cfg.SIDE_SHEAR_PANEL_RIB_THICKNESS
+    return cfg.SIDE_PANEL_RIB_WIDTH
+
+
+def _make_side_panel_frame(length: float, height: float, index: int) -> cq.Workplane:
     rail = cfg.SIDE_PANEL_FRAME_WIDTH
-    y = cfg.SIDE_PANEL_THICKNESS / 2 + cfg.SIDE_PANEL_RIB_HEIGHT / 2
+    thickness = _panel_thickness(index)
+    rib_height = _rib_height(index)
+    y = thickness / 2 + rib_height / 2
     top_bottom = cq.Workplane("XY")
     for z in (-(height - rail) / 2, (height - rail) / 2):
-        top_bottom = top_bottom.union(cq.Workplane("XY").box(length, cfg.SIDE_PANEL_RIB_HEIGHT, rail).translate((0, y, z)))
+        top_bottom = top_bottom.union(cq.Workplane("XY").box(length, rib_height, rail).translate((0, y, z)))
 
     sides = cq.Workplane("XY")
     for x in (-(length - rail) / 2, (length - rail) / 2):
-        sides = sides.union(cq.Workplane("XY").box(rail, cfg.SIDE_PANEL_RIB_HEIGHT, height).translate((x, y, 0)))
-    return top_bottom.union(sides)
+        sides = sides.union(cq.Workplane("XY").box(rail, rib_height, height).translate((x, y, 0)))
+    frame = top_bottom.union(sides)
+    if _is_structural_section(index):
+        overlap_y = thickness / 2 + rib_height + cfg.SIDE_PANEL_OVERLAP / 2
+        for z in (-(height - rail) / 2, (height - rail) / 2):
+            frame = frame.union(
+                cq.Workplane("XY")
+                .box(length, cfg.SIDE_PANEL_OVERLAP, cfg.SIDE_SHEAR_PANEL_OVERLAP_RIB_WIDTH)
+                .translate((0, overlap_y, z))
+            )
+    return frame
 
 
-def _make_side_panel_ribs(length: float, height: float) -> cq.Workplane:
+def _make_side_panel_ribs(length: float, height: float, index: int) -> cq.Workplane:
     rib_length = length - 2 * cfg.SIDE_PANEL_FRAME_WIDTH
     rib_height = height - 2 * cfg.SIDE_PANEL_FRAME_WIDTH
     diagonal = (rib_length**2 + rib_height**2) ** 0.5
     angle = math.degrees(math.atan2(rib_height, rib_length))
-    y = cfg.SIDE_PANEL_THICKNESS / 2 + cfg.SIDE_PANEL_RIB_HEIGHT / 2
-    envelope = cq.Workplane("XY").box(rib_length, cfg.SIDE_PANEL_RIB_HEIGHT, rib_height).translate((0, y, 0))
+    panel_thickness = _panel_thickness(index)
+    rib_y_height = _rib_height(index)
+    rib_width = _rib_width(index)
+    y = panel_thickness / 2 + rib_y_height / 2
+    envelope = cq.Workplane("XY").box(rib_length, rib_y_height, rib_height).translate((0, y, 0))
     ribs = cq.Workplane("XY")
     for rib_angle in (-angle, angle):
         rib = (
             cq.Workplane("XY")
-            .box(diagonal, cfg.SIDE_PANEL_RIB_HEIGHT, cfg.SIDE_PANEL_RIB_WIDTH)
+            .box(diagonal, rib_y_height, rib_width)
             .rotate((0, 0, 0), (0, 1, 0), rib_angle)
             .translate((0, y, 0))
         )
@@ -61,18 +97,20 @@ def _mount_points(length: float, height: float) -> list[tuple[float, float]]:
     return [(-x, -z), (x, -z), (-x, z), (x, z)]
 
 
-def _make_side_panel_mounts(length: float, height: float) -> cq.Workplane:
-    y = cfg.SIDE_PANEL_THICKNESS / 2 + cfg.SIDE_PANEL_RIB_HEIGHT / 2
+def _make_side_panel_mounts(length: float, height: float, index: int) -> cq.Workplane:
+    thickness = _panel_thickness(index)
+    rib_height = _rib_height(index)
+    y = thickness / 2 + rib_height / 2
     mounts = cq.Workplane("XY")
     for px, pz in _mount_points(length, height):
         boss = cq.Solid.makeCylinder(
             cfg.SIDE_PANEL_MOUNT_BOSS_DIAMETER / 2,
-            cfg.SIDE_PANEL_RIB_HEIGHT,
-            cq.Vector(px, cfg.SIDE_PANEL_THICKNESS / 2, pz),
+            rib_height,
+            cq.Vector(px, thickness / 2, pz),
             cq.Vector(0, 1, 0),
         )
         mounts = mounts.union(cq.Workplane("XY").add(boss))
-    return mounts.translate((0, y - cfg.SIDE_PANEL_THICKNESS / 2 - cfg.SIDE_PANEL_RIB_HEIGHT / 2, 0))
+    return mounts.translate((0, y - thickness / 2 - rib_height / 2, 0))
 
 
 def _cut_side_panel_vents(panel: cq.Workplane, length: float, height: float, tile_center_z: float) -> cq.Workplane:
@@ -107,19 +145,24 @@ def _cut_side_panel_vents(panel: cq.Workplane, length: float, height: float, til
 def make_side_panel_tile(side: str, index: int, height_units: float = 1.0) -> cq.Workplane:
     length = side_panel_length()
     height = side_panel_tile_height(height_units)
+    thickness = _panel_thickness(index)
     panel = (
         cq.Workplane("XY")
-        .box(length, cfg.SIDE_PANEL_THICKNESS, height)
+        .box(length, thickness, height)
         .edges("|Z")
         .chamfer(cfg.SIDE_PANEL_CORNER_RADIUS)
     )
     panel = _cut_side_panel_vents(panel, length, height, side_panel_tile_center_z(index, height_units))
-    panel = panel.union(_make_side_panel_frame(length, height))
-    panel = panel.union(_make_side_panel_ribs(length, height))
-    panel = panel.union(_make_side_panel_mounts(length, height))
+    panel = panel.union(_make_side_panel_frame(length, height, index))
+    panel = panel.union(_make_side_panel_ribs(length, height, index))
+    panel = panel.union(_make_side_panel_mounts(length, height, index))
     panel = panel.faces(">Y").workplane(centerOption="CenterOfBoundBox").pushPoints(_mount_points(length, height)).hole(
-        cfg.SIDE_PANEL_MOUNT_HOLE_DIAMETER
+        cfg.SIDE_SHEAR_PANEL_MOUNT_HOLE_DIAMETER if _is_structural_section(index) else cfg.SIDE_PANEL_MOUNT_HOLE_DIAMETER
     )
+    if _is_structural_section(index):
+        panel = panel.faces(">Y").workplane(centerOption="CenterOfBoundBox").pushPoints(
+            _mount_points(length, height)
+        ).circle(cfg.SIDE_PANEL_INSERT_DIAMETER / 2).cutBlind(-cfg.SIDE_PANEL_INSERT_DEPTH)
     label = cfg.SIDE_PANEL_SECTION_LABELS[index]
     return panel.tag(f"{side}_side_panel_{label}")
 

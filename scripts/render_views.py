@@ -223,6 +223,34 @@ def _select_parts(items: list[RenderItem], selected_part: str | None) -> list[Re
     raise RenderError(f"Part '{selected_part}' was not found. Available parts:\n  {available}")
 
 
+def _translate_item(item: RenderItem, offset: Point3D, name_suffix: str) -> RenderItem:
+    ox, oy, oz = offset
+    triangles = [[(x + ox, y + oy, z + oz) for x, y, z in triangle] for triangle in item.triangles]
+    points = [(x + ox, y + oy, z + oz) for x, y, z in item.points]
+    return RenderItem(
+        name=f"{item.name}_{name_suffix}",
+        triangles=triangles,
+        points=points,
+        bbox=compute_bounding_box(points),
+    )
+
+
+def _mini_pc_service_review_items(items: list[RenderItem]) -> list[RenderItem]:
+    selected: list[RenderItem] = []
+    service_offset = (0.0, -cfg.MINI_PC_TRAY_SERVICE_TRAVEL, 0.0)
+    for item in items:
+        if item.name in {"mini_pc_tray", "mini_pc_tray_device_placeholder"}:
+            selected.append(_translate_item(item, service_offset, "service_position"))
+        elif (
+            "base_stability" in item.name
+            or "foot" in item.name
+            or "tray_stop" in item.name
+            or item.name == "bottom_structural_frame"
+        ):
+            selected.append(item)
+    return selected
+
+
 def _add_meshes_to_axis(ax, items: list[RenderItem]) -> None:
     for item in items:
         collection = Poly3DCollection(
@@ -545,12 +573,34 @@ def render_review_views(items: list[RenderItem], out_dir: Path, size: int, dpi: 
     review_dir = out_dir / "review"
     bbox = combine_bounding_boxes(item.bbox for item in items)
     review_sets = {
+        "stability_base": [
+            item
+            for item in items
+            if "base_stability" in item.name
+            or "foot" in item.name
+            or "bottom_fan" in item.name
+            or "bottom_structural_frame" in item.name
+            or "m5_threaded_rod" in item.name
+        ],
+        "torsion_frame": [
+            item
+            for item in items
+            if "m5_threaded_rod" in item.name
+            or "structural_frame" in item.name
+            or "rear_service_spine" in item.name
+            or "side_panel" in item.name
+            or "corner_block" in item.name
+        ],
+        "mini_pc_service_position": _mini_pc_service_review_items(items),
         "rear_spine_detail": [item for item in items if "spine" in item.name or "power_bus" in item.name],
         "module_extraction": [item for item in items if "tray" in item.name or "bay" in item.name or "placeholder" in item.name],
         "airflow_path": [item for item in items if "fan_grille" in item.name or "airflow" in item.name or "mini_pc" in item.name],
         "exploded_modules": [item for item in items if "tray" in item.name or "bay" in item.name],
     }
     review_views = {
+        "stability_base": VIEWS["top"],
+        "torsion_frame": VIEWS["isometric"],
+        "mini_pc_service_position": VIEWS["right"],
         "rear_spine_detail": VIEWS["rear"],
         "module_extraction": VIEWS["right"],
         "airflow_path": VIEWS["front"],
