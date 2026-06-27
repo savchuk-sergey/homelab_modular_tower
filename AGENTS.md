@@ -354,6 +354,16 @@ cad/mk1.1
 - по возможности сохранять обратную совместимость;
 - явно указывать, какие файлы изменены.
 
+## Промпты для Kimi Agents Swarm
+
+Если агенту нужно подготовить промпт для внешнего multi-agent engineering review в `Kimi Agents Swarm`, он должен использовать инструкцию:
+
+- `docs/KIMI_AGENTS_SWARM_PROMPT_GUIDE.md`
+
+Перед генерацией такого промпта агент должен учитывать существующую структуру ревью проекта, текущие review packages, аналитические CSV и предыдущие `reviews/mkX.Y/agent_outputs/`.
+
+Промпт для `Kimi Agents Swarm` должен требовать строгого инженерного ревью, evidence status (`CONFIRMED`, `LIKELY`, `UNCERTAIN`, `NEEDS TEST`), запрета на выдуманные CFD/FEA/slicing/physical tests и итогового решения `GO FOR FULL PRINT`, `GO FOR PARTIAL TEST PRINT` или `NO-GO UNTIL BLOCKERS ARE FIXED`.
+
 ## Главный рабочий контекст
 
 `AGENTS.md` является главным рабочим контекстом для LLM-агентов в проекте `homelab_modular_tower`.
