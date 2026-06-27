@@ -64,10 +64,21 @@ def create_rear_service_spine() -> cq.Workplane:
                 spine.faces(">Y")
                 .workplane(centerOption="CenterOfBoundBox")
                 .center(x, z)
-                .slot2D(cfg.REAR_SPINE_TIE_SLOT_HEIGHT, cfg.REAR_SPINE_TIE_SLOT_WIDTH, 90)
+                .slot2D(cfg.SPINE_CABLE_TIE_SLOT_HEIGHT, cfg.SPINE_CABLE_TIE_SLOT_WIDTH, 90)
                 .cutThruAll()
             )
 
     for z in cfg.REAR_SPINE_MOUNT_Z:
         spine = spine.faces(">Y").workplane(centerOption="CenterOfBoundBox").pushPoints([(0, z)]).hole(cfg.M3_CLEARANCE)
     return spine.edges("|Y").chamfer(cfg.FILLET_RADIUS).tag("rear_service_spine")
+
+
+def create_rear_service_spine_cover() -> cq.Workplane:
+    cover = cq.Workplane("XY").box(
+        cfg.REAR_SPINE_COVER_WIDTH,
+        cfg.SPINE_COVER_THICKNESS,
+        cfg.REAR_SPINE_COVER_HEIGHT,
+    )
+    for z in cfg.REAR_SPINE_COVER_MOUNT_Z:
+        cover = cover.faces(">Y").workplane(centerOption="CenterOfBoundBox").pushPoints([(0, z)]).hole(cfg.M3_CLEARANCE)
+    return cover.edges("|Z").chamfer(cfg.FILLET_RADIUS).tag("rear_service_spine_cover")

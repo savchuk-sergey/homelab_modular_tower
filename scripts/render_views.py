@@ -29,6 +29,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from cad import config as cfg
 from cad.assembly import build_assembly
+from cad.exporters.part_registry import PARTS
 
 
 VIEWS = {
@@ -193,6 +194,20 @@ def collect_render_items(tolerance: float) -> list[RenderItem]:
 
     if not items:
         raise RenderError("Assembly did not produce any renderable items.")
+    return items
+
+
+def collect_export_part_render_items(tolerance: float, existing_names: set[str]) -> list[RenderItem]:
+    items: list[RenderItem] = []
+    for name, factory in PARTS.items():
+        if name in existing_names:
+            continue
+        try:
+            shape = factory().val()
+        except Exception as exc:  # noqa: BLE001 - keep registry factory failures readable.
+            raise RenderError(f"Failed to build export part '{name}': {exc}") from exc
+        triangles, points = _shape_triangles(shape, tolerance, name)
+        items.append(RenderItem(name=name, triangles=triangles, points=points, bbox=compute_bounding_box(points)))
     return items
 
 
@@ -406,7 +421,8 @@ def render_assembly_drawing_sheet(
 
 
 def render_drawing_sheets(
-    items: list[RenderItem],
+    assembly_items: list[RenderItem],
+    part_items: list[RenderItem],
     out_dir: Path,
     target: str,
     selected_part: str | None,
@@ -420,11 +436,11 @@ def render_drawing_sheets(
 
     drawings_dir = out_dir / "drawings"
     if target in ("all", "assembly") and selected_part is None:
-        render_assembly_drawing_sheet(items, drawings_dir / "assembly.png", sheet_size, dpi, revision)
+        render_assembly_drawing_sheet(assembly_items, drawings_dir / "assembly.png", sheet_size, dpi, revision)
 
     if target in ("all", "parts") or selected_part is not None:
         parts_dir = drawings_dir / "parts"
-        for item in _select_parts(items, selected_part):
+        for item in _select_parts(part_items, selected_part):
             render_drawing_sheet(
                 item,
                 parts_dir / f"{sanitize_name(item.name)}.png",
@@ -558,7 +574,8 @@ def render_review_views(items: list[RenderItem], out_dir: Path, size: int, dpi: 
 
 
 def render_views(
-    items: list[RenderItem],
+    assembly_items: list[RenderItem],
+    part_items: list[RenderItem],
     out_dir: Path,
     target: str,
     selected_part: str | None,
@@ -569,11 +586,11 @@ def render_views(
         raise RenderError("--part can only be used with --target parts or --target all.")
 
     if target in ("all", "assembly") and selected_part is None:
-        render_assembly_views(items, out_dir, size, dpi)
+        render_assembly_views(assembly_items, out_dir, size, dpi)
     if target in ("all", "parts") or selected_part is not None:
-        render_part_views(items, out_dir, size, dpi, selected_part)
+        render_part_views(part_items, out_dir, size, dpi, selected_part)
     if target == "all" and selected_part is None:
-        render_review_views(items, out_dir, size, dpi)
+        render_review_views(assembly_items, out_dir, size, dpi)
 
 
 def parse_args() -> argparse.Namespace:
@@ -606,11 +623,16 @@ def main() -> int:
     out_dir = Path(args.out)
 
     try:
-        items = collect_render_items(args.tolerance)
+        assembly_items = collect_render_items(args.tolerance)
+        part_items = assembly_items + collect_export_part_render_items(
+            args.tolerance,
+            {item.name for item in assembly_items},
+        )
         sheet_size = (args.sheet_width, args.sheet_height)
         if args.mode in ("drawings", "all"):
             render_drawing_sheets(
-                items=items,
+                assembly_items=assembly_items,
+                part_items=part_items,
                 out_dir=out_dir,
                 target=args.target,
                 selected_part=args.part,
@@ -621,7 +643,8 @@ def main() -> int:
             )
         if args.mode in ("views", "all"):
             render_views(
-                items=items,
+                assembly_items=assembly_items,
+                part_items=part_items,
                 out_dir=out_dir,
                 target=args.target,
                 selected_part=args.part,
