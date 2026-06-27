@@ -113,24 +113,25 @@ def make_bottom_filter_frame() -> cq.Workplane:
 def make_bottom_filter_retainer() -> cq.Workplane:
     retainer = cq.Workplane("XY").box(
         cfg.BOTTOM_FILTER_RETAINER_WIDTH,
-        cfg.BOTTOM_FILTER_RETAINER_DEPTH,
+        cfg.BOTTOM_FILTER_RETAINER_WIDTH,
         cfg.BOTTOM_FILTER_RETAINER_HEIGHT,
     )
-    slot = cq.Workplane("XY").box(
-        cfg.BOTTOM_FILTER_FRAME_WIDTH,
-        cfg.FILTER_RAIL_WIDTH,
+    filter_window = cq.Workplane("XY").box(
+        cfg.BOTTOM_FILTER_RETAINER_WIDTH - 2 * cfg.BOTTOM_FILTER_RETAINER_DEPTH,
+        cfg.BOTTOM_FILTER_RETAINER_WIDTH - 2 * cfg.BOTTOM_FILTER_RETAINER_DEPTH,
         cfg.BOTTOM_FILTER_RETAINER_HEIGHT + cfg.FILLET_RADIUS,
     )
-    retainer = retainer.cut(slot)
-    clip_offset = cfg.BOTTOM_FILTER_FRAME_WIDTH / 2 - cfg.BOTTOM_FILTER_CORNER_CLIP_SIZE / 2
+    retainer = retainer.cut(filter_window)
+
+    clip_offset = cfg.BOTTOM_FILTER_RETAINER_WIDTH / 2 - cfg.BOTTOM_FILTER_CORNER_CLIP_SIZE / 2
     for x in (-clip_offset, clip_offset):
         for y in (-clip_offset, clip_offset):
-            clip = cq.Workplane("XY").box(
+            pad = cq.Workplane("XY").box(
                 cfg.BOTTOM_FILTER_CORNER_CLIP_SIZE,
                 cfg.BOTTOM_FILTER_CORNER_CLIP_SIZE,
                 cfg.BOTTOM_FILTER_RETAINER_HEIGHT,
             )
-            retainer = retainer.union(clip.translate((x, y, 0)))
+            retainer = retainer.union(pad.translate((x, y, 0)))
     return retainer.tag("bottom_filter_retainer")
 
 

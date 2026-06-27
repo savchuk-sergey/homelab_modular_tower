@@ -44,13 +44,18 @@ def _add_rods(assembly: cq.Assembly) -> None:
 
 def _add_guide_rails(assembly: cq.Assembly) -> None:
     names = ["front_left", "front_right", "rear_left", "rear_right"]
+    rail_bottom_z = (cfg.TOWER_HEIGHT - cfg.METAL_RAIL_HEIGHT) / 2
+    rail_top_z = cfg.TOWER_HEIGHT - rail_bottom_z
     for index, (px, py) in enumerate(guide_rail_positions()):
         assembly.add(
             create_metal_guide_rail(),
             name=f"metal_guide_rail_{names[index]}",
             loc=cq.Location(cq.Vector(px, py, cfg.TOWER_HEIGHT / 2)),
         )
-        for z_name, pz in (("bottom", cfg.FRAME_THICKNESS / 2), ("top", cfg.TOWER_HEIGHT - cfg.FRAME_THICKNESS / 2)):
+        for z_name, pz in (
+            ("bottom", rail_bottom_z + cfg.RAIL_END_MOUNT_RAIL_CAPTURE_DEPTH / 2),
+            ("top", rail_top_z - cfg.RAIL_END_MOUNT_RAIL_CAPTURE_DEPTH / 2),
+        ):
             assembly.add(
                 create_rail_end_mount(),
                 name=f"rail_end_mount_{z_name}_{names[index]}",
@@ -158,7 +163,7 @@ def _mini_pc_tray_z() -> float:
 
 def _add_side_panels(assembly: cq.Assembly) -> None:
     side_x = cfg.OUTER_WIDTH / 2 + cfg.SIDE_PANEL_THICKNESS / 2
-    mount_x = cfg.OUTER_WIDTH / 2 - cfg.SIDE_PANEL_MOUNT_RAIL_WIDTH / 2
+    mount_x = cfg.OUTER_WIDTH / 2 - cfg.SIDE_PANEL_MOUNT_RAIL_WIDTH / 2 - cfg.SIDE_PANEL_MOUNT_RAIL_INSET
     mount_rail_factories = (
         side_panels.make_side_panel_mount_rail_lower,
         side_panels.make_side_panel_mount_rail_middle,
@@ -199,6 +204,11 @@ def _add_side_panels(assembly: cq.Assembly) -> None:
         ),
     }
     for side, (x_position, panel_factories) in factories.items():
+        rotation = (
+            cfg.SIDE_PANEL_ASSEMBLY_ROTATION_DEG_LEFT
+            if side == "left"
+            else cfg.SIDE_PANEL_ASSEMBLY_ROTATION_DEG_RIGHT
+        )
         for index, factory in enumerate(panel_factories):
             label = cfg.SIDE_PANEL_SECTION_LABELS[index]
             assembly.add(
@@ -207,7 +217,7 @@ def _add_side_panels(assembly: cq.Assembly) -> None:
                 loc=cq.Location(
                     cq.Vector(x_position, 0, side_panels.side_panel_tile_center_z(index)),
                     cq.Vector(0, 0, 1),
-                    cfg.SIDE_PANEL_ASSEMBLY_ROTATION_DEG,
+                    rotation,
                 ),
             )
 
