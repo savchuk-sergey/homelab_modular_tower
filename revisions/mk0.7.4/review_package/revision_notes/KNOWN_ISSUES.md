@@ -11,6 +11,7 @@
 - M3 screw lengths remain `TBD after stack check`; mk0.7.4 identifies hardware classes and counts but does not claim final screw lengths.
 - Tray ledge misassembly is controlled by a table, not by a physical jig; a jig or indexed rail may still be needed after mockup feedback.
 - Print orientations are planning recommendations only; no slicer simulation or physical print result is claimed.
+- Final readiness verdict is limited to partial test print; full tower print remains gated by physical coupon results.
 
 ## Deferred Non-Goals
 

@@ -8,6 +8,7 @@
 - Added explicit `MOCKUP_*` mass-reduction parameters.
 - Added rough-mockup fastener BOM and assembly sequence.
 - Added print orientation and batch plan.
+- Added final internal readiness review without generating an external engineering-review prompt.
 
 ## Changed
 
@@ -23,4 +24,4 @@
 
 ## Pending
 
-- Final mk0.7.4 readiness review prompt/package refresh.
+- Physical coupon prints and external engineering review remain future work.
