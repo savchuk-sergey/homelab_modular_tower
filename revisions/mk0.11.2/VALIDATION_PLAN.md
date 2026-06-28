@@ -260,6 +260,62 @@ first-layer adhesion check.
 
 ---
 
+## Requirement verification checklist
+
+Conducted: 2026-06-29.  Audited all 10 structural requirements against current
+CAD state in `cad/parts/` (flat structure — no `cad/current/mk0.11.2/` path).
+
+### Summary table
+
+| Requirement | Status | Evidence | Risk | Next action |
+|---|---|---|---|---|
+| Stack-through-rod architecture | **PASS** | Non-sliding stackable layer; no rail pockets, POM-C sockets, or sliding geometry. Four M5 rods are explicit load path. | None. | None. |
+| M5 through holes | **PASS** | 4× `ROD_CLEARANCE` (5.6 mm) holes through full bbox height at (±81, ±81) mm via `apply_module_interface_features`. All 4 unique corners verified in Step 5 fix. | Hardware clearance not yet physically tested. | Test with real M5 rod on first print. |
+| Top/bottom interface | **PASS** | Top and bottom frame rings on all three stack parts (base/module/cap) use identical `_make_frame_ring` formula. Perimeter contact surface valid. Pin engagement disabled (top=False); M5 rod columns provide alignment. | Module-to-cap pin socket present but no mating pin — gap is intentional for mk0.11.2. | Physically verify ring-to-ring mating contact. |
+| Compression pads around M5 rods | **PARTIAL** | Washer seat pockets at each corner post. `STACK_MODULE_COMPRESSION_PAD_DIAMETER` (12 mm) is 0.4 mm larger than `CORNER_POST_SIZE` (11.6 mm) — seat rim fractionally overlaps into ring material. | Minor: 0.4 mm overhang into ring is negligible for PETG compression load. Not a structural FAIL. | Physical test with M5 washer and modest torque. |
+| Airflow opening | **PASS** | Central 125×125 mm vertical channel (`AIRFLOW_CHANNEL_WIDTH` × `AIRFLOW_CHANNEL_DEPTH`), full module height. No solid floor. Aligned with base intake and top exhaust clearance zones. | CFD/physical airflow not tested. | Verify visually with physical print. |
+| Rear service zone | **PASS** | `REAR_RESERVED_DEPTH` = 30 mm zone explicitly preserved as open corridor. Ring rear cutout provides unobstructed channel at all stack levels. | No tie-slot or cable clip geometry yet. | Accept as open zone for mk0.11.2. |
+| Future cable management reserve | **PARTIAL** | 30 mm rear open zone is the only cable management reserve. No tie-slot placeholders, no cable pass-through holes, no strain relief bosses in CAD. | Future routing relies on open zone without structured anchor points. | Add rear cable tie slots and/or anchor bosses in mk0.12 or device-specific module. |
+| Future carriage mounting zones | **PARTIAL** | Full-height side pads at X = ±84.5 mm (`FUTURE_CARRIAGE_PAD_X_OFFSET`) integrated into top and bottom frame rings. Bottom adapter pads present at lower interface ring. M3 insert bosses deferred (floating island issue — Step 5, Finding 3). | Future adapter has solid material to fasten into but no pilot holes or heat-set boss geometry yet. | Redesign boss connectivity in mk0.12; reactivate `_make_future_side_adapter_mount_points` after fixing. |
+| Device mounting placeholder | **FAIL** | Internal mount grid (`_make_internal_mount_grid_placeholder`) exists as a deferred function but is NOT called in the printable shell. All 12 pads would float in the airflow zone (Step 5, Finding 4). | Generic shell provides no internal device attachment. | Accepted deferral for mk0.11.2 structural shell. Reactivate after adding bridging rib/floor or in device-specific module. |
+| Front handle / label placeholder | **PASS** | 64×4×12 mm pull lip at bottom-front (Y = −97 mm, Z spans −35 to −23 mm from module center). Clearly identifies front face. Protrudes 2 mm beyond tower front face — does not interfere with stack compression. | Minor first-layer adhesion concern (lip outside main footprint). | Check in slicer; add brim if needed. |
+| Printability | **PASS** | Single connected solid confirmed post Step 5 fixes. 4 unique corner holes. 8 compression pad pockets (top + bottom × 4). Airflow channel open. No floating islands. | Slicer island/support check not yet performed in actual slicer. | Open `generic_stack_module.step` in Bambu Studio / PrusaSlicer before printing. |
+| Config / no magic numbers | **PASS** | All geometry values reference named constants from `cad/config.py`. `rails` import decoupling fix applied (this audit): `FUTURE_CARRIAGE_PAD_X_OFFSET` added to `config.py`; `rails.u_channel_rail_x_offset()` calls replaced in `generic_stack_module.py`. | None remaining. | None. |
+| Base / top compatibility | **PASS** | All three parts use identical `_corner_rod_points` formula: `TOWER_WIDTH/2 − ROD_CENTER_OFFSET`. Frame ring geometry identical across base/module/cap. Compression pad constants shared. | None. | Physical fit test with all three parts on rods. |
+| Stack assembly clarity | **PASS** | `stack_test_assembly` shows base + 1 module + cap + 4 reference M5 rods. No carriage, rail, or POM-C components. Layer-cake structure unambiguous. Step 3 PASSED. | None. | None. |
+
+### Future readiness assessment
+
+**Future carriage / side adapter readiness:**
+Physical material exists at X = ±84.5 mm (full-height side pads, width 2.4 mm).
+Adapter can be bolted in after print by drilling pilot holes through the pad.
+Heat-set insert boss geometry is deferred — reactivating it after pad redesign
+is the recommended path.  No module redesign needed if `FUTURE_CARRIAGE_PAD_X_OFFSET`
+remains frozen.  Constraint: M5 corner posts at X = ±81 mm must not interfere with
+adapter fasteners — 3.5 mm clearance between post edge and pad center.
+
+**Future cable management readiness:**
+Rear 30 mm open corridor provides vertical cable routing space.
+No structured tie points exist in mk0.11.2.  Adding rear cable tie slot features
+to the frame ring rear wall is the next recommended step.  Bend radius is not
+constrained by any geometry in the rear zone.
+
+**Future airflow readiness:**
+Central 125×125 mm opening preserved at all stack levels.  Base includes bottom
+intake clearance zone; top cap includes exhaust clearance zone.
+Bottom 120 mm fan and top 120 mm fan can be added without module redesign —
+the 125 mm opening is larger than the fan air-opening diameter (112 mm).
+Stack module creates no dead-air layer.
+
+**Future multi-module scaling readiness:**
+All three parts use the same ring/post formula from `config.py`.
+A second `generic_stack_module` stacks identically.  M5 hole, airflow, rear zone,
+and side pad positions repeat for every module.  Risk of module-unique geometry
+is low; the only device-specific features (mount grid, device pads) are in
+deferred functions that are not called in the shell.
+
+---
+
 ### Remaining physical risks (not yet tested)
 
 - M5 rod real clearance (5.6 mm) not tested against actual rod diameter

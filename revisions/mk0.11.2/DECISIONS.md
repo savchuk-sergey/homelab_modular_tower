@@ -58,7 +58,29 @@ integrating into the full tower stack.
 
 ---
 
-## Inherited deferred decisions (unchanged)
+## D-013: FUTURE_CARRIAGE_PAD_X_OFFSET added to config.py (decoupling fix)
+
+**Decision:** Added named constant `FUTURE_CARRIAGE_PAD_X_OFFSET` to the
+mk0.11.2 section of `cad/config.py`.  Removed the `rails` module import from
+`cad/parts/generic_stack_module.py`.  All three internal pad-positioning calls
+now use `c.FUTURE_CARRIAGE_PAD_X_OFFSET` directly.
+
+**Reason:** The active stack module (`generic_stack_module.py`) was importing
+the deferred carriage subsystem (`rails.py`) solely to compute the lateral pad
+X-offset (`u_channel_rail_x_offset()`).  This created an unwanted coupling
+between the active mk0.11.2 architecture and the deferred rail/carriage path.
+The constant value (84.5 mm) is stable and derived from frozen U-channel rail
+geometry constants, so a named config constant is the correct representation.
+
+**Consequence:** No geometry change.  The side pad X-offset remains 84.5 mm.
+Future carriage zone pad positions remain compatible with the frozen U-channel
+rail standard.
+
+**Files changed:** `cad/config.py`, `cad/parts/generic_stack_module.py`.
+
+---
+
+
 
 The following mk0.11 decisions remain valid for the **deferred** rail path:
 

@@ -943,6 +943,16 @@ FUTURE_BOTTOM_ADAPTER_PAD_WIDTH = 18.0
 FUTURE_BOTTOM_ADAPTER_PAD_DEPTH = 10.0
 FUTURE_BOTTOM_ADAPTER_PAD_HEIGHT = 3.0
 
+# Lateral X centerline for future carriage / side adapter reserve pads.
+# Derived from the frozen U-channel rail standard so the pad positions stay
+# compatible with a future rail/carriage upgrade without importing the deferred
+# rails module into the active stack module code.
+# Value: TOWER_WIDTH/2 − RAIL_OUTER_WIDTH/2 − CARRIAGE_WALL_THICKNESS − RAIL_SIDE_OFFSET_CLEARANCE
+#        = 95.0 − 7.5 − 2.4 − 0.6 = 84.5 mm
+FUTURE_CARRIAGE_PAD_X_OFFSET = (
+    TOWER_WIDTH / 2 - RAIL_OUTER_WIDTH / 2 - CARRIAGE_WALL_THICKNESS - RAIL_SIDE_OFFSET_CLEARANCE
+)
+
 # Stack cap parts for the layer-cake prototype.
 BASE_PEDESTAL_HEIGHT = 24.0
 TOP_CAP_HEIGHT = 20.0
