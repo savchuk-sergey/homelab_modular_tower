@@ -5,7 +5,7 @@ from pathlib import Path
 import cadquery as cq
 
 from .. import config as cfg
-from .part_registry import EXPORT_CATEGORIES, PARTS
+from .part_registry import EXPORT_CATEGORIES, PARTS, categories_for_revision
 
 
 def ensure_export_dirs(revision: str | None = None) -> tuple[Path, Path]:
@@ -42,7 +42,8 @@ def export_parts(step_dir: Path, stl_dir: Path) -> None:
 
 
 def export_categorized_parts(export_root: Path) -> None:
-    for category, parts in EXPORT_CATEGORIES.items():
+    categories = categories_for_revision(export_root.name)
+    for category, parts in categories.items():
         category_dir = export_root / category
         category_dir.mkdir(parents=True, exist_ok=True)
         for name, factory in parts.items():
@@ -51,13 +52,15 @@ def export_categorized_parts(export_root: Path) -> None:
 
 
 def write_manifest(export_root: Path) -> None:
+    revision = export_root.name if export_root.name.startswith("mk") else cfg.CURRENT_REVISION
+    categories = categories_for_revision(revision if export_root.name.startswith("mk") else None)
     lines = [
-        f"# {cfg.CURRENT_REVISION} export manifest",
+        f"# {revision} export manifest",
         "",
         "Generated from CadQuery source. STEP/STL files are derived artifacts.",
         "",
     ]
-    for category, parts in EXPORT_CATEGORIES.items():
+    for category, parts in categories.items():
         lines.append(f"## {category}")
         lines.append("")
         for name in sorted(parts):

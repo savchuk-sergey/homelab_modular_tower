@@ -1,4 +1,7 @@
-"""mk0.11 generic module carriage.
+"""mk0.11 generic module carriage — DEFERRED sliding architecture.
+
+Superseded for active work by stack-through-rod modules in mk0.11.2.
+Preserved for future rail/carriage reactivation.  See `cad/deferred/README.md`.
 
 The generic module carriage is a device-agnostic open-frame carriage that
 slides on the aluminum U-channel rail standard using POM-C Ø8 mm round shoes.

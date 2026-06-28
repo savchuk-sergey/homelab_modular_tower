@@ -1,4 +1,10 @@
-"""mk0.11 generic removable module shell.
+"""mk0.11 generic removable module shell — DEFERRED carriage/rail era.
+
+Superseded for active work by `generic_stack_module.py` in mk0.11.2
+(stack-through-rod architecture).  This file is preserved unchanged for
+the deferred sliding carriage / rail upgrade path.
+
+See `cad/deferred/README.md` for deferred vs active architecture status.
 
 First subsystem target for the mk0.11 subsystem-first workflow.
 

@@ -1,4 +1,7 @@
-"""mk0.11 single module bay assembly.
+"""mk0.11 single module bay assembly — DEFERRED sliding architecture.
+
+Superseded for active validation by `stack_test_assembly.py` in mk0.11.2.
+See `cad/deferred/README.md`.
 
 The single module bay assembly shows one complete removable module unit with
 its full rail / shoe / carriage / shell stack in the correct geometric
