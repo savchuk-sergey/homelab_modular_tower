@@ -1,7 +1,6 @@
 """Generate mk0.10 drawing-layer v2 planning SVGs.
 
 LEGACY / CANCELLED — mk0.10 drawing-first workflow
-Active copy moved to: cad/legacy/scripts/generate_architecture_drawings.py
 ===================================================
 This script belongs to the mk0.10 drawing-first workflow iteration.
 That workflow has been cancelled.

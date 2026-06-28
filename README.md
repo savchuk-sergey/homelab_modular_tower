@@ -1,19 +1,104 @@
-# Homelab Modular Tower v1
+# Homelab Modular Tower
 
-Parametric CadQuery prototype of a compact 3D-printed mini-blade tower for a home homelab stack.
+Parametric CadQuery engineering project for a compact 3D-printed mini-blade
+tower homelab stack.
 
-The design is intentionally engineering-first: removable trays, four M5 vertical rods, rear service spine, low-voltage DC power bus placeholder, UPS/power module at the bottom, and a priority airflow duct for the Mini PC module.
+The design is engineering-first: removable modules, four M5 vertical rods,
+rear service spine, low-voltage DC power bus, UPS/power module placeholder,
+and a priority airflow duct for the Mini PC module.
 
-## Structure
+---
 
-- `cad/config.py` - all key dimensions and placeholder component sizes.
-- `cad/frame.py` - top/bottom frame rings, M5 corner block, M5 threaded rod placeholder, and metal guide rail placeholder.
-- `cad/trays.py` - generic tray generator and device-specific tray variants.
-- `cad/power_bus.py` - rear service spine and low-voltage power bus placeholder.
-- `cad/panels.py` - side panels and 120 mm fan panels.
-- `cad/airflow.py` - removable Mini PC airflow duct.
-- `cad/assembly.py` - complete tower assembly.
-- `cad/export.py` - STEP/STL export entrypoint.
+## Current revision: mk0.11 — subsystem-first workflow
+
+The previous mk0.10 drawing-first workflow has been cancelled.
+
+The current active workflow is **subsystem-first / testable CAD-first**:
+
+1. Validate the generic removable module (shell + carriage + rail interface).
+2. Only after physical validation of a single module bay: integrate into full tower.
+
+### Where to start
+
+| Where to look | What you'll find |
+|---|---|
+| `revisions/mk0.11/README.md` | mk0.11 scope, decisions, frozen constraints |
+| `revisions/mk0.11/VALIDATION_PLAN.md` | Step-by-step physical validation checklist |
+| `revisions/mk0.11/DECISIONS.md` | Engineering decisions (D-001 through D-008) |
+| `cad/legacy/README.md` | Which files are legacy and why |
+| `cad/current/mk0.11/` | Placeholder directories for future mk0.11 additions |
+| `docs/workflow/subsystem_first_workflow.md` | Workflow stages and rules |
+
+### Active mk0.11 CAD files
+
+| File | Role |
+|---|---|
+| `cad/config.py` | All parametric dimensions — source of truth |
+| `cad/parts/generic_module.py` | Generic removable module shell |
+| `cad/parts/module_carriage.py` | Generic module carriage (POM-C shoe mounts) |
+| `cad/parts/pom_shoe.py` | POM-C shoe reference geometry |
+| `cad/parts/rail_profile.py` | U-channel rail reference geometry |
+| `cad/jigs/rail_carriage_fit_test.py` | Rail / carriage / shoe fit test jig |
+| `cad/assembly/generic_module_assembly.py` | Module + carriage combined assembly |
+| `cad/assembly/single_module_bay_assembly.py` | Full single-bay validation assembly |
+
+---
+
+## Repository structure
+
+```
+homelab_modular_tower/
+  AGENTS.md                        ← LLM agent working rules
+  README.md                        ← this file
+
+  cad/
+    config.py                      ← ALL dimensions (source of truth)
+    parts/                         ← all part source files (active + legacy)
+    assembly/                      ← assembly files
+    jigs/                          ← fit test jigs
+    exporters/                     ← STEP/STL export infrastructure
+    utils/                         ← geometry helper utilities
+    legacy/
+      README.md                    ← legacy file classification
+    current/
+      mk0.11/
+        parts/README.md            ← placeholder for new mk0.11 part files
+        assemblies/README.md       ← placeholder for mk0.11 integration assemblies
+        jigs/README.md             ← placeholder for additional mk0.11 jigs
+
+  drawings/
+    mk0.10/                        ← LEGACY/CANCELLED SVG planning drawings
+
+  exports/
+    mk0.11/                        ← current active exports
+    mk0.7/ … mk0.9.3/              ← historical exports (reference only)
+
+  renders/
+    mk0.7/ … mk0.9.2/              ← historical renders (reference only)
+
+  revisions/
+    mk0.11/                        ← active revision documentation
+    mk0.1/ … mk0.9.3/              ← historical revision documentation
+
+  scripts/
+    export_revision.py             ← export pipeline
+    analyze_revision.py            ← geometry analysis
+    render_views.py                ← render generator
+    package_review.py              ← review package builder
+    run_revision_pipeline.py       ← full pipeline runner
+    generate_architecture_drawings.py  ← LEGACY/CANCELLED mk0.10 SVG generator
+    analysis/                      ← analysis utility modules
+
+  docs/
+    workflow/
+      subsystem_first_workflow.md  ← current active workflow description
+    ARCHITECTURE.md
+    BOM.md
+    POWER.md
+    PRINTING.md
+```
+
+---
 
 ## Install
 
@@ -23,86 +108,83 @@ CadQuery is the only non-standard dependency.
 python -m pip install cadquery
 ```
 
-If you use Conda, the CadQuery project usually recommends a Conda environment:
+If you use Conda, the CadQuery project recommends a Conda environment:
 
 ```powershell
 conda create -n cadquery cadquery -c conda-forge
 conda activate cadquery
 ```
 
+---
+
 ## Export
 
-From the project root:
+Run from the project root:
 
 ```powershell
-python -m cad.export
+python scripts/export_revision.py --revision mk0.11
 ```
 
-For the current engineering revision with categorized artifacts:
+Or for the mk0.11 subsystem only (faster):
 
 ```powershell
-python -m cad.export --revision mk0.7
+python -m cad.export --revision mk0.11
 ```
 
-Generated files:
+Generated files land in `exports/mk0.11/`:
 
-- STEP parts: `exports/step/`
-- STL parts: `exports/stl/`
-- Assembly: `exports/step/assembly.step`
-- Revision export: `exports/mk0.7/printable/`, `exports/mk0.7/non_printable/`, `exports/mk0.7/placeholders/`, `exports/mk0.7/review/`, `exports/mk0.7/assemblies/`
+```
+exports/mk0.11/
+  printed/
+    plastic_modules/     ← generic_module.step / .stl
+    plastic_subparts/    ← generic_module_shell, generic_module_carriage
+  reference_non_printed/
+    metal/               ← u_channel_rail reference
+    wear_parts/          ← pom_c_shoe reference
+  assemblies/            ← generic_module_assembly, single_module_bay_assembly
+  jigs/                  ← rail_carriage_fit_test
+```
 
-Open `exports/step/assembly.step` in FreeCAD, CAD Assistant, or another STEP viewer.
+---
 
-`exports/` and `renders/` are current generated artifacts and are ignored by Git. Recreate them from CadQuery code when needed.
+## Syntax check
 
-## CAD Revision Workflow
+```powershell
+python -m compileall cad scripts
+```
+
+---
+
+## CAD revision workflow
 
 The source of truth is:
-
 1. CadQuery code in `cad/`;
-2. Git history;
+2. git history;
 3. engineering revision documentation in `revisions/`.
 
-The `cad/` directory contains the current working CAD model. Do not copy the whole CAD tree into `cad/mk0.1`, `cad/mk0.2`, or similar folders for revision history.
+STEP/STL files and renders are derived artifacts. They are not the source of truth.
 
-Each stable CAD revision should have:
-
-- a git branch or git tag;
+Each stable revision has:
+- a git branch (`cad/mk0.11`) or git tag (`mk0.11`);
 - a documentation folder `revisions/mkX.Y/`;
-- generated exports/renders recreated only when needed.
+- generated exports recreated from CadQuery code when needed.
 
-Required revision documentation:
-
-- `REVISION.md`
-- `CALCULATIONS.md`
+Required revision documentation (per AGENTS.md):
+- `REVISION.md` or `README.md`
 - `DECISIONS.md`
+- `VALIDATION_PLAN.md` (for mk0.11+)
 - `KNOWN_ISSUES.md`
 - `CHANGELOG.md`
 
-Branch naming rule:
+Do not copy the whole `cad/` tree into version-named subdirectories.
+Revision history lives in git.
 
-```text
-cad/mk0.1
-cad/mk0.2
-cad/mk0.3
-cad/mk1.0
-cad/mk1.1
-```
+---
 
-Each next revision starts from the previous revision.
+## Full tower integration: out of scope until mk0.11 single-bay validation
 
-Revision history is never changed retroactively.
+The full tower assembly (`cad/assembly/tower_assembly.py`) is frozen for mk0.11.
+Full tower integration is explicitly out of scope until the single module bay
+physical validation passes all steps in `revisions/mk0.11/VALIDATION_PLAN.md`.
 
-Design changes are always made in a new branch.
-
-STEP/STL files and PNG renders are derived artifacts. They are not the source of truth.
-
-## Measurements Needed For v2
-
-- Actual Mini PC PCB/chassis dimensions, port locations, cooler height, and 19 V input connector.
-- MikroTik hAP ax2 bare board dimensions, Ethernet jack position, DC input position, and antenna keep-out zones.
-- Raspberry Pi standoff pattern and exact connector clearance for the chosen Pi revision.
-- DC UPS board, BMS, fuse block, terminal block, and DC-DC converter footprints.
-- Real connector footprints for XT30, JST-VH or Molex MicroFit, USB-C panel/cable routing.
-- Exact LiFePO4 pack dimensions and safe retention method.
-- Metal guide rail material, screw spacing, and whether 10 x 3 mm flat bar is stiff enough or should become aluminium profile.
+See `revisions/mk0.11/DECISIONS.md` — Decision D-006.

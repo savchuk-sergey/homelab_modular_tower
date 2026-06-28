@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke" /></marker>
+<marker id="dot" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5"><circle cx="5" cy="5" r="4" fill="context-stroke" /></marker>
+</defs>
+<rect x="0" y="0" width="1600" height="1000" fill="white" />
+<rect x="44" y="112" width="760" height="630" fill="#ffffff" stroke="#111111" stroke-width="1.25" rx="0.0" />
+<rect x="44" y="112" width="760" height="30" fill="#f6f7f8" stroke="#111111" stroke-width="1.0" rx="0.0" />
+<text x="56" y="133" fill="#20242a" font-size="13" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">A - Main top interface plan</text>
+<rect x="835" y="112" width="335" height="285" fill="#ffffff" stroke="#111111" stroke-width="1.25" rx="0.0" />
+<rect x="835" y="112" width="335" height="30" fill="#f6f7f8" stroke="#111111" stroke-width="1.0" rx="0.0" />
+<text x="847" y="133" fill="#20242a" font-size="13" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">B - Bottom-side mating inset</text>
+<rect x="1200" y="112" width="350" height="410" fill="#ffffff" stroke="#111111" stroke-width="1.25" rx="0.0" />
+<rect x="1200" y="112" width="350" height="30" fill="#f6f7f8" stroke="#111111" stroke-width="1.0" rx="0.0" />
+<text x="1212" y="133" fill="#20242a" font-size="13" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">C - Corner zoom detail</text>
+<rect x="835" y="420" width="335" height="322" fill="#ffffff" stroke="#111111" stroke-width="1.25" rx="0.0" />
+<rect x="835" y="420" width="335" height="30" fill="#f6f7f8" stroke="#111111" stroke-width="1.0" rx="0.0" />
+<text x="847" y="441" fill="#20242a" font-size="13" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">D - Legend and coordinates</text>
+<rect x="132" y="184" width="500.00000000000006" height="500.00000000000006" fill="#ffffff" stroke="#111111" stroke-width="2" rx="0.0" />
+<rect x="132" y="605.0526315789474" width="500.00000000000006" height="78.94736842105263" fill="#d9c7ee" stroke="#7b5aa6" stroke-width="1.2" stroke-dasharray="5 4" rx="0.0" />
+<rect x="217.5263157894737" y="230.05263157894737" width="328.94736842105266" height="328.94736842105266" fill="#dff1ff" stroke="#1f78c8" stroke-width="1.2" stroke-dasharray="5 4" rx="0.0" />
+<circle cx="168.8421052631579" cy="220.8421052631579" r="8" fill="#8fa5b8" stroke="#526b80" stroke-width="2.0" />
+<circle cx="168.8421052631579" cy="220.8421052631579" r="2.8" fill="#ffffff" stroke="#526b80" stroke-width="1.0" />
+<circle cx="168.8421052631579" cy="647.1578947368421" r="8" fill="#8fa5b8" stroke="#526b80" stroke-width="2.0" />
+<circle cx="168.8421052631579" cy="647.1578947368421" r="2.8" fill="#ffffff" stroke="#526b80" stroke-width="1.0" />
+<circle cx="595.1578947368421" cy="220.8421052631579" r="8" fill="#8fa5b8" stroke="#526b80" stroke-width="2.0" />
+<circle cx="595.1578947368421" cy="220.8421052631579" r="2.8" fill="#ffffff" stroke="#526b80" stroke-width="1.0" />
+<circle cx="595.1578947368421" cy="647.1578947368421" r="8" fill="#8fa5b8" stroke="#526b80" stroke-width="2.0" />
+<circle cx="595.1578947368421" cy="647.1578947368421" r="2.8" fill="#ffffff" stroke="#526b80" stroke-width="1.0" />
+<circle cx="232.0" cy="273.47368421052636" r="5" fill="#ffffff" stroke="#111111" stroke-width="1.4" />
+<circle cx="232.0" cy="515.578947368421" r="5" fill="#ffffff" stroke="#111111" stroke-width="1.4" />
+<circle cx="532.0" cy="273.47368421052636" r="5" fill="#ffffff" stroke="#111111" stroke-width="1.4" />
+<circle cx="532.0" cy="515.578947368421" r="5" fill="#ffffff" stroke="#111111" stroke-width="1.4" />
+<circle cx="232.0" cy="299.7894736842105" r="5" fill="#7a828a" stroke="#111111" stroke-width="1.0" />
+<circle cx="532.0" cy="299.7894736842105" r="5" fill="#7a828a" stroke="#111111" stroke-width="1.0" />
+<circle cx="232.0" cy="526.1052631578948" r="5" fill="#7a828a" stroke="#111111" stroke-width="1.0" />
+<circle cx="532.0" cy="526.1052631578948" r="5" fill="#7a828a" stroke="#111111" stroke-width="1.0" />
+<text x="382.0" y="168" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="middle" font-weight="normal">+X right</text>
+<text x="648.0" y="434.0" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="middle" font-weight="normal" transform="rotate(90 648.0 434.0)">+Y rear</text>
+<text x="132" y="168" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">FRONT</text>
+<text x="632.0" y="704.0" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="end" font-weight="bold">REAR</text>
+<line x1="168.8421052631579" y1="220.8421052631579" x2="544" y2="200" stroke="#526b80" stroke-width="1.0" marker-end="url(#dot)" />
+<text x="551" y="197" fill="#526b80" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">M5 rods clamp full tower stack</text>
+<line x1="232.0" y1="273.47368421052636" x2="544" y2="244" stroke="#111111" stroke-width="1.0" marker-end="url(#dot)" />
+<text x="551" y="241" fill="#111111" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">local bolts fasten module</text>
+<text x="551" y="255" fill="#111111" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">interface only</text>
+<line x1="232.0" y1="299.7894736842105" x2="544" y2="288" stroke="#7a828a" stroke-width="1.0" marker-end="url(#dot)" />
+<text x="551" y="285" fill="#7a828a" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">pins/sockets locate only, not</text>
+<text x="551" y="299" fill="#7a828a" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">compression</text>
+<rect x="873" y="179" width="195.00000000000003" height="195.00000000000003" fill="#ffffff" stroke="#111111" stroke-width="1.5" rx="0.0" />
+<rect x="873" y="343.2105263157895" width="195.00000000000003" height="30.789473684210527" fill="#d9c7ee" stroke="#7b5aa6" stroke-width="1.2" stroke-dasharray="5 4" rx="0.0" />
+<circle cx="912.0" cy="224.1578947368421" r="6" fill="#ffffff" stroke="#111111" stroke-width="1.2" stroke-dasharray="4 3" />
+<circle cx="1029.0" cy="224.1578947368421" r="6" fill="#ffffff" stroke="#111111" stroke-width="1.2" stroke-dasharray="4 3" />
+<circle cx="912.0" cy="312.42105263157896" r="6" fill="#ffffff" stroke="#111111" stroke-width="1.2" stroke-dasharray="4 3" />
+<circle cx="1029.0" cy="312.42105263157896" r="6" fill="#ffffff" stroke="#111111" stroke-width="1.2" stroke-dasharray="4 3" />
+<text x="857" y="354" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">Top side uses pins; bottom side provides sockets.</text>
+<text x="857" y="375" fill="#5f6670" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">Sockets are dashed/open to avoid confusion.</text>
+<rect x="1242" y="232" width="190" height="180" fill="#e6e8eb" stroke="#111111" stroke-width="1.5" rx="0.0" />
+<circle cx="1282" cy="272" r="18" fill="#8fa5b8" stroke="#526b80" stroke-width="2.0" />
+<circle cx="1282" cy="272" r="6.3" fill="#ffffff" stroke="#526b80" stroke-width="1.0" />
+<circle cx="1372" cy="300" r="11" fill="#ffffff" stroke="#111111" stroke-width="1.4" />
+<circle cx="1324" cy="368" r="10" fill="#7a828a" stroke="#111111" stroke-width="1.0" />
+<circle cx="1382" cy="368" r="12" fill="#ffffff" stroke="#111111" stroke-width="1.2" stroke-dasharray="4 3" />
+<line x1="1242" y1="330" x2="1432" y2="330" stroke="#111111" stroke-width="1.2" stroke-dasharray="5 4" />
+<line x1="1282" y1="272" x2="1408" y2="224" stroke="#526b80" stroke-width="1.0" marker-end="url(#dot)" />
+<text x="1415" y="221" fill="#526b80" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">rods clamp</text>
+<line x1="1372" y1="300" x2="1408" y2="290" stroke="#111111" stroke-width="1.0" marker-end="url(#dot)" />
+<text x="1415" y="287" fill="#111111" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">bolts fasten locally</text>
+<line x1="1324" y1="368" x2="1408" y2="358" stroke="#7a828a" stroke-width="1.0" marker-end="url(#dot)" />
+<text x="1415" y="355" fill="#7a828a" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">pins locate only</text>
+<line x1="1382" y1="368" x2="1408" y2="424" stroke="#111111" stroke-width="1.0" marker-end="url(#dot)" />
+<text x="1415" y="421" fill="#111111" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">bottom sockets receive pins</text>
+<text x="859" y="482" fill="#20242a" font-size="12" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">Legend</text>
+<circle cx="869" cy="499" r="7" fill="#8fa5b8" stroke="#526b80" stroke-width="2.0" />
+<circle cx="869" cy="499" r="2.4499999999999997" fill="#ffffff" stroke="#526b80" stroke-width="1.0" />
+<text x="891" y="504" fill="#20242a" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">M5 rod / compression path</text>
+<circle cx="869" cy="519" r="5" fill="#ffffff" stroke="#111111" stroke-width="1.4" />
+<text x="891" y="524" fill="#20242a" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">local interface bolt</text>
+<circle cx="869" cy="539" r="5" fill="#7a828a" stroke="#111111" stroke-width="1.0" />
+<text x="891" y="544" fill="#20242a" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">top alignment pin</text>
+<circle cx="869" cy="559" r="6" fill="#ffffff" stroke="#111111" stroke-width="1.2" stroke-dasharray="4 3" />
+<text x="891" y="564" fill="#20242a" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">bottom alignment socket</text>
+<rect x="862" y="571" width="18" height="13" fill="#dff1ff" stroke="#1f78c8" stroke-width="1.2" stroke-dasharray="4 3" rx="0.0" />
+<text x="891" y="584" fill="#20242a" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">airflow window</text>
+<rect x="862" y="591" width="18" height="13" fill="#d9c7ee" stroke="#7b5aa6" stroke-width="1.2" stroke-dasharray="4 3" rx="0.0" />
+<text x="891" y="604" fill="#20242a" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">rear service zone</text>
+<text x="859" y="640" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">Origin: module center</text>
+<text x="859" y="656" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">+X right</text>
+<text x="859" y="672" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">+Y rear</text>
+<text x="859" y="688" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">ROD_CENTER_OFFSET = 14 mm</text>
+<text x="859" y="704" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">INTERFACE_BOLT_CENTER_OFFSET = 38 mm</text>
+<text x="859" y="720" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">INTERFACE_LOCAL_BOLT_OFFSET_Y = 34 mm</text>
+<rect x="44" y="850" width="1506" height="118" fill="#fbfbfb" stroke="#a9adb4" stroke-width="1.0" rx="0.0" />
+<text x="56" y="872" fill="#20242a" font-size="12" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">Validation gates</text>
+<text x="56" y="892" fill="#20242a" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">Rods, local bolts, pins, and sockets use distinct symbols.</text>
+<text x="56" y="907" fill="#20242a" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">Top/bottom mating convention is explicit: top pins, bottom sockets.</text>
+<text x="56" y="922" fill="#20242a" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">Corner detail separates compression, local fastening, and locating functions.</text>
+<rect x="36" y="20" width="1528" height="62" fill="#f9fafb" stroke="#111111" stroke-width="1.3" rx="0.0" />
+<text x="52" y="47" fill="#20242a" font-size="18" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">HMT-mk0.10-DWG-03</text>
+<text x="52" y="70" fill="#20242a" font-size="18" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">Common module interface plan</text>
+<line x1="575" y1="20" x2="575" y2="82" stroke="#111111" stroke-width="1.2" />
+<text x="590" y="43" fill="#20242a" font-size="13" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">Revision: mk0.10</text>
+<text x="590" y="64" fill="#5f6670" font-size="12" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">Purpose: top and bottom module mating convention</text>
+<line x1="1040" y1="20" x2="1040" y2="82" stroke="#111111" stroke-width="1.2" />
+<text x="1055" y="43" fill="#9d1c20" font-size="13" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">PLANNING DRAWING - NOT FOR MANUFACTURING</text>
+<text x="1055" y="64" fill="#5f6670" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">Units: mm; source dimensions: cad/config.py (mk0.9.3)</text>
+</svg>
