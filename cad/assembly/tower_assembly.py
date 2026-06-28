@@ -1,9 +1,28 @@
-"""mk0.9 modular architecture prototype assembly."""
+"""mk0.9.1 modular architecture prototype assembly.
+
+Includes:
+* base, RPi/SSD, Mini PC placeholder, and roof modules
+* aluminum U-channel rail placeholders
+* POM-C shoe placeholders
+* M5 threaded rods and caps
+* 120 mm fan placeholders
+* device placeholders (RPi 3B, external SSD, Mini PC)
+* dust filter and top guard placeholders
+* central airflow channel placeholder
+"""
 
 import cadquery as cq
 
 from .. import config as cfg
-from ..parts import airflow, base_module, mini_pc_placeholder_module, placeholders, roof_module, rpi_ssd_module
+from ..parts import (
+    airflow,
+    base_module,
+    feet,
+    mini_pc_placeholder_module,
+    placeholders,
+    roof_module,
+    rpi_ssd_module,
+)
 from ..parts.rods import create_m5_threaded_rod, create_m5_threaded_rod_cap, rod_positions
 
 
@@ -22,8 +41,58 @@ def _add_rods(assembly: cq.Assembly) -> None:
         )
 
 
+def _add_module_rails_and_shoes(
+    assembly: cq.Assembly,
+    module_name: str,
+    module_z: float,
+    module_height: float,
+    rail_length: float,
+    shoes_per_side: int,
+) -> None:
+    """Add non-printed rail and POM-C shoe placeholders for a single module."""
+    x_rail = cfg.TOWER_WIDTH / 2 - cfg.RAIL_OUTER_WIDTH / 2 - cfg.CARRIAGE_WALL_THICKNESS - 1.0
+    y_center = -cfg.REAR_RESERVED_DEPTH / 2
+    # approximate Z where the shoe sits inside the carriage boss
+    deck_z = -module_height / 2 + cfg.CARRIAGE_WALL_THICKNESS / 2
+    z_shoe = module_z + deck_z + cfg.CARRIAGE_RUNNER_BOSS_THICKNESS / 2
+
+    side_length = cfg.MODULE_DEPTH - 24.0
+    if shoes_per_side <= 1:
+        offsets = [0.0]
+    else:
+        spacing = side_length / (shoes_per_side - 1)
+        offsets = [-side_length / 2 + i * spacing for i in range(shoes_per_side)]
+
+    for sign in (-1, 1):
+        # Rail placeholder — rotated so its length axis aligns with Y
+        assembly.add(
+            placeholders.make_aluminum_u_channel_rail_placeholder(rail_length),
+            name=f"aluminum_u_channel_rail_{module_name}_{'left' if sign < 0 else 'right'}",
+            loc=cq.Location(
+                cq.Vector(sign * x_rail, y_center, z_shoe),
+                cq.Vector(1, 0, 0),
+                90,
+            ),
+        )
+        # Shoe placeholders
+        for idx, y_offset in enumerate(offsets):
+            assembly.add(
+                placeholders.make_pom_c_shoe_placeholder(),
+                name=f"pom_c_shoe_{module_name}_{'left' if sign < 0 else 'right'}_{idx}",
+                loc=cq.Location(
+                    cq.Vector(
+                        sign * x_rail + sign * (cfg.RAIL_OUTER_WIDTH / 2 + cfg.RUNNER_PROTRUSION_FROM_CARRIAGE / 2),
+                        y_center + y_offset,
+                        z_shoe,
+                    ),
+                    cq.Vector(1, 0, 0),
+                    90,
+                ),
+            )
+
+
 def build_assembly() -> cq.Assembly:
-    assembly = cq.Assembly(name="homelab_modular_tower_mk0_9")
+    assembly = cq.Assembly(name="homelab_modular_tower_mk0_9_1")
 
     assembly.add(base_module.make_base_module(), name="base_module", loc=cq.Location(cq.Vector(0, 0, cfg.BASE_MODULE_Z)))
     assembly.add(
@@ -38,6 +107,36 @@ def build_assembly() -> cq.Assembly:
     )
     assembly.add(roof_module.make_roof_module(), name="roof_module", loc=cq.Location(cq.Vector(0, 0, cfg.ROOF_MODULE_Z)))
     _add_rods(assembly)
+
+    # Rail / shoe placeholders for the two carriages
+    _add_module_rails_and_shoes(
+        assembly,
+        "rpi_ssd",
+        cfg.RPI_SSD_MODULE_Z,
+        cfg.RPI_SSD_MODULE_HEIGHT,
+        cfg.RAIL_LENGTH_RPI_SSD,
+        cfg.RUNNER_SHOES_PER_SIDE_RPI_SSD,
+    )
+    _add_module_rails_and_shoes(
+        assembly,
+        "mini_pc",
+        cfg.MINI_PC_MODULE_Z,
+        cfg.MINI_PC_MODULE_HEIGHT,
+        cfg.RAIL_LENGTH_MINI_PC_PLACEHOLDER,
+        cfg.RUNNER_SHOES_PER_SIDE_MINI_PC,
+    )
+
+    # Foot placeholders
+    foot_z = cfg.BASE_MODULE_Z - cfg.BASE_MODULE_HEIGHT / 2 - cfg.FOOT_HEIGHT / 2 - cfg.FLOOR_THICKNESS
+    boss_radius = (cfg.FOOT_DIAMETER + 8.0) / 2
+    x = cfg.TOWER_WIDTH / 2 - boss_radius
+    y = cfg.TOWER_DEPTH / 2 - boss_radius
+    for idx, (px, py) in enumerate([(-x, -y), (x, -y), (x, y), (-x, y)]):
+        assembly.add(
+            feet.make_foot(),
+            name=f"tpu_foot_{idx}",
+            loc=cq.Location(cq.Vector(px, py, foot_z)),
+        )
 
     fan_y = -cfg.REAR_RESERVED_DEPTH / 2
     assembly.add(
@@ -63,7 +162,7 @@ def build_assembly() -> cq.Assembly:
             cq.Vector(
                 cfg.RPI3_PLACEHOLDER_X,
                 cfg.RPI3_PLACEHOLDER_Y,
-                cfg.BASE_MODULE_HEIGHT + cfg.FLOOR_THICKNESS + cfg.RPI3_STANDOFF_HEIGHT + cfg.RPI3B_BOARD_THICKNESS / 2,
+                cfg.BASE_MODULE_HEIGHT + cfg.CARRIAGE_WALL_THICKNESS + cfg.RPI3_STANDOFF_HEIGHT + cfg.RPI3B_BOARD_THICKNESS / 2,
             )
         ),
     )
@@ -74,7 +173,7 @@ def build_assembly() -> cq.Assembly:
             cq.Vector(
                 cfg.EXTERNAL_SSD_PLACEHOLDER_X,
                 cfg.EXTERNAL_SSD_PLACEHOLDER_Y,
-                cfg.BASE_MODULE_HEIGHT + cfg.FLOOR_THICKNESS + cfg.EXTERNAL_SSD_PLACEHOLDER_HEIGHT / 2,
+                cfg.BASE_MODULE_HEIGHT + cfg.CARRIAGE_WALL_THICKNESS + cfg.EXTERNAL_SSD_PLACEHOLDER_HEIGHT / 2,
             )
         ),
     )
@@ -87,7 +186,7 @@ def build_assembly() -> cq.Assembly:
                 fan_y,
                 cfg.BASE_MODULE_HEIGHT
                 + cfg.RPI_SSD_MODULE_HEIGHT
-                + cfg.FLOOR_THICKNESS
+                + cfg.CARRIAGE_WALL_THICKNESS
                 + cfg.MINI_PC_PLACEHOLDER_HEIGHT / 2,
             )
         ),

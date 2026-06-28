@@ -1,4 +1,7 @@
-"""Temporary device volumes used only for mk0.3 assembly layout checks."""
+"""Temporary device volumes used only for mk0.3 assembly layout checks.
+
+mk0.9.1 additions: POM-C shoe placeholders and aluminum U-channel rail placeholders.
+"""
 
 import cadquery as cq
 
@@ -174,3 +177,36 @@ def make_top_guard_filter_mesh_placeholder() -> cq.Workplane:
         cfg.FILTER_SLOT_HEIGHT,
         "top_guard_filter_mesh_placeholder",
     )
+
+
+# ---------------------------------------------------------------------------
+# mk0.9.1 non-printed placeholders
+# ---------------------------------------------------------------------------
+
+def make_pom_c_shoe_placeholder() -> cq.Workplane:
+    """Non-printed placeholder for a short perpendicular POM-C round shoe Ø8 mm.
+
+    The shoe is a short cylinder that press-fits into the PETG carriage socket
+    and slides inside the aluminum U-channel rail.
+    """
+    d = cfg.RUNNER_DIAMETER
+    l = cfg.RUNNER_SHOE_LENGTH
+    shoe = cq.Workplane("XY").circle(d / 2).extrude(l).tag("pom_c_shoe_placeholder")
+    return shoe
+
+
+def make_aluminum_u_channel_rail_placeholder(length: float) -> cq.Workplane:
+    """Non-printed placeholder for aluminum U-channel rail 15 x 10 x 10 x 2 mm.
+
+    Profile is a simple U-shape: outer width 15, outer height 10, wall 2.
+    Inner channel ~ 11 mm wide, 8 mm deep.
+    """
+    ow = cfg.RAIL_OUTER_WIDTH
+    oh = cfg.RAIL_OUTER_HEIGHT
+    wt = cfg.RAIL_WALL_THICKNESS
+    iw = ow - 2 * wt
+
+    outer = cq.Workplane("XY").box(ow, oh, length)
+    inner = cq.Workplane("XY").box(iw, oh - wt, length + 0.02).translate((0, wt / 2, 0))
+    rail = outer.cut(inner)
+    return rail.tag("aluminum_u_channel_rail_placeholder")

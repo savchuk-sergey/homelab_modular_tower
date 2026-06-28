@@ -1,4 +1,10 @@
-"""mk0.9 Base Module with bottom intake, filter tray and TPU foot mounts."""
+"""mk0.9.1 lightweight Base Module with bottom intake, filter tray and TPU foot mounts.
+
+The base is no longer a massive slab.  It is a frame-only structure with
+local ribs, a fan mount plate, a bottom grill, and replaceable TPU foot
+mounts.  All stiffness comes from the frame geometry, corner posts, and
+the M5 rod system—not from thick PETG walls.
+"""
 
 import cadquery as cq
 
@@ -31,16 +37,10 @@ def _frame_body(height: float, c=cfg) -> cq.Workplane:
 
 
 def make_base_frame(c=cfg) -> cq.Workplane:
+    """Lightweight frame-only base structure.  No solid floor."""
     base = _frame_body(c.BASE_MODULE_HEIGHT, c)
-    rib_z = -c.BASE_MODULE_HEIGHT / 2 + c.FLOOR_THICKNESS / 2
-    usable_y = -c.REAR_RESERVED_DEPTH / 2
-    for x in (-c.AIRFLOW_CHANNEL_WIDTH / 2 - c.RIB_THICKNESS, c.AIRFLOW_CHANNEL_WIDTH / 2 + c.RIB_THICKNESS):
-        base = base.union(cq.Workplane("XY").box(c.RIB_THICKNESS, c.MODULE_USABLE_DEPTH, c.FLOOR_THICKNESS).translate((x, usable_y, rib_z)))
-    for y in (
-        usable_y - c.AIRFLOW_CHANNEL_DEPTH / 2 - c.RIB_THICKNESS,
-        usable_y + c.AIRFLOW_CHANNEL_DEPTH / 2 + c.RIB_THICKNESS,
-    ):
-        base = base.union(cq.Workplane("XY").box(c.MODULE_USABLE_DEPTH, c.RIB_THICKNESS, c.FLOOR_THICKNESS).translate((0, y, rib_z)))
+    # mk0.9.1: remove the massive floor ribs that were added in mk0.9.
+    # Stiffness is provided by the frame rings, corner posts, and M5 rods.
     return base.tag("base_frame")
 
 
@@ -74,6 +74,7 @@ def make_dust_filter_slot(c=cfg) -> cq.Workplane:
 
 
 def make_foot_mounts(c=cfg) -> cq.Workplane:
+    """PETG socket bosses for replaceable TPU feet at the four corners."""
     mounts = None
     boss_radius = (c.FOOT_DIAMETER + 8.0) / 2
     x = c.TOWER_WIDTH / 2 - boss_radius
@@ -87,8 +88,32 @@ def make_foot_mounts(c=cfg) -> cq.Workplane:
 
 
 def make_base_module(c=cfg) -> cq.Workplane:
+    """Assembled lightweight base module.
+
+    Components from bottom to top:
+    1. Foot mounts (TPU feet attach here)
+    2. Bottom grill (intake protection)
+    3. Dust filter slot (removable filter tray)
+    4. Fan mount (120 mm intake fan)
+    5. Frame (M5 rod posts + module interface)
+    """
     module = make_base_frame(c)
     fan_y = -c.REAR_RESERVED_DEPTH / 2
-    z_floor = -c.BASE_MODULE_HEIGHT / 2 + c.FLOOR_THICKNESS / 2
-    module = module.union(make_base_fan_mount(c).translate((0, fan_y, z_floor)))
+
+    # Fan mount sits just above the bottom of the frame
+    z_fan_mount = -c.BASE_MODULE_HEIGHT / 2 + c.FLOOR_THICKNESS / 2
+    module = module.union(make_base_fan_mount(c).translate((0, fan_y, z_fan_mount)))
+
+    # Bottom grill sits below the fan mount
+    z_grill = z_fan_mount - c.FLOOR_THICKNESS
+    module = module.union(make_bottom_grill(c).translate((0, fan_y, z_grill)))
+
+    # Dust filter slot sits below the grill
+    z_filter = z_grill - c.FLOOR_THICKNESS / 2 - c.FILTER_SLOT_HEIGHT / 2
+    module = module.union(make_dust_filter_slot(c).translate((0, fan_y, z_filter)))
+
+    # Foot mounts sit on the very bottom face of the frame
+    z_feet = -c.BASE_MODULE_HEIGHT / 2 - c.FLOOR_THICKNESS / 2
+    module = module.union(make_foot_mounts(c).translate((0, 0, z_feet)))
+
     return module_interface.apply_module_interface_features(module, c, top=True, bottom=False).tag("base_module")

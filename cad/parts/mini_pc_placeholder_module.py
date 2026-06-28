@@ -1,14 +1,22 @@
-"""mk0.9 temporary Mini PC placeholder module for pre-measurement layout."""
+"""mk0.9.1 temporary Mini PC placeholder module for pre-measurement layout.
+
+The removable tray is replaced by an open-frame carriage with replaceable
+POM-C shoe runners.  Legacy tray, airflow guide, and retainer functions are
+kept for backward compatibility but are no longer used by the module
+assembly.
+"""
 
 import cadquery as cq
 
 from .. import config as cfg
-from . import module_interface, placeholders
+from . import carriages, module_interface, placeholders
 
 
 def make_mini_pc_placeholder(c=cfg) -> cq.Workplane:
     return placeholders.make_mini_pc_placeholder().tag("mini_pc_placeholder")
 
+
+# Legacy mk0.9 tray helpers (kept for backward compatibility)
 
 def make_mini_pc_placeholder_tray(c=cfg) -> cq.Workplane:
     tray = cq.Workplane("XY").box(c.TOWER_WIDTH, c.TOWER_DEPTH, c.FLOOR_THICKNESS)
@@ -68,9 +76,12 @@ def make_mini_pc_placeholder_module_shell(c=cfg) -> cq.Workplane:
 
 
 def make_mini_pc_placeholder_module(c=cfg) -> cq.Workplane:
+    """Assembled Mini PC placeholder module with the mk0.9.1 open-frame carriage.
+
+    The carriage includes placeholder support pads, POM-C shoe mounts,
+    front pull lip, lock screw, and rear cable exit.
+    """
     module = make_mini_pc_placeholder_module_shell(c)
-    deck_z = -c.MINI_PC_MODULE_HEIGHT / 2 + c.FLOOR_THICKNESS / 2
-    module = module.union(make_mini_pc_placeholder_tray(c).translate((0, 0, deck_z)))
-    module = module.union(make_mini_pc_placeholder_airflow_guide(c).translate((0, 0, deck_z + c.FLOOR_THICKNESS / 2)))
-    module = module.union(make_mini_pc_placeholder_retainer(c).translate((0, 0, deck_z + c.FLOOR_THICKNESS / 2)))
+    deck_z = -c.MINI_PC_MODULE_HEIGHT / 2 + c.CARRIAGE_WALL_THICKNESS / 2
+    module = module.union(carriages.make_mini_pc_placeholder_carriage().translate((0, 0, deck_z)))
     return module_interface.apply_module_interface_features(module, c, top=True, bottom=True).tag("mini_pc_placeholder_module")
