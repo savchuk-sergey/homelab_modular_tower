@@ -1,6 +1,6 @@
 """Generic removable carriage geometry shared by all module trays.
 
-mk0.9.1 introduces lightweight open-frame carriages with replaceable
+mk0.9.2 uses lightweight open-frame carriages with replaceable
 perpendicular POM-C shoe runners riding inside aluminum U-channel rails.
 Legacy tray functions are kept for backward compatibility.
 """
@@ -260,7 +260,7 @@ def make_module_tray(name: str, height_units: float, ventilation: bool = True, f
 
 
 # ---------------------------------------------------------------------------
-# mk0.9.1 open-frame carriage with perpendicular POM-C shoe runners
+# mk0.9.2 open-frame carriage with perpendicular POM-C shoe runners
 # ---------------------------------------------------------------------------
 
 def make_pom_c_shoe_socket() -> cq.Workplane:
@@ -286,11 +286,31 @@ def make_pom_c_shoe_clamp() -> cq.Workplane:
     threaded into a heat-set insert in the boss wall; it clamps or stops
     the POM-C shoe but does NOT thread into POM-C.
     """
-    bridge = cq.Workplane("XY").box(8.0, 6.0, 5.0)
+    bridge = cq.Workplane("XY").box(
+        cfg.CARRIAGE_CLAMP_BRIDGE_WIDTH,
+        cfg.CARRIAGE_CLAMP_BRIDGE_DEPTH,
+        cfg.CARRIAGE_CLAMP_BRIDGE_HEIGHT,
+    )
     bridge = bridge.faces(">Z").workplane().hole(cfg.RUNNER_RETENTION_SCREW_CLEARANCE)
-    # small lip that overhangs the shoe
-    lip = cq.Workplane("XY").box(4.0, 3.0, 2.0).translate((0, -1.5, 2.5))
-    return bridge.union(lip).edges("|Z").chamfer(cfg.FILLET_RADIUS).tag("pom_c_shoe_clamp")
+    insert_boss = (
+        cq.Workplane("XY")
+        .circle(cfg.CARRIAGE_CLAMP_INSERT_BOSS_DIAMETER / 2)
+        .extrude(cfg.CARRIAGE_CLAMP_INSERT_BOSS_HEIGHT)
+        .translate((0, 0, -cfg.CARRIAGE_CLAMP_INSERT_BOSS_HEIGHT / 2))
+    )
+    insert_bore = (
+        cq.Workplane("XY")
+        .circle(cfg.HEAT_SET_INSERT_M3_DIAMETER / 2)
+        .extrude(cfg.CARRIAGE_CLAMP_INSERT_BOSS_HEIGHT + 0.02)
+        .translate((0, 0, -cfg.CARRIAGE_CLAMP_INSERT_BOSS_HEIGHT / 2 - 0.01))
+    )
+    insert_boss = insert_boss.cut(insert_bore)
+    lip = cq.Workplane("XY").box(
+        cfg.CARRIAGE_CLAMP_LIP_WIDTH,
+        cfg.CARRIAGE_CLAMP_LIP_DEPTH,
+        cfg.CARRIAGE_CLAMP_LIP_HEIGHT,
+    ).translate((0, cfg.CARRIAGE_CLAMP_LIP_OFFSET_Y, cfg.CARRIAGE_CLAMP_LIP_OFFSET_Z))
+    return bridge.union(insert_boss).union(lip).tag("pom_c_shoe_clamp")
 
 
 def make_carriage_side_shoe_mounts(shoes_per_side: int) -> cq.Workplane:
@@ -298,7 +318,7 @@ def make_carriage_side_shoe_mounts(shoes_per_side: int) -> cq.Workplane:
 
     Shoes are arranged along the side wall of the carriage, spaced evenly.
     """
-    side_length = cfg.MODULE_DEPTH - 24.0  # inset from front/rear
+    side_length = cfg.MODULE_DEPTH - cfg.CARRIAGE_SHOE_END_INSET
     if shoes_per_side <= 1:
         spacing = 0.0
         offsets = [0.0]
@@ -313,7 +333,7 @@ def make_carriage_side_shoe_mounts(shoes_per_side: int) -> cq.Workplane:
             mount = make_pom_c_shoe_socket().translate((sign * x, y, cfg.CARRIAGE_RUNNER_BOSS_THICKNESS / 2))
             # add a small rib between socket and carriage wall
             rib = cq.Workplane("XY").box(
-                cfg.CARRIAGE_RUNNER_BOSS_DIAMETER + 2.0,
+                cfg.CARRIAGE_RUNNER_BOSS_DIAMETER + cfg.CARRIAGE_RUNNER_BOSS_RIB_EXTRA_WIDTH,
                 cfg.CARRIAGE_RUNNER_BOSS_RIB_THICKNESS,
                 cfg.CARRIAGE_RUNNER_BOSS_THICKNESS,
             ).translate((sign * x, y, cfg.CARRIAGE_RUNNER_BOSS_THICKNESS / 2))
@@ -366,8 +386,8 @@ def make_lightweight_open_frame_carriage(
     # front pull lip / handle bridge
     lip = (
         cq.Workplane("XY")
-        .box(64.0, 4.0, 8.0)
-        .translate((0, -depth / 2 - 2.0, 8.0))
+        .box(cfg.CARRIAGE_PULL_LIP_WIDTH, cfg.CARRIAGE_PULL_LIP_DEPTH, cfg.CARRIAGE_PULL_LIP_HEIGHT)
+        .translate((0, -depth / 2 - cfg.CARRIAGE_PULL_LIP_FRONT_OFFSET, cfg.CARRIAGE_PULL_LIP_Z))
     )
     carriage = carriage.union(lip)
 
@@ -466,7 +486,12 @@ def make_mini_pc_placeholder_carriage() -> cq.Workplane:
     cy = cfg.MINI_PC_PLACEHOLDER_DEPTH / 2 + cfg.MINI_PC_PLACEHOLDER_CLEARANCE
     center_y = -cfg.REAR_RESERVED_DEPTH / 2
     for dx, dy in [(-cx, -cy), (cx, -cy), (cx, cy), (-cx, cy)]:
-        pad = cq.Workplane("XY").circle(6.0).extrude(4.0).translate((dx, center_y + dy, pad_z))
+        pad = (
+            cq.Workplane("XY")
+            .circle(cfg.MINI_PC_SUPPORT_PAD_RADIUS)
+            .extrude(cfg.MINI_PC_SUPPORT_PAD_HEIGHT)
+            .translate((dx, center_y + dy, pad_z))
+        )
         carriage = carriage.union(pad)
 
     # front and rear placeholder retainers (low rails)

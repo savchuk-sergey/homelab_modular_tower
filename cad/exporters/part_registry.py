@@ -1,5 +1,6 @@
 """Part registry used by export scripts."""
 
+from .. import config as cfg
 from ..parts import (
     airflow,
     base_module,
@@ -35,7 +36,7 @@ PARTS = {
     "rpi_mount_posts": rpi_ssd_module.make_rpi_mount_posts,
     "ssd_retainer": rpi_ssd_module.make_ssd_retainer,
     "rpi_ssd_module_shell": rpi_ssd_module.make_rpi_ssd_module_shell,
-    # mk0.9.1 open-frame carriage
+    # mk0.9.2 open-frame carriage
     "rpi_ssd_carriage": carriages.make_rpi_ssd_carriage,
     "rpi_ssd_module": rpi_ssd_module.make_rpi_ssd_module,
     # mini_pc legacy helpers
@@ -44,7 +45,7 @@ PARTS = {
     "mini_pc_placeholder_airflow_guide": mini_pc_placeholder_module.make_mini_pc_placeholder_airflow_guide,
     "mini_pc_placeholder_retainer": mini_pc_placeholder_module.make_mini_pc_placeholder_retainer,
     "mini_pc_placeholder_module_shell": mini_pc_placeholder_module.make_mini_pc_placeholder_module_shell,
-    # mk0.9.1 open-frame carriage
+    # mk0.9.2 open-frame carriage
     "mini_pc_placeholder_carriage": carriages.make_mini_pc_placeholder_carriage,
     "mini_pc_placeholder_module": mini_pc_placeholder_module.make_mini_pc_placeholder_module,
     # roof
@@ -67,7 +68,9 @@ PARTS = {
     "dust_filter_placeholder": placeholders.make_dust_filter_placeholder,
     "top_guard_filter_mesh_placeholder": placeholders.make_top_guard_filter_mesh_placeholder,
     "pom_c_shoe_placeholder": placeholders.make_pom_c_shoe_placeholder,
-    "aluminum_u_channel_rail_placeholder": placeholders.make_aluminum_u_channel_rail_placeholder,
+    "aluminum_u_channel_rail_placeholder": lambda: placeholders.make_aluminum_u_channel_rail_placeholder(
+        cfg.RAIL_LENGTH_MINI_PC_PLACEHOLDER
+    ),
     # airflow review
     "central_airflow_channel_placeholder": airflow.make_central_airflow_channel_placeholder,
     "airflow_clearance_zone": airflow.make_airflow_clearance_zone,
@@ -75,7 +78,7 @@ PARTS = {
     # legacy rail helpers (kept for backward compatibility)
     "rail_end_mount": rails.create_rail_end_mount,
     "tray_support_ledge": rails.create_tray_support_ledge,
-    # mk0.9.1 rail
+    # mk0.9.2 rail
     "rail_end_clip": rails.make_rail_end_clip,
 }
 
@@ -101,7 +104,9 @@ EXPORT_CATEGORIES = {
     },
     "non_printable/metal_reference": {
         "m5_threaded_rod": create_m5_threaded_rod,
-        "aluminum_u_channel_rail_placeholder": placeholders.make_aluminum_u_channel_rail_placeholder,
+        "aluminum_u_channel_rail_placeholder": lambda: placeholders.make_aluminum_u_channel_rail_placeholder(
+            cfg.RAIL_LENGTH_MINI_PC_PLACEHOLDER
+        ),
     },
     "placeholders/devices": {
         "raspberry_pi_3b_placeholder": placeholders.make_raspberry_pi_3b_placeholder,

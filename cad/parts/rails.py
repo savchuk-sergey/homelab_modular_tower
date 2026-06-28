@@ -1,6 +1,6 @@
 """Metal guide rail placeholders and rail layout.
 
-mk0.9.1 introduces the aluminum U-channel rail standard (15 x 10 x 10 x 2 mm)
+mk0.9.2 uses the aluminum U-channel rail standard (15 x 10 x 10 x 2 mm)
 as the primary side-mounted guide rail.  Legacy flat-bar rails are kept for
 backward compatibility but are no longer the recommended path.
 """
@@ -69,16 +69,26 @@ def create_tray_support_ledge() -> cq.Workplane:
 
 
 # ---------------------------------------------------------------------------
-# mk0.9.1 U-channel rail standard
+# mk0.9.2 U-channel rail standard
 # ---------------------------------------------------------------------------
 
+def u_channel_rail_x_offset() -> float:
+    """Lateral centerline for the active U-channel rail standard."""
+    return (
+        cfg.TOWER_WIDTH / 2
+        - cfg.RAIL_OUTER_WIDTH / 2
+        - cfg.CARRIAGE_WALL_THICKNESS
+        - cfg.RAIL_SIDE_OFFSET_CLEARANCE
+    )
+
+
 def u_channel_rail_positions() -> list[tuple[float, float]]:
-    """Return side-mounted U-channel rail positions for mk0.9.1.
+    """Return side-mounted U-channel rail positions for mk0.9.2.
 
     Rails sit at the lateral sides of the module, aligned with the
     carriage POM-C shoe runners.
     """
-    x = cfg.TOWER_WIDTH / 2 - cfg.RAIL_OUTER_WIDTH / 2 - cfg.CARRIAGE_WALL_THICKNESS - 1.0
+    x = u_channel_rail_x_offset()
     y = -cfg.REAR_RESERVED_DEPTH / 2
     return [(-x, y), (x, y)]
 
@@ -107,7 +117,70 @@ def make_rail_pocket_cutter(length: float) -> cq.Workplane:
     """
     pw = cfg.RAIL_POCKET_WIDTH
     ph = cfg.RAIL_POCKET_HEIGHT
-    return cq.Workplane("XY").box(pw, ph, length + 0.02)
+    return cq.Workplane("XY").box(
+        pw,
+        length + cfg.RAIL_POCKET_LENGTH_CLEARANCE,
+        ph,
+    )
+
+
+def make_rail_pocket_carrier(length: float) -> cq.Workplane:
+    """Printed side carrier with a visible rail pocket for the U-channel."""
+    carrier = cq.Workplane("XY").box(
+        cfg.RAIL_POCKET_CARRIER_WIDTH,
+        length + cfg.RAIL_POCKET_LENGTH_CLEARANCE,
+        cfg.RAIL_POCKET_CARRIER_HEIGHT,
+    )
+    pocket = make_rail_pocket_cutter(length).translate(
+        (
+            0,
+            0,
+            cfg.RAIL_POCKET_CARRIER_WALL / 2,
+        )
+    )
+    carrier = carrier.cut(pocket)
+
+    rib_x = cfg.RAIL_POCKET_CARRIER_WIDTH / 2 - cfg.RAIL_POCKET_CARRIER_RIB_WIDTH / 2
+    for sign in (-1, 1):
+        rib = cq.Workplane("XY").box(
+            cfg.RAIL_POCKET_CARRIER_RIB_WIDTH,
+            length + cfg.RAIL_POCKET_LENGTH_CLEARANCE,
+            cfg.RAIL_POCKET_CARRIER_HEIGHT,
+        ).translate((sign * rib_x, 0, 0))
+        carrier = carrier.union(rib)
+    return carrier.tag("rail_pocket_carrier")
+
+
+def make_module_rail_pocket_features(module_height: float, rail_length: float) -> cq.Workplane:
+    """Printable rail pocket and end-retention features for one active module shell."""
+    features = cq.Workplane("XY")
+    x = u_channel_rail_x_offset()
+    rail_z = (
+        -module_height / 2
+        + cfg.CARRIAGE_WALL_THICKNESS / 2
+        + cfg.CARRIAGE_RUNNER_BOSS_THICKNESS / 2
+    )
+    for sign in (-1, 1):
+        carrier = make_rail_pocket_carrier(rail_length).translate((sign * x, -cfg.REAR_RESERVED_DEPTH / 2, rail_z))
+        features = features.union(carrier)
+        stop_y = rail_length / 2 + cfg.RAIL_END_STOP_DEPTH / 2
+        for end_sign in (-1, 1):
+            stop = cq.Workplane("XY").box(
+                cfg.RAIL_END_STOP_WIDTH,
+                cfg.RAIL_END_STOP_DEPTH,
+                cfg.RAIL_END_STOP_HEIGHT,
+            ).translate(
+                (
+                    sign * x,
+                    -cfg.REAR_RESERVED_DEPTH / 2 + end_sign * stop_y,
+                    rail_z + cfg.RAIL_POCKET_CARRIER_HEIGHT / 2 + cfg.RAIL_END_STOP_HEIGHT / 2,
+                )
+            )
+            stop = stop.faces(">Z").workplane(centerOption="CenterOfBoundBox").hole(
+                cfg.RAIL_END_STOP_SCREW_DIAMETER
+            )
+            features = features.union(stop)
+    return features.tag("module_rail_pocket_features")
 
 
 def make_rail_end_clip() -> cq.Workplane:
@@ -116,9 +189,12 @@ def make_rail_end_clip() -> cq.Workplane:
     The clip is screwed into the module side wall with an M3 screw;
     it blocks the rail from sliding out without requiring glue.
     """
-    clip = cq.Workplane("XY").box(12.0, 8.0, 6.0)
+    clip = cq.Workplane("XY").box(cfg.RAIL_END_CLIP_WIDTH, cfg.RAIL_END_CLIP_DEPTH, cfg.RAIL_END_CLIP_HEIGHT)
     clip = clip.faces(">Z").workplane().hole(cfg.M3_CLEARANCE)
     # small lip that overlaps the rail end
-    lip = cq.Workplane("XY").box(6.0, 4.0, 3.0).translate((0, -2.0, 3.5))
-    clip = clip.union(lip)
-    return clip.edges("|Z").chamfer(cfg.FILLET_RADIUS).tag("rail_end_clip")
+    lip = cq.Workplane("XY").box(
+        cfg.RAIL_END_CLIP_LIP_WIDTH,
+        cfg.RAIL_END_CLIP_LIP_DEPTH,
+        cfg.RAIL_END_CLIP_LIP_HEIGHT,
+    ).translate((0, cfg.RAIL_END_CLIP_LIP_OFFSET_Y, cfg.RAIL_END_CLIP_LIP_OFFSET_Z))
+    return clip.union(lip).tag("rail_end_clip")

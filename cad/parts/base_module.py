@@ -1,4 +1,4 @@
-"""mk0.9.1 lightweight Base Module with bottom intake, filter tray and TPU foot mounts.
+"""mk0.9.2 lightweight Base Module with bottom intake, filter tray and TPU foot mounts.
 
 The base is no longer a massive slab.  It is a frame-only structure with
 local ribs, a fan mount plate, a bottom grill, and replaceable TPU foot
@@ -39,7 +39,7 @@ def _frame_body(height: float, c=cfg) -> cq.Workplane:
 def make_base_frame(c=cfg) -> cq.Workplane:
     """Lightweight frame-only base structure.  No solid floor."""
     base = _frame_body(c.BASE_MODULE_HEIGHT, c)
-    # mk0.9.1: remove the massive floor ribs that were added in mk0.9.
+    # mk0.9.x: keep the base off the massive floor ribs that were added in mk0.9.
     # Stiffness is provided by the frame rings, corner posts, and M5 rods.
     return base.tag("base_frame")
 

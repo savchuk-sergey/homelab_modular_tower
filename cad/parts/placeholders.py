@@ -1,6 +1,6 @@
 """Temporary device volumes used only for mk0.3 assembly layout checks.
 
-mk0.9.1 additions: POM-C shoe placeholders and aluminum U-channel rail placeholders.
+mk0.9.2 additions: POM-C shoe placeholders and aluminum U-channel rail placeholders.
 """
 
 import cadquery as cq
@@ -180,7 +180,7 @@ def make_top_guard_filter_mesh_placeholder() -> cq.Workplane:
 
 
 # ---------------------------------------------------------------------------
-# mk0.9.1 non-printed placeholders
+# mk0.9.2 non-printed placeholders
 # ---------------------------------------------------------------------------
 
 def make_pom_c_shoe_placeholder() -> cq.Workplane:

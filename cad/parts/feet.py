@@ -195,7 +195,7 @@ def create_foot() -> cq.Workplane:
     return make_foot()
 
 
-# mk0.9.1 aliases for explicit naming
+# mk0.9.x aliases for explicit naming
 
 def make_tpu_foot_placeholder() -> cq.Workplane:
     """Non-printed TPU foot placeholder (same geometry as make_foot)."""

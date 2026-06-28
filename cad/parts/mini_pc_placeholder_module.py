@@ -1,4 +1,4 @@
-"""mk0.9.1 temporary Mini PC placeholder module for pre-measurement layout.
+"""mk0.9.2 temporary Mini PC placeholder module for pre-measurement layout.
 
 The removable tray is replaced by an open-frame carriage with replaceable
 POM-C shoe runners.  Legacy tray, airflow guide, and retainer functions are
@@ -9,7 +9,7 @@ assembly.
 import cadquery as cq
 
 from .. import config as cfg
-from . import carriages, module_interface, placeholders
+from . import carriages, module_interface, placeholders, rails
 
 
 def make_mini_pc_placeholder(c=cfg) -> cq.Workplane:
@@ -72,11 +72,12 @@ def make_mini_pc_placeholder_module_shell(c=cfg) -> cq.Workplane:
     y = c.TOWER_DEPTH / 2 - c.ROD_CENTER_OFFSET
     for px, py in [(-x, -y), (x, -y), (x, y), (-x, y)]:
         shell = shell.union(cq.Workplane("XY").box(post_size, post_size, c.MINI_PC_MODULE_HEIGHT).translate((px, py, 0)))
+    shell = shell.union(rails.make_module_rail_pocket_features(c.MINI_PC_MODULE_HEIGHT, c.RAIL_LENGTH_MINI_PC_PLACEHOLDER))
     return shell.tag("mini_pc_placeholder_module_shell")
 
 
 def make_mini_pc_placeholder_module(c=cfg) -> cq.Workplane:
-    """Assembled Mini PC placeholder module with the mk0.9.1 open-frame carriage.
+    """Assembled Mini PC placeholder module with the mk0.9.2 open-frame carriage.
 
     The carriage includes placeholder support pads, POM-C shoe mounts,
     front pull lip, lock screw, and rear cable exit.

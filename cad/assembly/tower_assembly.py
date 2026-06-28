@@ -1,4 +1,4 @@
-"""mk0.9.1 modular architecture prototype assembly.
+"""mk0.9.2 modular architecture prototype assembly.
 
 Includes:
 * base, RPi/SSD, Mini PC placeholder, and roof modules
@@ -20,6 +20,7 @@ from ..parts import (
     feet,
     mini_pc_placeholder_module,
     placeholders,
+    rails,
     roof_module,
     rpi_ssd_module,
 )
@@ -50,13 +51,13 @@ def _add_module_rails_and_shoes(
     shoes_per_side: int,
 ) -> None:
     """Add non-printed rail and POM-C shoe placeholders for a single module."""
-    x_rail = cfg.TOWER_WIDTH / 2 - cfg.RAIL_OUTER_WIDTH / 2 - cfg.CARRIAGE_WALL_THICKNESS - 1.0
+    x_rail = rails.u_channel_rail_x_offset()
     y_center = -cfg.REAR_RESERVED_DEPTH / 2
     # approximate Z where the shoe sits inside the carriage boss
     deck_z = -module_height / 2 + cfg.CARRIAGE_WALL_THICKNESS / 2
     z_shoe = module_z + deck_z + cfg.CARRIAGE_RUNNER_BOSS_THICKNESS / 2
 
-    side_length = cfg.MODULE_DEPTH - 24.0
+    side_length = cfg.MODULE_DEPTH - cfg.CARRIAGE_SHOE_END_INSET
     if shoes_per_side <= 1:
         offsets = [0.0]
     else:
@@ -92,7 +93,7 @@ def _add_module_rails_and_shoes(
 
 
 def build_assembly() -> cq.Assembly:
-    assembly = cq.Assembly(name="homelab_modular_tower_mk0_9_1")
+    assembly = cq.Assembly(name="homelab_modular_tower_mk0_9_2")
 
     assembly.add(base_module.make_base_module(), name="base_module", loc=cq.Location(cq.Vector(0, 0, cfg.BASE_MODULE_Z)))
     assembly.add(
