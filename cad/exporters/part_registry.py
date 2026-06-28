@@ -1,6 +1,6 @@
 """Part registry used by export scripts."""
 
-from ..parts import cooling, feet, modules, placeholders, review, service_spine, side_panels
+from ..parts import cooling, coupons, feet, modules, placeholders, review, service_spine, side_panels
 from ..parts.corner_blocks import create_corner_block
 from ..parts.frame import make_bottom_structural_frame, make_top_structural_frame
 from ..parts.rails import create_metal_guide_rail, create_rail_end_mount, create_tray_support_ledge
@@ -79,6 +79,15 @@ PARTS = {
     "blocked_air_zones_review": review.make_blocked_air_zones_review,
     "stability_review": review.make_stability_review,
     "printability_layout_review": review.make_printability_layout_review,
+    "coupon_split_joint_tab_socket": coupons.make_split_joint_coupon,
+    "coupon_rail_end_mount_fit": coupons.make_rail_end_mount_coupon,
+    "coupon_tray_ledge_stack": coupons.make_tray_ledge_coupon,
+    "coupon_side_panel_mount": coupons.make_side_panel_mount_coupon,
+    "coupon_bottom_filter_retainer": coupons.make_bottom_filter_retainer_coupon,
+    "coupon_petg_foot_socket": coupons.make_petg_foot_socket_coupon,
+    "coupon_flat_petg_tile": coupons.make_flat_tile_coupon,
+    "coupon_fan_grille_section": coupons.make_fan_grille_section_coupon,
+    "coupon_tpu_foot": coupons.make_tpu_foot_coupon,
 }
 
 
@@ -129,6 +138,19 @@ EXPORT_CATEGORIES = {
     },
     "printable/tpu": {
         "foot": feet.make_foot,
+    },
+    "printable/coupons_petg": {
+        "coupon_split_joint_tab_socket": coupons.make_split_joint_coupon,
+        "coupon_rail_end_mount_fit": coupons.make_rail_end_mount_coupon,
+        "coupon_tray_ledge_stack": coupons.make_tray_ledge_coupon,
+        "coupon_side_panel_mount": coupons.make_side_panel_mount_coupon,
+        "coupon_bottom_filter_retainer": coupons.make_bottom_filter_retainer_coupon,
+        "coupon_petg_foot_socket": coupons.make_petg_foot_socket_coupon,
+        "coupon_flat_petg_tile": coupons.make_flat_tile_coupon,
+        "coupon_fan_grille_section": coupons.make_fan_grille_section_coupon,
+    },
+    "printable/coupons_tpu": {
+        "coupon_tpu_foot": coupons.make_tpu_foot_coupon,
     },
     "non_printable/metal_reference": {
         "m5_threaded_rod": create_m5_threaded_rod,

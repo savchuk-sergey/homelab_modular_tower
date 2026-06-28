@@ -42,6 +42,9 @@ def create_rail_end_mount() -> cq.Workplane:
     )
     mount = mount.cut(rail_slot)
     mount = mount.faces(">Y").workplane(centerOption="CenterOfBoundBox").hole(cfg.M3_CLEARANCE)
+    mount = mount.faces(">Z").workplane(centerOption="CenterOfBoundBox").pushPoints(
+        [(0.0, cfg.RAIL_END_MOUNT_FRAME_SCREW_OFFSET_Y)]
+    ).hole(cfg.M3_CLEARANCE)
     return mount.edges("|Z").chamfer(cfg.FILLET_RADIUS).tag("rail_end_mount")
 
 

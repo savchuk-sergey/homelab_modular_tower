@@ -21,14 +21,30 @@ def _split_section(part: cq.Workplane, width: float, depth: float, height: float
     ).translate((0, 0, cutter_z))
     segment = part.intersect(cutter)
 
+    tab_width = max(width - 2 * cfg.SPLIT_JOINT_TAB_SIDE_MARGIN, cfg.SPLIT_JOINT_TAB_MIN_WIDTH)
     tab_z = 0
     tab_y = depth / 2 + cfg.SPLIT_JOINT_TAB_DEPTH / 2
-    tab = cq.Workplane("XY").box(
-        max(width - 12.0, cfg.SPLIT_JOINT_SCREW_OFFSET_X * 2 + 8.0),
-        cfg.SPLIT_JOINT_TAB_DEPTH,
-        cfg.SPLIT_JOINT_TAB_HEIGHT,
-    ).translate((0, tab_y, tab_z))
-    segment = segment.union(tab)
+    if section == "lower":
+        tab = cq.Workplane("XY").box(
+            tab_width,
+            cfg.SPLIT_JOINT_TAB_DEPTH,
+            cfg.SPLIT_JOINT_TAB_HEIGHT,
+        ).translate((0, tab_y, tab_z))
+        segment = segment.union(tab)
+    else:
+        socket_depth = cfg.SPLIT_JOINT_TAB_DEPTH + cfg.SPLIT_JOINT_SOCKET_CLEARANCE + 2 * cfg.SPLIT_JOINT_SOCKET_WALL
+        socket_height = cfg.SPLIT_JOINT_TAB_HEIGHT + 2 * cfg.SPLIT_JOINT_SOCKET_WALL
+        socket = cq.Workplane("XY").box(
+            tab_width + 2 * cfg.SPLIT_JOINT_SOCKET_WALL,
+            socket_depth,
+            socket_height,
+        ).translate((0, depth / 2 + socket_depth / 2, tab_z))
+        tab_clearance = cq.Workplane("XY").box(
+            tab_width + 2 * cfg.SPLIT_JOINT_SOCKET_CLEARANCE,
+            cfg.SPLIT_JOINT_TAB_DEPTH + cfg.SPLIT_JOINT_SOCKET_CLEARANCE,
+            cfg.SPLIT_JOINT_TAB_HEIGHT + 2 * cfg.SPLIT_JOINT_SOCKET_CLEARANCE,
+        ).translate((0, depth / 2 + (cfg.SPLIT_JOINT_TAB_DEPTH + cfg.SPLIT_JOINT_SOCKET_CLEARANCE) / 2, tab_z))
+        segment = segment.union(socket.cut(tab_clearance))
     segment = segment.faces(">Y").workplane(centerOption="CenterOfBoundBox").pushPoints(
         [(-cfg.SPLIT_JOINT_SCREW_OFFSET_X, tab_z), (cfg.SPLIT_JOINT_SCREW_OFFSET_X, tab_z)]
     ).hole(cfg.M3_CLEARANCE)

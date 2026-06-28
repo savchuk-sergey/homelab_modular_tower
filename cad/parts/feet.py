@@ -26,12 +26,12 @@ def make_foot_socket() -> cq.Workplane:
     return socket.tag("foot_socket")
 
 
-def _rib(length: float, width: float, height: float, x: float, y: float) -> cq.Workplane:
+def _rib(length: float, width: float, height: float, x: float, y: float, base_thickness: float) -> cq.Workplane:
     rib = cq.Workplane("XY").box(length, width, height)
-    return rib.translate((x, y, -cfg.BASE_STABILITY_THICKNESS / 2 - height / 2))
+    return rib.translate((x, y, -base_thickness / 2 - height / 2))
 
 
-def _add_base_ribs(base: cq.Workplane, width: float, depth: float) -> cq.Workplane:
+def _add_base_ribs(base: cq.Workplane, width: float, depth: float, base_thickness: float) -> cq.Workplane:
     rib_h = cfg.BASE_STABILITY_RIB_HEIGHT
     rib_t = cfg.BASE_STABILITY_RIB_THICKNESS
     inset = cfg.BASE_STABILITY_PERIMETER_RIB_INSET
@@ -39,23 +39,23 @@ def _add_base_ribs(base: cq.Workplane, width: float, depth: float) -> cq.Workpla
     y_len = depth - 2 * inset
 
     for y in (-(depth / 2 - inset), depth / 2 - inset):
-        base = base.union(_rib(x_len, rib_t, rib_h, 0, y))
+        base = base.union(_rib(x_len, rib_t, rib_h, 0, y, base_thickness))
     for x in (-(width / 2 - inset), width / 2 - inset):
-        base = base.union(_rib(rib_t, y_len, rib_h, x, 0))
+        base = base.union(_rib(rib_t, y_len, rib_h, x, 0, base_thickness))
 
     fan = cfg.BASE_STABILITY_FAN_RIB_OFFSET
     for y in (-fan, fan):
-        base = base.union(_rib(cfg.BASE_STABILITY_FAN_CLEARANCE_DIAMETER, rib_t, rib_h, 0, y))
+        base = base.union(_rib(cfg.BASE_STABILITY_FAN_CLEARANCE_DIAMETER, rib_t, rib_h, 0, y, base_thickness))
     for x in (-fan, fan):
-        base = base.union(_rib(rib_t, cfg.BASE_STABILITY_FAN_CLEARANCE_DIAMETER, rib_h, x, 0))
+        base = base.union(_rib(rib_t, cfg.BASE_STABILITY_FAN_CLEARANCE_DIAMETER, rib_h, x, 0, base_thickness))
     return base
 
 
-def _cut_intake(part: cq.Workplane) -> cq.Workplane:
+def _cut_intake(part: cq.Workplane, base_thickness: float) -> cq.Workplane:
     intake = (
         cq.Workplane("XY")
         .circle(cfg.BASE_STABILITY_FAN_CLEARANCE_DIAMETER / 2)
-        .extrude(cfg.BASE_STABILITY_THICKNESS + cfg.BASE_STABILITY_RIB_HEIGHT + cfg.FILLET_RADIUS * 2)
+        .extrude(base_thickness + cfg.BASE_STABILITY_RIB_HEIGHT + cfg.FILLET_RADIUS * 2)
         .translate((0, 0, -cfg.BASE_STABILITY_RIB_HEIGHT / 2 - cfg.FILLET_RADIUS))
     )
     return part.cut(intake)
@@ -87,15 +87,21 @@ def _add_wing_fasteners(part: cq.Workplane, horizontal: bool) -> cq.Workplane:
     return part.faces(">Z").workplane().pushPoints(points).hole(cfg.M3_CLEARANCE)
 
 
-def _make_base_section(width: float, depth: float, name: str, include_intake: bool = False) -> cq.Workplane:
+def _make_base_section(
+    width: float,
+    depth: float,
+    name: str,
+    include_intake: bool = False,
+    thickness: float = cfg.BASE_STABILITY_THICKNESS,
+) -> cq.Workplane:
     part = (
         cq.Workplane("XY")
-        .box(width, depth, cfg.BASE_STABILITY_THICKNESS)
+        .box(width, depth, thickness)
         .edges("|Z")
         .chamfer(cfg.BASE_STABILITY_CORNER_RADIUS)
     )
     if include_intake:
-        part = _cut_intake(part)
+        part = _cut_intake(part, thickness)
     return part.tag(name)
 
 
@@ -105,9 +111,10 @@ def make_central_bottom_fan_frame() -> cq.Workplane:
         cfg.BASE_CENTER_FRAME_DEPTH,
         "central_bottom_fan_frame",
         include_intake=True,
+        thickness=cfg.BASE_CENTER_FRAME_THICKNESS,
     )
     section = _add_frame_mounts(section)
-    return _add_base_ribs(section, cfg.BASE_CENTER_FRAME_WIDTH, cfg.BASE_CENTER_FRAME_DEPTH)
+    return _add_base_ribs(section, cfg.BASE_CENTER_FRAME_WIDTH, cfg.BASE_CENTER_FRAME_DEPTH, cfg.BASE_CENTER_FRAME_THICKNESS)
 
 
 def make_left_foot_extension() -> cq.Workplane:
@@ -139,7 +146,7 @@ def make_base_stability_plate() -> cq.Workplane:
         .chamfer(cfg.BASE_STABILITY_CORNER_RADIUS)
     )
 
-    base = _cut_intake(base)
+    base = _cut_intake(base, cfg.BASE_STABILITY_THICKNESS)
     base = _add_frame_mounts(base)
 
     for x, y in wide_foot_positions():
@@ -157,7 +164,7 @@ def make_base_stability_plate() -> cq.Workplane:
         )
         base = base.cut(socket_cut).cut(screw_cut)
 
-    return _add_base_ribs(base, cfg.BASE_STABILITY_WIDTH, cfg.BASE_STABILITY_DEPTH).tag("base_stability_plate")
+    return _add_base_ribs(base, cfg.BASE_STABILITY_WIDTH, cfg.BASE_STABILITY_DEPTH, cfg.BASE_STABILITY_THICKNESS).tag("base_stability_plate")
 
 
 def make_wide_tpu_foot_placeholder() -> cq.Workplane:

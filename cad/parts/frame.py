@@ -51,6 +51,9 @@ def create_frame_ring(
             cfg.METAL_RAIL_WIDTH + cfg.METAL_RAIL_FRAME_CLEARANCE,
             cfg.METAL_RAIL_THICKNESS + cfg.METAL_RAIL_FRAME_CLEARANCE,
         ).cutBlind(-z_height)
+        ring = ring.faces(">Z").workplane().pushPoints(
+            [(x, y + cfg.RAIL_END_MOUNT_FRAME_SCREW_OFFSET_Y)]
+        ).hole(cfg.M3_CLEARANCE)
 
     rib_z = z_height / 2 + cfg.FRAME_RIB_HEIGHT / 2
     rib_span_x = cfg.OUTER_WIDTH - 2 * cfg.FRAME_RIB_INSET
