@@ -45,14 +45,22 @@ def make_base_frame(c=cfg) -> cq.Workplane:
 
 
 def make_base_fan_mount(c=cfg) -> cq.Workplane:
-    plate = cq.Workplane("XY").box(c.FAN_120_SIZE + 22.0, c.FAN_120_SIZE + 22.0, c.FLOOR_THICKNESS)
+    plate = cq.Workplane("XY").box(
+        c.FAN_120_SIZE + 2 * c.FAN_MOUNT_FRAME_MARGIN,
+        c.FAN_120_SIZE + 2 * c.FAN_MOUNT_FRAME_MARGIN,
+        c.FLOOR_THICKNESS,
+    )
     plate = plate.faces(">Z").workplane().circle(c.FAN_120_SIZE / 2).cutThruAll()
     d = c.FAN_120_HOLE_SPACING / 2
     return plate.faces(">Z").workplane().pushPoints([(x, y) for x in (-d, d) for y in (-d, d)]).hole(c.FAN_SCREW_CLEARANCE).tag("base_fan_mount")
 
 
 def make_bottom_grill(c=cfg) -> cq.Workplane:
-    grill = cq.Workplane("XY").box(c.FAN_120_SIZE + 18.0, c.FAN_120_SIZE + 18.0, c.FLOOR_THICKNESS)
+    grill = cq.Workplane("XY").box(
+        c.FAN_120_SIZE + 2 * c.FAN_GRILL_FRAME_MARGIN,
+        c.FAN_120_SIZE + 2 * c.FAN_GRILL_FRAME_MARGIN,
+        c.FLOOR_THICKNESS,
+    )
     grill = grill.faces(">Z").workplane().circle(c.FAN_120_SIZE / 2).cutThruAll()
     for offset in c.FAN_GRILLE_BAR_X:
         grill = grill.union(cq.Workplane("XY").box(c.RIB_THICKNESS, c.FAN_120_SIZE - c.FAN_GRILLE_BAR_LENGTH_INSET, c.FLOOR_THICKNESS).translate((offset, 0, 0)))
@@ -76,7 +84,7 @@ def make_dust_filter_slot(c=cfg) -> cq.Workplane:
 def make_foot_mounts(c=cfg) -> cq.Workplane:
     """PETG socket bosses for replaceable TPU feet at the four corners."""
     mounts = None
-    boss_radius = (c.FOOT_DIAMETER + 8.0) / 2
+    boss_radius = (c.FOOT_DIAMETER + c.FOOT_MOUNT_BOSS_EXTRA_DIAMETER) / 2
     x = c.TOWER_WIDTH / 2 - boss_radius
     y = c.TOWER_DEPTH / 2 - boss_radius
     for px, py in [(-x, -y), (x, -y), (x, y), (-x, y)]:

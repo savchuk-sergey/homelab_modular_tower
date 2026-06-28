@@ -3,7 +3,7 @@
 import argparse
 
 from .exporters.export_assembly import export_assembly
-from .exporters.export_parts import ensure_export_dirs, export_part, export_parts, write_manifest
+from .exporters.export_parts import ensure_export_dirs, export_part, export_parts, write_manifest, write_print_manifest
 from .exporters.part_registry import PARTS
 
 
@@ -13,6 +13,7 @@ def export_all(revision: str | None = None) -> None:
     export_assembly(step_dir)
     if revision:
         write_manifest(step_dir)
+        write_print_manifest(step_dir)
 
 
 if __name__ == "__main__":
@@ -26,4 +27,12 @@ if __name__ == "__main__":
     export_all(args.revision or None)
 
 
-__all__ = ["PARTS", "ensure_export_dirs", "export_all", "export_part", "export_parts", "write_manifest"]
+__all__ = [
+    "PARTS",
+    "ensure_export_dirs",
+    "export_all",
+    "export_part",
+    "export_parts",
+    "write_manifest",
+    "write_print_manifest",
+]

@@ -209,7 +209,7 @@ def make_foot_mounts_for_base_module() -> cq.Workplane:
     here so that base_module can import it when it is refactored.
     """
     mounts = None
-    boss_radius = (cfg.FOOT_DIAMETER + 8.0) / 2
+    boss_radius = (cfg.FOOT_DIAMETER + cfg.FOOT_MOUNT_BOSS_EXTRA_DIAMETER) / 2
     x = cfg.TOWER_WIDTH / 2 - boss_radius
     y = cfg.TOWER_DEPTH / 2 - boss_radius
     for px, py in [(-x, -y), (x, -y), (x, y), (-x, y)]:

@@ -36,7 +36,7 @@ PARTS = {
     "rpi_mount_posts": rpi_ssd_module.make_rpi_mount_posts,
     "ssd_retainer": rpi_ssd_module.make_ssd_retainer,
     "rpi_ssd_module_shell": rpi_ssd_module.make_rpi_ssd_module_shell,
-    # mk0.9.2 open-frame carriage
+    # mk0.9.3 open-frame carriage
     "rpi_ssd_carriage": carriages.make_rpi_ssd_carriage,
     "rpi_ssd_module": rpi_ssd_module.make_rpi_ssd_module,
     # mini_pc legacy helpers
@@ -45,7 +45,7 @@ PARTS = {
     "mini_pc_placeholder_airflow_guide": mini_pc_placeholder_module.make_mini_pc_placeholder_airflow_guide,
     "mini_pc_placeholder_retainer": mini_pc_placeholder_module.make_mini_pc_placeholder_retainer,
     "mini_pc_placeholder_module_shell": mini_pc_placeholder_module.make_mini_pc_placeholder_module_shell,
-    # mk0.9.2 open-frame carriage
+    # mk0.9.3 open-frame carriage
     "mini_pc_placeholder_carriage": carriages.make_mini_pc_placeholder_carriage,
     "mini_pc_placeholder_module": mini_pc_placeholder_module.make_mini_pc_placeholder_module,
     # roof
@@ -78,46 +78,50 @@ PARTS = {
     # legacy rail helpers (kept for backward compatibility)
     "rail_end_mount": rails.create_rail_end_mount,
     "tray_support_ledge": rails.create_tray_support_ledge,
-    # mk0.9.2 rail
+    # mk0.9.3 rail
     "rail_end_clip": rails.make_rail_end_clip,
 }
 
 
 EXPORT_CATEGORIES = {
-    "printable/plastic": {
+    "printed/plastic_modules": {
         "base_module": base_module.make_base_module,
+        "rpi_ssd_module": rpi_ssd_module.make_rpi_ssd_module,
+        "mini_pc_placeholder_module": mini_pc_placeholder_module.make_mini_pc_placeholder_module,
+        "roof_module": roof_module.make_roof_module,
+    },
+    "printed/plastic_subparts": {
         "bottom_grill": base_module.make_bottom_grill,
         "foot_mounts": base_module.make_foot_mounts,
-        "rpi_ssd_module": rpi_ssd_module.make_rpi_ssd_module,
         "rpi_ssd_carriage": carriages.make_rpi_ssd_carriage,
-        "mini_pc_placeholder_module": mini_pc_placeholder_module.make_mini_pc_placeholder_module,
         "mini_pc_placeholder_carriage": carriages.make_mini_pc_placeholder_carriage,
-        "roof_module": roof_module.make_roof_module,
         "dust_filter_slot": base_module.make_dust_filter_slot,
         "top_filter_slot": roof_module.make_top_filter_slot,
         "m5_threaded_rod_cap": create_m5_threaded_rod_cap,
         "rail_end_clip": rails.make_rail_end_clip,
     },
-    "printable/tpu": {
+    "printed/tpu": {
         "foot": feet.make_foot,
-        "tpu_foot_placeholder": feet.make_tpu_foot_placeholder,
     },
-    "non_printable/metal_reference": {
+    "reference_non_printed/metal": {
         "m5_threaded_rod": create_m5_threaded_rod,
         "aluminum_u_channel_rail_placeholder": lambda: placeholders.make_aluminum_u_channel_rail_placeholder(
             cfg.RAIL_LENGTH_MINI_PC_PLACEHOLDER
         ),
     },
-    "placeholders/devices": {
+    "reference_non_printed/wear_parts": {
+        "pom_c_shoe_placeholder": placeholders.make_pom_c_shoe_placeholder,
+        "tpu_foot_placeholder": feet.make_tpu_foot_placeholder,
+    },
+    "reference_placeholders/devices": {
         "raspberry_pi_3b_placeholder": placeholders.make_raspberry_pi_3b_placeholder,
         "external_ssd_placeholder": placeholders.make_external_ssd_placeholder,
         "mini_pc_placeholder": placeholders.make_mini_pc_placeholder,
-        "pom_c_shoe_placeholder": placeholders.make_pom_c_shoe_placeholder,
     },
-    "placeholders/fans": {
+    "reference_placeholders/fans": {
         "fan_120x120x25_placeholder": placeholders.make_fan_120_placeholder,
     },
-    "placeholders/filters": {
+    "reference_placeholders/filters": {
         "dust_filter_placeholder": placeholders.make_dust_filter_placeholder,
         "top_guard_filter_mesh_placeholder": placeholders.make_top_guard_filter_mesh_placeholder,
     },
@@ -128,7 +132,7 @@ EXPORT_CATEGORIES = {
         "airflow_clearance_zone": airflow.make_airflow_clearance_zone,
         "simplified_airflow_guide": airflow.make_simplified_airflow_guide,
     },
-    "legacy": {
+    "legacy_do_not_print": {
         "rail_end_mount": rails.create_rail_end_mount,
         "tray_support_ledge": rails.create_tray_support_ledge,
         "rpi_ssd_tray": rpi_ssd_module.make_rpi_ssd_tray,

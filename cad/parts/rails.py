@@ -1,6 +1,6 @@
 """Metal guide rail placeholders and rail layout.
 
-mk0.9.2 uses the aluminum U-channel rail standard (15 x 10 x 10 x 2 mm)
+mk0.9.3 uses the aluminum U-channel rail standard (15 x 10 x 10 x 2 mm)
 as the primary side-mounted guide rail.  Legacy flat-bar rails are kept for
 backward compatibility but are no longer the recommended path.
 """
@@ -69,7 +69,7 @@ def create_tray_support_ledge() -> cq.Workplane:
 
 
 # ---------------------------------------------------------------------------
-# mk0.9.2 U-channel rail standard
+# mk0.9.3 U-channel rail standard
 # ---------------------------------------------------------------------------
 
 def u_channel_rail_x_offset() -> float:
@@ -83,7 +83,7 @@ def u_channel_rail_x_offset() -> float:
 
 
 def u_channel_rail_positions() -> list[tuple[float, float]]:
-    """Return side-mounted U-channel rail positions for mk0.9.2.
+    """Return side-mounted U-channel rail positions for mk0.9.3.
 
     Rails sit at the lateral sides of the module, aligned with the
     carriage POM-C shoe runners.
