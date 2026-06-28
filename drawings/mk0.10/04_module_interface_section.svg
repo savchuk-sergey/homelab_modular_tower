@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke" /></marker>
+<marker id="dot" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5"><circle cx="5" cy="5" r="4" fill="context-stroke" /></marker>
+</defs>
+<rect x="0" y="0" width="1600" height="1000" fill="white" />
+<rect x="44" y="112" width="440" height="300" fill="#ffffff" stroke="#111111" stroke-width="1.25" rx="0.0" />
+<rect x="44" y="112" width="440" height="30" fill="#f6f7f8" stroke="#111111" stroke-width="1.0" rx="0.0" />
+<text x="56" y="133" fill="#20242a" font-size="13" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">A - Top reference map</text>
+<rect x="515" y="112" width="500" height="300" fill="#ffffff" stroke="#111111" stroke-width="1.25" rx="0.0" />
+<rect x="515" y="112" width="500" height="30" fill="#f6f7f8" stroke="#111111" stroke-width="1.0" rx="0.0" />
+<text x="527" y="133" fill="#20242a" font-size="13" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">B - A-A ring stack section</text>
+<rect x="44" y="442" width="470" height="300" fill="#ffffff" stroke="#111111" stroke-width="1.25" rx="0.0" />
+<rect x="44" y="442" width="470" height="30" fill="#f6f7f8" stroke="#111111" stroke-width="1.0" rx="0.0" />
+<text x="56" y="463" fill="#20242a" font-size="13" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">C - B-B M5 compression section</text>
+<rect x="545" y="442" width="470" height="300" fill="#ffffff" stroke="#111111" stroke-width="1.25" rx="0.0" />
+<rect x="545" y="442" width="470" height="30" fill="#f6f7f8" stroke="#111111" stroke-width="1.0" rx="0.0" />
+<text x="557" y="463" fill="#20242a" font-size="13" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">D - C-C alignment section</text>
+<rect x="1045" y="442" width="505" height="300" fill="#ffffff" stroke="#111111" stroke-width="1.25" rx="0.0" />
+<rect x="1045" y="442" width="505" height="30" fill="#f6f7f8" stroke="#111111" stroke-width="1.0" rx="0.0" />
+<text x="1057" y="463" fill="#20242a" font-size="13" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">Function separation</text>
+<rect x="168.0" y="176" width="192.0" height="192.0" fill="#ffffff" stroke="#111111" stroke-width="1.6" rx="0.0" />
+<rect x="168.0" y="337.6842105263158" width="192.0" height="30.315789473684212" fill="#d9c7ee" stroke="#7b5aa6" stroke-width="1.2" stroke-dasharray="5 4" rx="0.0" />
+<rect x="200.8421052631579" y="193.68421052631578" width="126.31578947368422" height="126.31578947368422" fill="#dff1ff" stroke="#1f78c8" stroke-width="1.2" stroke-dasharray="5 4" rx="0.0" />
+<circle cx="182.14736842105265" cy="190.14736842105265" r="6" fill="#8fa5b8" stroke="#526b80" stroke-width="2.0" />
+<circle cx="182.14736842105265" cy="190.14736842105265" r="2.0999999999999996" fill="#ffffff" stroke="#526b80" stroke-width="1.0" />
+<circle cx="182.14736842105265" cy="353.85263157894735" r="6" fill="#8fa5b8" stroke="#526b80" stroke-width="2.0" />
+<circle cx="182.14736842105265" cy="353.85263157894735" r="2.0999999999999996" fill="#ffffff" stroke="#526b80" stroke-width="1.0" />
+<circle cx="345.85263157894735" cy="190.14736842105265" r="6" fill="#8fa5b8" stroke="#526b80" stroke-width="2.0" />
+<circle cx="345.85263157894735" cy="190.14736842105265" r="2.0999999999999996" fill="#ffffff" stroke="#526b80" stroke-width="1.0" />
+<circle cx="345.85263157894735" cy="353.85263157894735" r="6" fill="#8fa5b8" stroke="#526b80" stroke-width="2.0" />
+<circle cx="345.85263157894735" cy="353.85263157894735" r="2.0999999999999996" fill="#ffffff" stroke="#526b80" stroke-width="1.0" />
+<text x="168.0" y="166" fill="#20242a" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">FRONT</text>
+<text x="360.0" y="386.0" fill="#20242a" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="end" font-weight="bold">REAR</text>
+<text x="264.0" y="272.0" fill="#1f78c8" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="middle" font-weight="normal">airflow window</text>
+<text x="264.0" y="356.8421052631579" fill="#7b5aa6" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="middle" font-weight="normal">rear service zone</text>
+<line x1="210.24" y1="260.48" x2="317.76" y2="260.48" stroke="#9d1c20" stroke-width="2.0" stroke-dasharray="8 5" />
+<text x="264.0" y="254.48000000000002" fill="#9d1c20" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="middle" font-weight="bold">A-A</text>
+<line x1="182.14736842105265" y1="181" x2="182.14736842105265" y2="238" stroke="#526b80" stroke-width="2.0" stroke-dasharray="8 5" />
+<text x="182.14736842105265" y="203.5" fill="#526b80" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="middle" font-weight="bold">B-B</text>
+<line x1="302.4" y1="184" x2="302.4" y2="246" stroke="#5f6670" stroke-width="2.0" stroke-dasharray="8 5" />
+<text x="302.4" y="209.0" fill="#5f6670" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="middle" font-weight="bold">C-C</text>
+<rect x="577" y="178" width="360" height="55" fill="#cfd5dc" stroke="#5f6670" stroke-width="1.2" rx="0.0" />
+<text x="591" y="210" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">upper module body</text>
+<rect x="577" y="208.0" width="360" height="64.0" fill="#e6e8eb" stroke="#111111" stroke-width="1.2" rx="0.0" />
+<text x="591" y="260" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">upper bottom interface ring</text>
+<line x1="567" y1="272" x2="947" y2="272" stroke="#9d1c20" stroke-width="1.8" stroke-dasharray="8 5" />
+<text x="932" y="264" fill="#9d1c20" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="end" font-weight="normal">module split line</text>
+<rect x="577" y="272" width="360" height="64.0" fill="#e6e8eb" stroke="#111111" stroke-width="1.2" rx="0.0" />
+<text x="591" y="352.0" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">lower top interface ring</text>
+<rect x="577" y="336.0" width="360" height="55" fill="#cfd5dc" stroke="#5f6670" stroke-width="1.2" rx="0.0" />
+<text x="591" y="381.0" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">lower module body</text>
+<rect x="709" y="194" width="95" height="155" fill="#dff1ff" stroke="#1f78c8" stroke-width="1.2" stroke-dasharray="6 4" rx="0.0" />
+<text x="757" y="276" fill="#1f78c8" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="middle" font-weight="normal">airflow remains open</text>
+<line x1="965" y1="208.0" x2="985" y2="208.0" stroke="#5f6670" stroke-width="0.9" />
+<line x1="965" y1="272" x2="985" y2="272" stroke="#5f6670" stroke-width="0.9" />
+<line x1="985" y1="208.0" x2="985" y2="272" stroke="#5f6670" stroke-width="1.0" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+<text x="991" y="240.0" fill="#5f6670" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">4 mm per ring</text>
+<text x="539" y="390" fill="#5f6670" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">No M5 rods or pins in A-A: ring function only.</text>
+<rect x="112" y="520" width="140" height="158" fill="#e6e8eb" stroke="#111111" stroke-width="1.2" rx="0.0" />
+<text x="124" y="556" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">local PETG</text>
+<text x="124" y="574" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">compression pad</text>
+<rect x="141.2" y="493" width="61.599999999999994" height="220" fill="#ffffff" stroke="#526b80" stroke-width="1.2" stroke-dasharray="4 3" rx="0.0" />
+<line x1="172" y1="480" x2="172" y2="723" stroke="#526b80" stroke-width="4" />
+<rect x="133.6" y="508" width="76.80000000000001" height="16" fill="#8fa5b8" stroke="#111111" stroke-width="1.2" rx="0.0" />
+<rect x="139.1" y="688" width="65.8" height="26" fill="#8fa5b8" stroke="#111111" stroke-width="1.2" rx="0.0" />
+<line x1="172" y1="471" x2="172" y2="528" stroke="#526b80" stroke-width="2.6" marker-end="url(#arrow)" />
+<text x="180" y="521" fill="#526b80" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">compression</text>
+<line x1="172" y1="733" x2="172" y2="664" stroke="#526b80" stroke-width="2.6" marker-end="url(#arrow)" />
+<text x="322" y="530" fill="#526b80" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">M5 rod clamps</text>
+<text x="322" y="546" fill="#526b80" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">module stack.</text>
+<text x="322" y="587" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">PETG spreads load</text>
+<text x="322" y="603" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">locally only.</text>
+<text x="322" y="656" fill="#9d1c20" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">Not a massive</text>
+<text x="322" y="672" fill="#9d1c20" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">plastic column.</text>
+<rect x="595" y="610" width="160" height="40" fill="#e6e8eb" stroke="#111111" stroke-width="1.2" rx="0.0" />
+<rect x="627.25" y="581.6" width="59.5" height="50.4" fill="#ffffff" stroke="#111111" stroke-width="1.2" stroke-dasharray="4 3" rx="0.0" />
+<rect x="633.0" y="481.6" width="48.0" height="72.0" fill="#7a828a" stroke="#111111" stroke-width="1.2" rx="0.0" />
+<polygon points="633.0,481.6 657.0,463.6 681.0,481.6" fill="#7a828a" stroke="#111111" stroke-width="1.2" />
+<line x1="602" y1="576.6" x2="712" y2="576.6" stroke="#9d1c20" stroke-width="1.2" stroke-dasharray="4 3" />
+<text x="735" y="556" fill="#9d1c20" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">visual clearance gap</text>
+<line x1="772" y1="481.6" x2="790" y2="481.6" stroke="#5f6670" stroke-width="0.9" />
+<line x1="772" y1="553.6" x2="790" y2="553.6" stroke="#5f6670" stroke-width="0.9" />
+<line x1="790" y1="481.6" x2="790" y2="553.6" stroke="#5f6670" stroke-width="1.0" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+<text x="796" y="517.6" fill="#5f6670" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">pin 4 mm</text>
+<text x="830" y="547" fill="#9d1c20" font-size="12" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">positioning only</text>
+<text x="830" y="565" fill="#9d1c20" font-size="12" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">not compression</text>
+<text x="830" y="622" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">lead-in/chamfer</text>
+<text x="830" y="638" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">shown schematically</text>
+<text x="1073" y="512" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">A-A: interface rings and airflow opening.</text>
+<text x="1073" y="532" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">B-B: M5 compression path and washer/nut pad.</text>
+<text x="1073" y="552" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">C-C: pin/socket alignment with clearance.</text>
+<text x="1073" y="572" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">These functions must not be merged in one feature.</text>
+<text x="1073" y="592" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">MODULE_INTERFACE_HEIGHT = 4 mm per ring</text>
+<text x="1073" y="612" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">INTERFACE_PIN_DIAMETER = 4 mm</text>
+<text x="1073" y="632" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">INTERFACE_PIN_CLEARANCE = 4.2 mm</text>
+<text x="1073" y="652" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">INTERFACE_SOCKET_DEPTH = 2.8 mm</text>
+<rect x="44" y="850" width="1506" height="118" fill="#fbfbfb" stroke="#a9adb4" stroke-width="1.0" rx="0.0" />
+<text x="56" y="872" fill="#20242a" font-size="12" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">Validation gates</text>
+<text x="56" y="892" fill="#20242a" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">module_interface_coupon required before relying on stacked ring contract.</text>
+<text x="56" y="907" fill="#20242a" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">pin/socket clearance coupon required before full module stack print.</text>
+<text x="56" y="922" fill="#20242a" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">A-A, B-B, and C-C are explicitly tied to the top reference map.</text>
+<rect x="36" y="20" width="1528" height="62" fill="#f9fafb" stroke="#111111" stroke-width="1.3" rx="0.0" />
+<text x="52" y="47" fill="#20242a" font-size="18" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">HMT-mk0.10-DWG-04</text>
+<text x="52" y="70" fill="#20242a" font-size="18" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">Module vertical mating contract</text>
+<line x1="575" y1="20" x2="575" y2="82" stroke="#111111" stroke-width="1.2" />
+<text x="590" y="43" fill="#20242a" font-size="13" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">Revision: mk0.10</text>
+<text x="590" y="64" fill="#5f6670" font-size="12" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">Purpose: vertical interface sections for coupon planning</text>
+<line x1="1040" y1="20" x2="1040" y2="82" stroke="#111111" stroke-width="1.2" />
+<text x="1055" y="43" fill="#9d1c20" font-size="13" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">PLANNING DRAWING - NOT FOR MANUFACTURING</text>
+<text x="1055" y="64" fill="#5f6670" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">Units: mm; source dimensions: cad/config.py (mk0.9.3)</text>
+</svg>

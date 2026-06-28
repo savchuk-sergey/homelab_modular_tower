@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke" /></marker>
+<marker id="dot" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5"><circle cx="5" cy="5" r="4" fill="context-stroke" /></marker>
+</defs>
+<rect x="0" y="0" width="1600" height="1000" fill="white" />
+<rect x="44" y="112" width="390" height="205" fill="#ffffff" stroke="#111111" stroke-width="1.25" rx="0.0" />
+<rect x="44" y="112" width="390" height="30" fill="#f6f7f8" stroke="#111111" stroke-width="1.0" rx="0.0" />
+<text x="56" y="133" fill="#20242a" font-size="13" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">A - Orientation inset</text>
+<rect x="462" y="112" width="505" height="315" fill="#ffffff" stroke="#111111" stroke-width="1.25" rx="0.0" />
+<rect x="462" y="112" width="505" height="30" fill="#f6f7f8" stroke="#111111" stroke-width="1.0" rx="0.0" />
+<text x="474" y="133" fill="#20242a" font-size="13" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">B - Real U-channel section</text>
+<rect x="995" y="112" width="555" height="315" fill="#ffffff" stroke="#111111" stroke-width="1.25" rx="0.0" />
+<rect x="995" y="112" width="555" height="30" fill="#f6f7f8" stroke="#111111" stroke-width="1.0" rx="0.0" />
+<text x="1007" y="133" fill="#20242a" font-size="13" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">C - Shoe engagement cross-section</text>
+<rect x="44" y="452" width="500" height="290" fill="#ffffff" stroke="#111111" stroke-width="1.25" rx="0.0" />
+<rect x="44" y="452" width="500" height="30" fill="#f6f7f8" stroke="#111111" stroke-width="1.0" rx="0.0" />
+<text x="56" y="473" fill="#20242a" font-size="13" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">D - Shoe side view</text>
+<rect x="572" y="452" width="500" height="290" fill="#ffffff" stroke="#111111" stroke-width="1.25" rx="0.0" />
+<rect x="572" y="452" width="500" height="30" fill="#f6f7f8" stroke="#111111" stroke-width="1.0" rx="0.0" />
+<text x="584" y="473" fill="#20242a" font-size="13" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">E - Clamp screw retention</text>
+<rect x="1100" y="452" width="450" height="290" fill="#ffffff" stroke="#111111" stroke-width="1.25" rx="0.0" />
+<rect x="1100" y="452" width="450" height="30" fill="#f6f7f8" stroke="#111111" stroke-width="1.0" rx="0.0" />
+<text x="1112" y="473" fill="#20242a" font-size="13" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">F - Clearance and structural warning</text>
+<line x1="124" y1="250" x2="194.0" y2="250" stroke="#111111" stroke-width="2.0" marker-end="url(#arrow)" />
+<text x="202.0" y="243" fill="#111111" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">+X shoe insertion</text>
+<line x1="124" y1="250" x2="239.0" y2="212.0" stroke="#526b80" stroke-width="2.0" marker-end="url(#arrow)" />
+<text x="247.0" y="205.0" fill="#526b80" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">+Y rail length / slide</text>
+<line x1="124" y1="250" x2="124" y2="188.0" stroke="#5f6670" stroke-width="2.0" marker-end="url(#arrow)" />
+<text x="132" y="181.0" fill="#5f6670" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">+Z</text>
+<rect x="279" y="217" width="92" height="22" fill="#8fa5b8" stroke="#111111" stroke-width="1.2" rx="0.0" />
+<rect x="316" y="188" width="28" height="80" fill="#f2b84b" stroke="#111111" stroke-width="1.2" rx="0.0" />
+<text x="262" y="290" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">section plane X-Z</text>
+<text x="80" y="299" fill="#526b80" font-size="12" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">Carriage slides along Y.</text>
+<rect x="542" y="170" width="354.0" height="262.0" fill="#e6e8eb" stroke="#111111" stroke-width="1.5" rx="0.0" />
+<text x="550" y="160" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">PETG rail pocket</text>
+<rect x="584" y="212" width="36.0" height="180.0" fill="#8fa5b8" stroke="#111111" stroke-width="1.4" rx="0.0" />
+<rect x="584" y="356.0" width="270.0" height="36.0" fill="#8fa5b8" stroke="#111111" stroke-width="1.4" rx="0.0" />
+<rect x="818.0" y="212" width="36.0" height="180.0" fill="#8fa5b8" stroke="#111111" stroke-width="1.4" rx="0.0" />
+<line x1="620.0" y1="212" x2="818.0" y2="212" stroke="#9d1c20" stroke-width="1.2" stroke-dasharray="4 3" />
+<text x="719.0" y="200" fill="#9d1c20" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="middle" font-weight="normal">open side</text>
+<rect x="556" y="200" width="20" height="42" fill="#e6e8eb" stroke="#111111" stroke-width="1.2" rx="0.0" />
+<rect x="862.0" y="200" width="20" height="42" fill="#e6e8eb" stroke="#111111" stroke-width="1.2" rx="0.0" />
+<text x="792" y="200" fill="#526b80" font-size="12" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">aluminium U-channel</text>
+<text x="792" y="226" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">outer 15 mm x 10 mm x 10 mm</text>
+<text x="792" y="250" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">wall thickness 2 mm</text>
+<text x="792" y="274" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">inner width approx. 11 mm</text>
+<text x="792" y="318" fill="#9d1c20" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">rail must be mechanically retained,</text>
+<text x="792" y="338" fill="#9d1c20" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">not glue-only</text>
+<line x1="584" y1="428.0" x2="584" y2="428.0" stroke="#5f6670" stroke-width="0.9" />
+<line x1="854.0" y1="428.0" x2="854.0" y2="428.0" stroke="#5f6670" stroke-width="0.9" />
+<line x1="584" y1="428.0" x2="854.0" y2="428.0" stroke="#5f6670" stroke-width="1.0" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+<text x="719.0" y="444.0" fill="#5f6670" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="middle" font-weight="normal">15 mm</text>
+<line x1="878.0" y1="212" x2="878.0" y2="212" stroke="#5f6670" stroke-width="0.9" />
+<line x1="878.0" y1="392.0" x2="878.0" y2="392.0" stroke="#5f6670" stroke-width="0.9" />
+<line x1="878.0" y1="212" x2="878.0" y2="392.0" stroke="#5f6670" stroke-width="1.0" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+<text x="872.0" y="302.0" fill="#5f6670" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="end" font-weight="normal">10 mm</text>
+<rect x="1071" y="222" width="34.0" height="170.0" fill="#8fa5b8" stroke="#111111" stroke-width="1.4" rx="0.0" />
+<rect x="1071" y="358.0" width="255.0" height="34.0" fill="#8fa5b8" stroke="#111111" stroke-width="1.4" rx="0.0" />
+<rect x="1292.0" y="222" width="34.0" height="170.0" fill="#8fa5b8" stroke="#111111" stroke-width="1.4" rx="0.0" />
+<line x1="1105.0" y1="222" x2="1292.0" y2="222" stroke="#9d1c20" stroke-width="1.2" stroke-dasharray="4 3" />
+<rect x="1408.0" y="208" width="160" height="70" fill="#e6e8eb" stroke="#111111" stroke-width="1.4" rx="0.0" />
+<line x1="1298.0" y1="300.2" x2="1502.0" y2="300.2" stroke="#f2b84b" stroke-width="136.0" />
+<circle cx="1298.0" cy="300.2" r="68.0" fill="#f2b84b" stroke="#111111" stroke-width="1.4" />
+<circle cx="1502.0" cy="300.2" r="68.0" fill="#f2b84b" stroke="#111111" stroke-width="1.4" />
+<rect x="1400.0" y="215.88" width="167.0" height="168.64" fill="none" stroke="#9b6400" stroke-width="1.2" stroke-dasharray="5 4" rx="0.0" />
+<text x="1305" y="204" fill="#9b6400" font-size="12" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">POM-C short cylinder Ø8.0 x 12 mm</text>
+<text x="1305" y="234" fill="#9d1c20" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">not a wheel, ball, or bearing roller</text>
+<text x="1305" y="264" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">shoe protrudes into rail channel</text>
+<text x="1305" y="288" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">socket holds replaceable shoe</text>
+<line x1="1298.0" y1="300.2" x2="1300" y2="332" stroke="#9b6400" stroke-width="1.0" marker-end="url(#dot)" />
+<text x="1307" y="329" fill="#9b6400" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">wear contact inside U-channel</text>
+<line x1="1309" y1="374" x2="1495" y2="374" stroke="#526b80" stroke-width="2.4" marker-end="url(#arrow)" />
+<text x="1402.0" y="366.0" fill="#526b80" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="middle" font-weight="bold">sliding along Y</text>
+<rect x="136" y="584" width="216.0" height="144.0" fill="#f2b84b" stroke="#111111" stroke-width="1.3" rx="0.0" />
+<ellipse cx="136" cy="656.0" rx="72.0" ry="72.0" fill="#f2b84b" stroke="#111111" stroke-width="1.3" />
+<ellipse cx="352.0" cy="656.0" rx="72.0" ry="72.0" fill="#f2b84b" stroke="#111111" stroke-width="1.3" />
+<line x1="136" y1="584" x2="352.0" y2="584" stroke="#9b6400" stroke-width="1.0" />
+<line x1="136" y1="728.0" x2="352.0" y2="728.0" stroke="#9b6400" stroke-width="1.0" />
+<rect x="136" y="550" width="108.0" height="212.0" fill="none" stroke="#1f78c8" stroke-width="1.2" stroke-dasharray="6 4" rx="0.0" />
+<rect x="244.0" y="562" width="108.0" height="188.0" fill="none" stroke="#9b6400" stroke-width="1.2" stroke-dasharray="6 4" rx="0.0" />
+<line x1="136" y1="774.0" x2="136" y2="774.0" stroke="#5f6670" stroke-width="0.9" />
+<line x1="352.0" y1="774.0" x2="352.0" y2="774.0" stroke="#5f6670" stroke-width="0.9" />
+<line x1="136" y1="774.0" x2="352.0" y2="774.0" stroke="#5f6670" stroke-width="1.0" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+<text x="244.0" y="790.0" fill="#5f6670" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="middle" font-weight="normal">length 12 mm</text>
+<line x1="394.0" y1="584" x2="394.0" y2="584" stroke="#5f6670" stroke-width="0.9" />
+<line x1="394.0" y1="728.0" x2="394.0" y2="728.0" stroke="#5f6670" stroke-width="0.9" />
+<line x1="394.0" y1="584" x2="394.0" y2="728.0" stroke="#5f6670" stroke-width="1.0" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+<text x="388.0" y="656.0" fill="#5f6670" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="end" font-weight="normal">diameter 8 mm</text>
+<text x="374" y="560" fill="#9b6400" font-size="12" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">short cylinder</text>
+<text x="374" y="588" fill="#9d1c20" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">not a bearing / not a roller</text>
+<text x="374" y="624" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">protrusion: 6 mm</text>
+<text x="374" y="648" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">insertion depth: 6 mm</text>
+<circle cx="737" cy="636.3199999999999" r="64.39999999999999" fill="#e6e8eb" stroke="#111111" stroke-width="1.4" />
+<circle cx="737" cy="636.3199999999999" r="32.370000000000005" fill="#fff8e8" stroke="#9b6400" stroke-width="1.2" />
+<line x1="649" y1="636.3199999999999" x2="785" y2="636.3199999999999" stroke="#f2b84b" stroke-width="52.0" />
+<rect x="713.6" y="558.3199999999999" width="46.800000000000004" height="35.0" fill="#8fa5b8" stroke="#111111" stroke-width="1.2" rx="0.0" />
+<line x1="737" y1="526.3199999999999" x2="737" y2="606.3199999999999" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)" />
+<circle cx="737" cy="514.3199999999999" r="18.7" fill="#ffffff" stroke="#111111" stroke-width="1.2" />
+<circle cx="737" cy="606.3199999999999" r="5" fill="#9d1c20" stroke="#9d1c20" stroke-width="1.2" />
+<line x1="737" y1="606.3199999999999" x2="882" y2="573" stroke="#9d1c20" stroke-width="1.0" marker-end="url(#dot)" />
+<text x="889" y="570" fill="#9d1c20" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">clamp/stop contact point</text>
+<text x="882" y="610" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">M3 clamp screw into PETG boss / insert</text>
+<text x="882" y="633" fill="#9d1c20" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">thread in PETG only, not in POM-C</text>
+<text x="882" y="656" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">POM-C shoe remains replaceable</text>
+<text x="1124" y="518" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">Rail inner width approx. 11.0 mm</text>
+<text x="1124" y="539" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">Runner diameter = 8.0 mm</text>
+<text x="1124" y="560" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">Envelope difference: 11.0 - 8.0 = 3.0 mm total</text>
+<text x="1124" y="581" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">This is NOT final working clearance.</text>
+<text x="1124" y="602" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">Actual sliding contact must be validated.</text>
+<text x="1124" y="623" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">rail_shoe_test_jig variants: 0.2 / 0.4 / 0.6 mm</text>
+<text x="1124" y="644" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">Shoe acts as a short cantilever.</text>
+<text x="1124" y="665" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">Contact force bends PETG boss/ribs.</text>
+<text x="1124" y="686" fill="#20242a" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">RAIL_POCKET = 15.6 mm x 10.6 mm</text>
+<rect x="44" y="850" width="1506" height="118" fill="#fbfbfb" stroke="#a9adb4" stroke-width="1.0" rx="0.0" />
+<text x="56" y="872" fill="#20242a" font-size="12" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">Validation gates</text>
+<text x="56" y="892" fill="#20242a" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">U-channel must be instantly recognizable as top-open aluminium rail.</text>
+<text x="56" y="907" fill="#20242a" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">POM-C shoe is drawn as a short cylinder, not as a wheel, ball, or roller.</text>
+<text x="56" y="922" fill="#20242a" font-size="10.5" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">Clamp screw retention and boss stiffness require rail_shoe_test_jig validation.</text>
+<rect x="36" y="20" width="1528" height="62" fill="#f9fafb" stroke="#111111" stroke-width="1.3" rx="0.0" />
+<text x="52" y="47" fill="#20242a" font-size="18" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">HMT-mk0.10-DWG-05</text>
+<text x="52" y="70" fill="#20242a" font-size="18" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">Rail, carriage and POM-C shoe contract</text>
+<line x1="575" y1="20" x2="575" y2="82" stroke="#111111" stroke-width="1.2" />
+<text x="590" y="43" fill="#20242a" font-size="13" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">Revision: mk0.10</text>
+<text x="590" y="64" fill="#5f6670" font-size="12" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">Purpose: rail-shoe test-jig input</text>
+<line x1="1040" y1="20" x2="1040" y2="82" stroke="#111111" stroke-width="1.2" />
+<text x="1055" y="43" fill="#9d1c20" font-size="13" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="bold">PLANNING DRAWING - NOT FOR MANUFACTURING</text>
+<text x="1055" y="64" fill="#5f6670" font-size="11" font-family="Arial, Helvetica, sans-serif" text-anchor="start" font-weight="normal">Units: mm; source dimensions: cad/config.py (mk0.9.3)</text>
+</svg>

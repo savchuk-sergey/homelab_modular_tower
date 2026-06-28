@@ -875,3 +875,35 @@ MK091_ROOF_TARGET_G = 190.0
 MK091_SMALL_BRACKETS_TARGET_G = 60.0
 MK091_PETG_TOTAL_TARGET_G = 900.0
 
+# ============================================================
+# mk0.11 generic module subsystem
+# ============================================================
+#
+# This section defines the first subsystem target for the mk0.11
+# subsystem-first workflow.  All geometry reuses existing tower standard
+# dimensions wherever possible.  Only values not already covered by
+# prior sections are introduced here.
+
+# Generic module height — set equal to RPI_SSD_MODULE_HEIGHT so the first
+# prototype occupies a known, validated slot footprint in the existing stack.
+GENERIC_MODULE_HEIGHT = RPI_SSD_MODULE_HEIGHT  # 70 mm
+
+# Rail pocket length for the generic module.  Slightly shorter than
+# RAIL_LENGTH_RPI_SSD to give fresh end-stop clearance test data without
+# relying solely on the RPi/SSD result.
+GENERIC_MODULE_RAIL_LENGTH = 140.0  # mm
+
+# POM-C shoe runners per side for the generic module carriage (4 total).
+# Mirrors the RPi/SSD carriage for a minimum-shoe first prototype.
+GENERIC_MODULE_SHOES_PER_SIDE = RUNNER_SHOES_PER_SIDE_RPI_SSD  # 2
+
+# Front handle height on the module shell.  Aligned with CARRIAGE_FRONT_LIP_HEIGHT
+# so the handle zone is consistent with the existing carriage pull lip standard.
+GENERIC_MODULE_HANDLE_HEIGHT = CARRIAGE_FRONT_LIP_HEIGHT  # 12 mm
+
+# Minimum PETG bridge thickness above the handle opening (printability floor).
+GENERIC_MODULE_HANDLE_BRIDGE = 4.0  # mm
+
+# mk0.11 informational revision tag.  Does not override any frozen geometry.
+MK011_REVISION = "mk0.11"
+
