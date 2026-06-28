@@ -31,11 +31,21 @@ FIELDS = [
     "notes",
 ]
 
+PRINTED_CATEGORY_PREFIXES = (
+    "printed/plastic_modules",
+    "printed/plastic_subparts",
+    "printed/tpu",
+)
+
 
 def estimate_plastic_volume(revision: str) -> Path:
     revision = validate_current_revision(revision)
     rows: list[dict[str, object]] = []
-    for path in iter_export_files(revision, ".stl", "printable/plastic"):
+    paths: list[Path] = []
+    for category_prefix in PRINTED_CATEGORY_PREFIXES:
+        paths.extend(iter_export_files(revision, ".stl", category_prefix))
+
+    for path in sorted(paths):
         row: dict[str, object] = {
             "part_name": path.stem,
             "category": export_category(path, revision),

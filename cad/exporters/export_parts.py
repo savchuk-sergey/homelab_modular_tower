@@ -64,3 +64,51 @@ def write_manifest(export_root: Path) -> None:
             lines.append(f"- `{name}`")
         lines.append("")
     (export_root / "MANIFEST.md").write_text("\n".join(lines), encoding="utf-8")
+
+
+def write_print_manifest(export_root: Path) -> None:
+    lines = [
+        f"# {cfg.CURRENT_REVISION} Print Manifest",
+        "",
+        "This manifest separates printable prototype parts from reference-only geometry.",
+        "CadQuery source remains the source of truth; STEP/STL files are derived artifacts.",
+        "",
+        "## Print these for module-level prototype",
+        "",
+        "- `base_module`",
+        "- `rpi_ssd_module`",
+        "- `mini_pc_placeholder_module`",
+        "- `roof_module`",
+        "- `foot` / TPU feet",
+        "- `rail_end_clip` if rail end retention is tested as a separate printed part",
+        "",
+        "## Do not print separately if printing module assemblies",
+        "",
+        "- `rpi_ssd_carriage` if it is already included in `rpi_ssd_module`",
+        "- `mini_pc_placeholder_carriage` if it is already included in `mini_pc_placeholder_module`",
+        "- `bottom_grill` if it is already included in `base_module`",
+        "- `top_filter_slot` if it is already included in `roof_module`",
+        "- `foot_mounts` if they are already included in `base_module`",
+        "",
+        "## Reference only / do not print",
+        "",
+        "- `aluminum_u_channel_rail_placeholder`",
+        "- `pom_c_shoe_placeholder`",
+        "- `m5_threaded_rod`",
+        "- fan placeholders",
+        "- device placeholders",
+        "- filter placeholders",
+        "- `tpu_foot_placeholder` unless it is intentionally selected instead of `foot`",
+        "",
+        "## Legacy / do not use for mk0.9.3",
+        "",
+        "- old trays",
+        "- old flat rail mounts",
+        "- old rail ledges",
+        "- `rail_end_mount`",
+        "- `tray_support_ledge`",
+        "- `rpi_ssd_tray`",
+        "- `mini_pc_placeholder_tray`",
+        "",
+    ]
+    (export_root / "PRINT_MANIFEST.md").write_text("\n".join(lines), encoding="utf-8")

@@ -23,14 +23,22 @@ def make_roof_frame(c=cfg) -> cq.Workplane:
 
 
 def make_top_fan_mount(c=cfg) -> cq.Workplane:
-    plate = cq.Workplane("XY").box(c.FAN_120_SIZE + 22.0, c.FAN_120_SIZE + 22.0, c.FLOOR_THICKNESS)
+    plate = cq.Workplane("XY").box(
+        c.FAN_120_SIZE + 2 * c.FAN_MOUNT_FRAME_MARGIN,
+        c.FAN_120_SIZE + 2 * c.FAN_MOUNT_FRAME_MARGIN,
+        c.FLOOR_THICKNESS,
+    )
     plate = plate.faces(">Z").workplane().circle(c.FAN_120_SIZE / 2).cutThruAll()
     d = c.FAN_120_HOLE_SPACING / 2
     return plate.faces(">Z").workplane().pushPoints([(x, y) for x in (-d, d) for y in (-d, d)]).hole(c.FAN_SCREW_CLEARANCE).tag("top_fan_mount")
 
 
 def make_top_grill(c=cfg) -> cq.Workplane:
-    grill = cq.Workplane("XY").box(c.FAN_120_SIZE + 18.0, c.FAN_120_SIZE + 18.0, c.TOP_GUARD_FRAME_HEIGHT)
+    grill = cq.Workplane("XY").box(
+        c.FAN_120_SIZE + 2 * c.FAN_GRILL_FRAME_MARGIN,
+        c.FAN_120_SIZE + 2 * c.FAN_GRILL_FRAME_MARGIN,
+        c.TOP_GUARD_FRAME_HEIGHT,
+    )
     grill = grill.faces(">Z").workplane().circle(c.FAN_120_SIZE / 2).cutThruAll()
     for offset in c.FAN_GRILLE_BAR_X:
         grill = grill.union(cq.Workplane("XY").box(c.RIB_THICKNESS, c.FAN_120_SIZE - c.FAN_GRILLE_BAR_LENGTH_INSET, c.TOP_GUARD_FRAME_HEIGHT).translate((offset, 0, 0)))
@@ -39,7 +47,11 @@ def make_top_grill(c=cfg) -> cq.Workplane:
 
 
 def make_top_filter_slot(c=cfg) -> cq.Workplane:
-    slot = cq.Workplane("XY").box(c.FAN_120_SIZE + 22.0, c.FAN_120_SIZE + 22.0, c.FILTER_SLOT_HEIGHT)
+    slot = cq.Workplane("XY").box(
+        c.FAN_120_SIZE + 2 * c.FAN_MOUNT_FRAME_MARGIN,
+        c.FAN_120_SIZE + 2 * c.FAN_MOUNT_FRAME_MARGIN,
+        c.FILTER_SLOT_HEIGHT,
+    )
     window = cq.Workplane("XY").box(c.FAN_120_SIZE, c.FAN_120_SIZE, c.FILTER_SLOT_HEIGHT + c.FILLET_RADIUS)
     return slot.cut(window).tag("top_filter_slot")
 

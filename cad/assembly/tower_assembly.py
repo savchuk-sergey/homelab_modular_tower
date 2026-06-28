@@ -129,7 +129,7 @@ def build_assembly() -> cq.Assembly:
 
     # Foot placeholders
     foot_z = cfg.BASE_MODULE_Z - cfg.BASE_MODULE_HEIGHT / 2 - cfg.FOOT_HEIGHT / 2 - cfg.FLOOR_THICKNESS
-    boss_radius = (cfg.FOOT_DIAMETER + 8.0) / 2
+    boss_radius = (cfg.FOOT_DIAMETER + cfg.FOOT_MOUNT_BOSS_EXTRA_DIAMETER) / 2
     x = cfg.TOWER_WIDTH / 2 - boss_radius
     y = cfg.TOWER_DEPTH / 2 - boss_radius
     for idx, (px, py) in enumerate([(-x, -y), (x, -y), (x, y), (-x, y)]):
