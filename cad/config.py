@@ -907,3 +907,49 @@ GENERIC_MODULE_HANDLE_BRIDGE = 4.0  # mm
 # mk0.11 informational revision tag.  Does not override any frozen geometry.
 MK011_REVISION = "mk0.11"
 
+# ============================================================
+# mk0.11.2 stack-through-rod architecture
+# ============================================================
+#
+# Active architecture: base_pedestal + stack modules + top_cap,
+# compressed by four M5 through-rods.  Sliding carriage/rail system
+# is deferred; stack modules reserve future adapter mounting zones.
+
+MK0112_REVISION = "mk0.11.2"
+
+# Stack module height — same slot as RPI_SSD for conservative first prototype.
+GENERIC_STACK_MODULE_HEIGHT = RPI_SSD_MODULE_HEIGHT  # 70 mm
+
+# Local M5 washer compression seats on stack module corner posts.
+STACK_MODULE_COMPRESSION_PAD_DIAMETER = M5_WASHER_DIAMETER
+STACK_MODULE_COMPRESSION_PAD_DEPTH = M5_WASHER_SEAT_DEPTH
+
+# Internal device mounting placeholder grid (not device-specific).
+STACK_MODULE_MOUNT_GRID_PITCH = 20.0
+STACK_MODULE_MOUNT_GRID_COLS = 4
+STACK_MODULE_MOUNT_GRID_ROWS = 3
+STACK_MODULE_MOUNT_PAD_DIAMETER = 6.0
+STACK_MODULE_MOUNT_PAD_HEIGHT = 2.0
+
+# Future carriage / side adapter reserve zones (placeholders only — no rails/shoes).
+FUTURE_CARRIAGE_PAD_WIDTH = RAIL_POCKET_CARRIER_WIDTH
+FUTURE_CARRIAGE_PAD_HEIGHT = RAIL_POCKET_CARRIER_HEIGHT
+FUTURE_CARRIAGE_PAD_WALL = RAIL_POCKET_CARRIER_WALL
+FUTURE_CARRIAGE_PAD_VERTICAL_CENTER_Z = 0.0
+FUTURE_CARRIAGE_PAD_VERTICAL_SPAN = 40.0
+FUTURE_SIDE_ADAPTER_MOUNT_COUNT = 2
+FUTURE_SIDE_ADAPTER_MOUNT_SPACING_Y = 30.0
+FUTURE_BOTTOM_ADAPTER_PAD_WIDTH = 18.0
+FUTURE_BOTTOM_ADAPTER_PAD_DEPTH = 10.0
+FUTURE_BOTTOM_ADAPTER_PAD_HEIGHT = 3.0
+
+# Stack cap parts for the layer-cake prototype.
+BASE_PEDESTAL_HEIGHT = 24.0
+TOP_CAP_HEIGHT = 20.0
+BASE_PEDESTAL_AIRFLOW_CLEARANCE = BOTTOM_AIR_INTAKE_CLEARANCE
+TOP_CAP_AIRFLOW_CLEARANCE = 12.0
+
+# Reference rod length for stack_test_assembly (non-printed M5 rods).
+STACK_TEST_STACK_HEIGHT = BASE_PEDESTAL_HEIGHT + GENERIC_STACK_MODULE_HEIGHT + TOP_CAP_HEIGHT
+STACK_TEST_ROD_LENGTH = STACK_TEST_STACK_HEIGHT + ROD_EXTRA_THREAD_ALLOWANCE
+

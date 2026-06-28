@@ -1,4 +1,7 @@
-"""Rail / carriage / POM-C shoe fit test jig for mk0.11.
+"""Rail / carriage / POM-C shoe fit test jig — DEFERRED sliding architecture.
+
+Superseded for active validation by stack_test_assembly in mk0.11.2.
+See `cad/deferred/README.md`.
 
 This jig assembles a short rail section, the generic module carriage,
 and POM-C shoe references into a single cq.Assembly for visual and

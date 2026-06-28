@@ -13,11 +13,14 @@ from ..parts import (
     roof_module,
     rpi_ssd_module,
 )
+from ..parts.base_pedestal import make_base_pedestal
 from ..parts.generic_module import make_generic_module, make_generic_module_shell
+from ..parts.generic_stack_module import make_generic_stack_module, make_generic_stack_module_shell
 from ..parts.module_carriage import make_generic_module_carriage
 from ..parts.pom_shoe import make_pom_c_shoe
 from ..parts.rail_profile import make_generic_module_rail
 from ..parts.rods import create_m5_threaded_rod, create_m5_threaded_rod_cap
+from ..parts.top_cap import make_top_cap
 
 
 PARTS = {
@@ -90,6 +93,11 @@ PARTS = {
     "generic_module_carriage": make_generic_module_carriage,
     "pom_c_shoe_reference": make_pom_c_shoe,
     "u_channel_rail_generic_module": make_generic_module_rail,
+    # mk0.11.2 stack-through-rod architecture
+    "generic_stack_module_shell": make_generic_stack_module_shell,
+    "generic_stack_module": make_generic_stack_module,
+    "base_pedestal": make_base_pedestal,
+    "top_cap": make_top_cap,
 }
 
 
@@ -152,18 +160,52 @@ EXPORT_CATEGORIES = {
         "mini_pc_placeholder_airflow_guide": mini_pc_placeholder_module.make_mini_pc_placeholder_airflow_guide,
         "mini_pc_placeholder_retainer": mini_pc_placeholder_module.make_mini_pc_placeholder_retainer,
     },
-    # mk0.11 generic module subsystem — separate category for easy selective export
-    "mk011_printed/plastic_modules": {
+    # mk0.11 generic module subsystem — deferred in mk0.11.2 (carriage/rail era)
+    "mk011_deferred/plastic_modules": {
         "generic_module": make_generic_module,
     },
-    "mk011_printed/plastic_subparts": {
+    "mk011_deferred/plastic_subparts": {
         "generic_module_shell": make_generic_module_shell,
         "generic_module_carriage": make_generic_module_carriage,
     },
-    "mk011_reference_non_printed/metal": {
+    "mk011_deferred/reference_non_printed/metal": {
         "u_channel_rail_generic_module": make_generic_module_rail,
     },
-    "mk011_reference_non_printed/wear_parts": {
+    "mk011_deferred/reference_non_printed/wear_parts": {
         "pom_c_shoe_reference": make_pom_c_shoe,
     },
+    # mk0.11.2 stack-through-rod architecture — active prototype targets
+    "mk0112_printed/plastic_modules": {
+        "generic_stack_module": make_generic_stack_module,
+        "base_pedestal": make_base_pedestal,
+        "top_cap": make_top_cap,
+    },
+    "mk0112_printed/plastic_subparts": {
+        "generic_stack_module_shell": make_generic_stack_module_shell,
+    },
+    "mk0112_reference_non_printed/metal": {
+        "m5_threaded_rod_stack_test": lambda: create_m5_threaded_rod(cfg.STACK_TEST_ROD_LENGTH),
+    },
 }
+
+
+REVISION_EXPORT_PREFIXES = {
+    "mk0.11": ("mk011_deferred/",),
+    "mk0.11.2": ("mk0112_",),
+}
+
+
+def categories_for_revision(revision: str | None) -> dict:
+    """Return export categories filtered for a revision-specific export run."""
+    if revision is None:
+        return EXPORT_CATEGORIES
+
+    prefixes = REVISION_EXPORT_PREFIXES.get(revision)
+    if prefixes is None:
+        return {k: v for k, v in EXPORT_CATEGORIES.items() if not k.startswith("mk011")}
+
+    return {
+        k: v
+        for k, v in EXPORT_CATEGORIES.items()
+        if any(k.startswith(prefix) for prefix in prefixes)
+    }

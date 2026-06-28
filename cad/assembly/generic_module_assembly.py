@@ -1,4 +1,7 @@
-"""mk0.11 generic module assembly.
+"""mk0.11 generic module assembly — DEFERRED sliding architecture.
+
+Superseded for active validation by `stack_test_assembly.py` in mk0.11.2.
+See `cad/deferred/README.md`.
 
 Combines the generic module shell and the generic module carriage into a
 single named assembly for STEP export and visual inspection.
