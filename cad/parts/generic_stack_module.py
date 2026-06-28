@@ -21,7 +21,7 @@ Design intent:
 import cadquery as cq
 
 from .. import config as cfg
-from . import module_interface, rails
+from . import module_interface
 
 
 def _corner_rod_points(c=cfg) -> list[tuple[float, float]]:
@@ -90,7 +90,7 @@ def _make_future_carriage_mount_zones(height: float, c=cfg) -> cq.Workplane:
     sliding features.
     """
     pads = None
-    x_rail = rails.u_channel_rail_x_offset()
+    x_rail = c.FUTURE_CARRIAGE_PAD_X_OFFSET
     y_center = -c.REAR_RESERVED_DEPTH / 2
 
     for sign in (-1, 1):
@@ -117,7 +117,7 @@ def _make_future_side_adapter_mount_points(height: float, c=cfg) -> cq.Workplane
     geometry is redesigned for full connectivity.
     """
     bosses = None
-    x_rail = rails.u_channel_rail_x_offset()
+    x_rail = c.FUTURE_CARRIAGE_PAD_X_OFFSET
     y_center = -c.REAR_RESERVED_DEPTH / 2
     z_center = c.FUTURE_CARRIAGE_PAD_VERTICAL_CENTER_Z
     half_spacing = c.FUTURE_SIDE_ADAPTER_MOUNT_SPACING_Y / 2
@@ -151,7 +151,7 @@ def _make_future_side_adapter_mount_points(height: float, c=cfg) -> cq.Workplane
 def _make_future_bottom_adapter_pads(c=cfg) -> cq.Workplane:
     """Optional bottom adapter pad placeholders on the lower interface ring."""
     pads = None
-    x_rail = rails.u_channel_rail_x_offset()
+    x_rail = c.FUTURE_CARRIAGE_PAD_X_OFFSET
     z = -c.GENERIC_STACK_MODULE_HEIGHT / 2 + c.MODULE_INTERFACE_HEIGHT / 2
     y_center = -c.REAR_RESERVED_DEPTH / 2
 
