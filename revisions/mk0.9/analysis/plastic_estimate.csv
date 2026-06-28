@@ -1,0 +1,10 @@
+part_name,category,relative_path,status,mesh_volume_mm3,mesh_volume_cm3,petg_density_g_cm3,pla_density_g_cm3,estimated_petg_mass_g,estimated_pla_mass_g,notes
+base_module,printable/plastic,exports/mk0.9/printable/plastic/base_module.stl,ok,149674.232,149.674,1.27,1.24,190.086,185.596,"mesh solid volume only; slicer infill, perimeters, supports and purge are not included"
+bottom_grill,printable/plastic,exports/mk0.9/printable/plastic/bottom_grill.stl,ok,41011.495,41.011,1.27,1.24,52.085,50.854,"mesh solid volume only; slicer infill, perimeters, supports and purge are not included"
+dust_filter_slot,printable/plastic,exports/mk0.9/printable/plastic/dust_filter_slot.stl,ok,7821.600,7.822,1.27,1.24,9.933,9.699,"mesh solid volume only; slicer infill, perimeters, supports and purge are not included"
+foot_mounts,printable/plastic,exports/mk0.9/printable/plastic/foot_mounts.stl,ok,5055.885,5.056,1.27,1.24,6.421,6.269,"mesh solid volume only; slicer infill, perimeters, supports and purge are not included"
+m5_threaded_rod_cap,printable/plastic,exports/mk0.9/printable/plastic/m5_threaded_rod_cap.stl,ok,707.078,0.707,1.27,1.24,0.898,0.877,"mesh solid volume only; slicer infill, perimeters, supports and purge are not included"
+mini_pc_placeholder_module,printable/plastic,exports/mk0.9/printable/plastic/mini_pc_placeholder_module.stl,ok,221438.324,221.438,1.27,1.24,281.227,274.584,"mesh solid volume only; slicer infill, perimeters, supports and purge are not included"
+roof_module,printable/plastic,exports/mk0.9/printable/plastic/roof_module.stl,ok,215056.839,215.057,1.27,1.24,273.122,266.670,"mesh solid volume only; slicer infill, perimeters, supports and purge are not included"
+rpi_ssd_module,printable/plastic,exports/mk0.9/printable/plastic/rpi_ssd_module.stl,ok,156653.895,156.654,1.27,1.24,198.950,194.251,"mesh solid volume only; slicer infill, perimeters, supports and purge are not included"
+top_filter_slot,printable/plastic,exports/mk0.9/printable/plastic/top_filter_slot.stl,ok,11528.000,11.528,1.27,1.24,14.641,14.295,"mesh solid volume only; slicer infill, perimeters, supports and purge are not included"
