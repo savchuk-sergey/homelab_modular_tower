@@ -193,3 +193,28 @@ def make_foot() -> cq.Workplane:
 
 def create_foot() -> cq.Workplane:
     return make_foot()
+
+
+# mk0.9.x aliases for explicit naming
+
+def make_tpu_foot_placeholder() -> cq.Workplane:
+    """Non-printed TPU foot placeholder (same geometry as make_foot)."""
+    return make_wide_tpu_foot_placeholder().tag("tpu_foot_placeholder")
+
+
+def make_foot_mounts_for_base_module() -> cq.Workplane:
+    """Create foot socket bosses suitable for integration into the base module frame.
+
+    This is the same geometry as base_module.make_foot_mounts; it is provided
+    here so that base_module can import it when it is refactored.
+    """
+    mounts = None
+    boss_radius = (cfg.FOOT_DIAMETER + 8.0) / 2
+    x = cfg.TOWER_WIDTH / 2 - boss_radius
+    y = cfg.TOWER_DEPTH / 2 - boss_radius
+    for px, py in [(-x, -y), (x, -y), (x, y), (-x, y)]:
+        boss = cq.Workplane("XY").circle(boss_radius).extrude(cfg.FLOOR_THICKNESS).translate((px, py, 0))
+        socket = cq.Workplane("XY").circle((cfg.FOOT_DIAMETER + cfg.FOOT_TPU_CLEARANCE) / 2).extrude(cfg.FLOOR_THICKNESS + cfg.FILLET_RADIUS).translate((px, py, 0))
+        mount = boss.cut(socket)
+        mounts = mount if mounts is None else mounts.union(mount)
+    return mounts.tag("foot_mounts")

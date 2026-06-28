@@ -1,0 +1,15 @@
+part_name,category,relative_path,status,size_x_mm,size_y_mm,size_z_mm,print_volume_x_mm,print_volume_y_mm,print_volume_z_mm,fits_axis_aligned,long_thin_risk,max_aspect_ratio,notes
+base_module,printable/plastic,exports/mk0.9.2/printable/plastic/base_module.stl,ok,190.000,190.000,68.000,256.000,256.000,256.000,True,False,2.794,
+bottom_grill,printable/plastic,exports/mk0.9.2/printable/plastic/bottom_grill.stl,ok,138.000,138.000,4.000,256.000,256.000,256.000,True,True,34.500,long-thin geometry risk; orientation/support review required
+dust_filter_slot,printable/plastic,exports/mk0.9.2/printable/plastic/dust_filter_slot.stl,ok,142.000,144.000,2.000,256.000,256.000,256.000,True,True,72.000,long-thin geometry risk; orientation/support review required
+foot_mounts,printable/plastic,exports/mk0.9.2/printable/plastic/foot_mounts.stl,ok,190.000,190.000,4.000,256.000,256.000,256.000,True,True,47.500,long-thin geometry risk; orientation/support review required
+m5_threaded_rod_cap,printable/plastic,exports/mk0.9.2/printable/plastic/m5_threaded_rod_cap.stl,ok,12.000,12.000,8.000,256.000,256.000,256.000,True,False,1.500,
+mini_pc_placeholder_carriage,printable/plastic,exports/mk0.9.2/printable/plastic/mini_pc_placeholder_carriage.stl,ok,183.600,180.000,13.200,256.000,256.000,256.000,True,False,13.909,
+mini_pc_placeholder_module,printable/plastic,exports/mk0.9.2/printable/plastic/mini_pc_placeholder_module.stl,ok,191.200,193.500,89.800,256.000,256.000,256.000,True,False,2.155,
+rail_end_clip,printable/plastic,exports/mk0.9.2/printable/plastic/rail_end_clip.stl,ok,12.000,8.000,8.000,256.000,256.000,256.000,True,False,1.500,
+roof_module,printable/plastic,exports/mk0.9.2/printable/plastic/roof_module.stl,ok,190.000,190.000,69.000,256.000,256.000,256.000,True,False,2.754,
+rpi_ssd_carriage,printable/plastic,exports/mk0.9.2/printable/plastic/rpi_ssd_carriage.stl,ok,183.600,180.000,13.200,256.000,256.000,256.000,True,False,13.909,
+rpi_ssd_module,printable/plastic,exports/mk0.9.2/printable/plastic/rpi_ssd_module.stl,ok,191.200,190.000,77.800,256.000,256.000,256.000,True,False,2.458,
+top_filter_slot,printable/plastic,exports/mk0.9.2/printable/plastic/top_filter_slot.stl,ok,142.000,142.000,2.000,256.000,256.000,256.000,True,True,71.000,long-thin geometry risk; orientation/support review required
+foot,printable/tpu,exports/mk0.9.2/printable/tpu/foot.stl,ok,22.000,22.000,12.000,256.000,256.000,256.000,True,False,1.833,
+tpu_foot_placeholder,printable/tpu,exports/mk0.9.2/printable/tpu/tpu_foot_placeholder.stl,ok,22.000,22.000,12.000,256.000,256.000,256.000,True,False,1.833,

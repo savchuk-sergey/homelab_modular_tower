@@ -1,9 +1,15 @@
-"""mk0.9 Raspberry Pi 3B plus external SSD module."""
+"""mk0.9.2 Raspberry Pi 3B plus external SSD module.
+
+The removable tray is replaced by an open-frame carriage with replaceable
+POM-C shoe runners.  The old tray, mount posts, and retainer functions are
+kept for backward compatibility but are no longer used by the module
+assembly.
+"""
 
 import cadquery as cq
 
 from .. import config as cfg
-from . import module_interface, placeholders
+from . import carriages, module_interface, placeholders, rails
 
 
 def make_rpi3_placeholder(c=cfg) -> cq.Workplane:
@@ -13,6 +19,8 @@ def make_rpi3_placeholder(c=cfg) -> cq.Workplane:
 def make_external_ssd_placeholder(c=cfg) -> cq.Workplane:
     return placeholders.make_external_ssd_placeholder().tag("external_ssd_placeholder")
 
+
+# Legacy mk0.9 tray helpers (kept for backward compatibility)
 
 def make_rpi_ssd_tray(c=cfg) -> cq.Workplane:
     tray = cq.Workplane("XY").box(c.TOWER_WIDTH, c.TOWER_DEPTH, c.FLOOR_THICKNESS)
@@ -64,13 +72,17 @@ def make_rpi_ssd_module_shell(c=cfg) -> cq.Workplane:
     y = c.TOWER_DEPTH / 2 - c.ROD_CENTER_OFFSET
     for px, py in [(-x, -y), (x, -y), (x, y), (-x, y)]:
         shell = shell.union(cq.Workplane("XY").box(post_size, post_size, c.RPI_SSD_MODULE_HEIGHT).translate((px, py, 0)))
+    shell = shell.union(rails.make_module_rail_pocket_features(c.RPI_SSD_MODULE_HEIGHT, c.RAIL_LENGTH_RPI_SSD))
     return shell.tag("rpi_ssd_module_shell")
 
 
 def make_rpi_ssd_module(c=cfg) -> cq.Workplane:
+    """Assembled RPi/SSD module with the mk0.9.2 open-frame carriage.
+
+    The carriage includes RPi standoffs, SSD retainers, POM-C shoe mounts,
+    front pull lip, lock screw, and rear cable exit.
+    """
     module = make_rpi_ssd_module_shell(c)
-    deck_z = -c.RPI_SSD_MODULE_HEIGHT / 2 + c.FLOOR_THICKNESS / 2
-    module = module.union(make_rpi_ssd_tray(c).translate((0, 0, deck_z)))
-    module = module.union(make_rpi_mount_posts(c).translate((0, 0, deck_z + c.FLOOR_THICKNESS / 2)))
-    module = module.union(make_ssd_retainer(c).translate((0, 0, deck_z + c.FLOOR_THICKNESS / 2)))
+    deck_z = -c.RPI_SSD_MODULE_HEIGHT / 2 + c.CARRIAGE_WALL_THICKNESS / 2
+    module = module.union(carriages.make_rpi_ssd_carriage().translate((0, 0, deck_z)))
     return module_interface.apply_module_interface_features(module, c, top=True, bottom=True).tag("rpi_ssd_module")
