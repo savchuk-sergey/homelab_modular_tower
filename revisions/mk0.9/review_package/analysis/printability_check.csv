@@ -1,0 +1,11 @@
+part_name,category,relative_path,status,size_x_mm,size_y_mm,size_z_mm,print_volume_x_mm,print_volume_y_mm,print_volume_z_mm,fits_axis_aligned,long_thin_risk,max_aspect_ratio,notes
+base_module,printable/plastic,exports/mk0.9/printable/plastic/base_module.stl,ok,190.000,190.000,62.000,256.000,256.000,256.000,True,False,3.065,
+bottom_grill,printable/plastic,exports/mk0.9/printable/plastic/bottom_grill.stl,ok,138.000,138.000,4.000,256.000,256.000,256.000,True,True,34.500,long-thin geometry risk; orientation/support review required
+dust_filter_slot,printable/plastic,exports/mk0.9/printable/plastic/dust_filter_slot.stl,ok,142.000,144.000,2.000,256.000,256.000,256.000,True,True,72.000,long-thin geometry risk; orientation/support review required
+foot_mounts,printable/plastic,exports/mk0.9/printable/plastic/foot_mounts.stl,ok,190.000,190.000,4.000,256.000,256.000,256.000,True,True,47.500,long-thin geometry risk; orientation/support review required
+m5_threaded_rod_cap,printable/plastic,exports/mk0.9/printable/plastic/m5_threaded_rod_cap.stl,ok,12.000,12.000,8.000,256.000,256.000,256.000,True,False,1.500,
+mini_pc_placeholder_module,printable/plastic,exports/mk0.9/printable/plastic/mini_pc_placeholder_module.stl,ok,190.000,190.000,86.000,256.000,256.000,256.000,True,False,2.209,
+roof_module,printable/plastic,exports/mk0.9/printable/plastic/roof_module.stl,ok,190.000,190.000,69.000,256.000,256.000,256.000,True,False,2.754,
+rpi_ssd_module,printable/plastic,exports/mk0.9/printable/plastic/rpi_ssd_module.stl,ok,190.000,190.000,74.000,256.000,256.000,256.000,True,False,2.568,
+top_filter_slot,printable/plastic,exports/mk0.9/printable/plastic/top_filter_slot.stl,ok,142.000,142.000,2.000,256.000,256.000,256.000,True,True,71.000,long-thin geometry risk; orientation/support review required
+foot,printable/tpu,exports/mk0.9/printable/tpu/foot.stl,ok,22.000,22.000,12.000,256.000,256.000,256.000,True,False,1.833,

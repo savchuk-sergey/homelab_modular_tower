@@ -156,3 +156,21 @@ def make_power_bus_zone_placeholder() -> cq.Workplane:
         cfg.POWER_BUS_HEIGHT,
         "power_bus_zone_placeholder",
     )
+
+
+def make_dust_filter_placeholder() -> cq.Workplane:
+    return make_placeholder_box(
+        cfg.BASE_FILTER_TRAY_WIDTH - 2 * cfg.FILTER_FRAME_MARGIN,
+        cfg.BASE_FILTER_TRAY_DEPTH - 2 * cfg.FILTER_FRAME_MARGIN,
+        cfg.FILTER_SLOT_HEIGHT,
+        "dust_filter_placeholder",
+    )
+
+
+def make_top_guard_filter_mesh_placeholder() -> cq.Workplane:
+    return make_placeholder_box(
+        cfg.FAN_120_SIZE,
+        cfg.FAN_120_SIZE,
+        cfg.FILTER_SLOT_HEIGHT,
+        "top_guard_filter_mesh_placeholder",
+    )
