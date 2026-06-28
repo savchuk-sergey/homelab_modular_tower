@@ -13,6 +13,10 @@ from ..parts import (
     roof_module,
     rpi_ssd_module,
 )
+from ..parts.generic_module import make_generic_module, make_generic_module_shell
+from ..parts.module_carriage import make_generic_module_carriage
+from ..parts.pom_shoe import make_pom_c_shoe
+from ..parts.rail_profile import make_generic_module_rail
 from ..parts.rods import create_m5_threaded_rod, create_m5_threaded_rod_cap
 
 
@@ -80,6 +84,12 @@ PARTS = {
     "tray_support_ledge": rails.create_tray_support_ledge,
     # mk0.9.3 rail
     "rail_end_clip": rails.make_rail_end_clip,
+    # mk0.11 generic module subsystem
+    "generic_module_shell": make_generic_module_shell,
+    "generic_module": make_generic_module,
+    "generic_module_carriage": make_generic_module_carriage,
+    "pom_c_shoe_reference": make_pom_c_shoe,
+    "u_channel_rail_generic_module": make_generic_module_rail,
 }
 
 
@@ -141,5 +151,19 @@ EXPORT_CATEGORIES = {
         "mini_pc_placeholder_tray": mini_pc_placeholder_module.make_mini_pc_placeholder_tray,
         "mini_pc_placeholder_airflow_guide": mini_pc_placeholder_module.make_mini_pc_placeholder_airflow_guide,
         "mini_pc_placeholder_retainer": mini_pc_placeholder_module.make_mini_pc_placeholder_retainer,
+    },
+    # mk0.11 generic module subsystem — separate category for easy selective export
+    "mk011_printed/plastic_modules": {
+        "generic_module": make_generic_module,
+    },
+    "mk011_printed/plastic_subparts": {
+        "generic_module_shell": make_generic_module_shell,
+        "generic_module_carriage": make_generic_module_carriage,
+    },
+    "mk011_reference_non_printed/metal": {
+        "u_channel_rail_generic_module": make_generic_module_rail,
+    },
+    "mk011_reference_non_printed/wear_parts": {
+        "pom_c_shoe_reference": make_pom_c_shoe,
     },
 }
