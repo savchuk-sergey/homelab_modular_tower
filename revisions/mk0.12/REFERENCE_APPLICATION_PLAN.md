@@ -1,5 +1,13 @@
 # mk0.12 Reference Application Plan
 
+> REFERENCE/CONTEXT ONLY:
+> This file is not an active requirement document for new mk0.12 CAD work.
+> Use the revision-scoped document set in `revisions/mk0.12/` as the active source of truth:
+> `README.md`, `ENGINEERING_SPEC.md`, `PARTS_SPEC.md`, `INTERFACES.md`,
+> `VALIDATION_GATES.md`, `PHYSICAL_TEST_PLAN.md`, `AGENT_RULES.md`, and `KNOWN_ISSUES.md`.
+> If this file conflicts with the active revision-scoped documents, the revision-scoped documents win.
+> If a requirement is ambiguous, preserve the stricter interpretation and verify against `VALIDATION_GATES.md`.
+
 ## 1. Executive Summary
 
 mk0.12 is planned as an MVP-2M reference-informed revision for Homelab Modular Tower. It is not a copy, fork, or adaptation of any single external project.
