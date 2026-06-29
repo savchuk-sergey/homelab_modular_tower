@@ -1,1 +1,1 @@
-"""Domain part factories for the Homelab Modular Tower CAD model."""
+"""mk0.12 active CadQuery part builders."""
