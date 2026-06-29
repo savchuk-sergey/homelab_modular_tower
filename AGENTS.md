@@ -6,7 +6,10 @@
 
 `homelab_modular_tower` - долгосрочный инженерный CAD-проект модульной настольной мини-стойки для HomeLab. Проект должен развиваться как инженерная платформа, а не как разовый декоративный корпус для 3D-печати.
 
-Текущая стабильная ревизия проекта: `mk0.1`.
+Historical baseline: `mk0.1`.
+
+Active engineering focus is defined by the latest active revision under `revisions/`.
+As of this cleanup, active focus is `mk0.12` (`MVP-2M stack-through-rod`), unless a newer revision explicitly supersedes it.
 
 ## Общий стиль работы
 
@@ -64,7 +67,9 @@
 5. MikroTik hAP ax2
 6. Mini PC
 
-Каждый модуль должен быть полностью съемным. Извлечение одного модуля не должно требовать разборки всей башни.
+Full independent module removal is a long-term design goal, but not a hard requirement for every MVP revision.
+Revision-scoped architecture wins.
+In `mk0.12`, stack-through-rod architecture requires loosening the stack to remove middle modules. This is an accepted MVP limitation, not a failure, as long as it is documented in the active revision specification.
 
 ## Стандарт модулей
 
@@ -75,7 +80,7 @@
 - одинаковые ручки;
 - одинаковые фиксаторы;
 - одинаковые посадочные размеры;
-- возможность извлечения модуля без разборки всей башни.
+- возможность извлечения модуля без разборки всей башни, если это не переопределено revision-scoped MVP-архитектурой.
 
 Любое новое решение должно проверяться на совместимость с существующим модульным стандартом.
 
@@ -159,6 +164,101 @@ STEP/STL-файлы и рендеры являются производными 
 
 Если нужно добавить новый размер, он должен быть добавлен в `config.py` с понятным именем.
 
+## Revision workflow hard gate
+
+Before any CAD work, the active revision specification must be complete, revision-scoped, and internally consistent.
+
+Required order:
+
+1. Create or update the revision-scoped specification.
+2. Validate required document structure.
+3. Validate consistency across all active revision documents.
+4. Resolve conflicts, mark assumptions, and mark unverifiable requirements as `NOT VERIFIED`.
+5. Only after valid specification: allow CAD planning.
+6. Only after CAD planning: allow CadQuery implementation.
+7. Only after CAD validation gates: allow coupon parts.
+8. Only after coupon and physical tests: allow full print.
+
+If the active specification is missing, incomplete, contradictory, or structurally invalid, CAD work is BLOCKED.
+
+No CAD development is allowed until the active revision specification is structurally complete and internally consistent.
+
+## Active revision source-of-truth precedence
+
+For active engineering work, source-of-truth precedence is:
+
+1. Revision-scoped documents under `revisions/<revision>/`.
+2. Root `AGENTS.md` workflow rules.
+3. Legacy/reference snapshots.
+4. Generated artifacts such as STEP, STL, PNG, screenshots, slicer previews, and renders.
+
+If documents conflict:
+
+- revision-scoped documents win over legacy/reference snapshots;
+- the stricter interpretation wins;
+- unresolved ambiguity must be marked `NOT VERIFIED`;
+- CAD work remains BLOCKED until the ambiguity is resolved.
+
+## Required revision document structure
+
+For `mk0.12` and later revision-scoped specifications, the required active document set is:
+
+- `README.md`
+- `ENGINEERING_SPEC.md`
+- `PARTS_SPEC.md`
+- `INTERFACES.md`
+- `VALIDATION_GATES.md`
+- `PHYSICAL_TEST_PLAN.md`
+- `AGENT_RULES.md`
+- `KNOWN_ISSUES.md`
+
+If any required document is missing, the specification is structurally invalid and CAD work is BLOCKED.
+
+Pre-`mk0.12` revisions may use their historical document structures. Historical structure must not override the required `mk0.12+` active document set.
+
+## Allowed status values
+
+Use explicit status lines in active revision README files:
+
+```text
+SPECIFICATION: DRAFT / UNDER REVIEW / PASS FOR CAD INPUT / PASS FOR CAD SKELETON V3 INPUT / BLOCKED
+CAD IMPLEMENTATION: NOT STARTED / IN PROGRESS / VALIDATION FAILED / VALIDATION PASSED
+COUPON PARTS: BLOCKED / ALLOWED / DONE
+FULL PRINT: BLOCKED / ALLOWED / DONE
+NEXT STEP: <explicit next engineering step>
+```
+
+Rules:
+
+- `COUPON PARTS` must remain `BLOCKED` until CAD validation gates pass.
+- `FULL PRINT` must remain `BLOCKED` until coupon and physical tests pass.
+- CAD status must not be advanced by documentation-only tasks.
+
+## CAD source of truth
+
+CadQuery source files are the CAD source of truth.
+
+Rules:
+
+- all dimensions must live in `cad/config.py`;
+- no magic numbers inside part builders;
+- printable builders must return printable plastic geometry only;
+- reference builders must return placeholders/reference geometry only;
+- assembly must be separate from part definitions;
+- STEP/STL/PNG/renders are derived artifacts;
+- derived artifacts must never override CadQuery source or revision-scoped specification.
+
+## Legacy and cleanup policy
+
+Rules:
+
+- do not keep multiple active sources of truth for the same revision;
+- legacy documents must be explicitly marked as legacy/reference/historical;
+- historical review reports must not be treated as active requirements unless explicitly promoted;
+- old CAD skeleton notes must be marked historical unless they match the active revision status;
+- temporary scratch files should be deleted or moved to an archive;
+- if deleting a file may remove engineering history, do not delete it; mark it and report it.
+
 ## Структура ревизий
 
 Каждая CAD-ревизия является отдельной инженерной версией.
@@ -189,31 +289,38 @@ homelab_modular_tower/
   exports/
   renders/
   revisions/
-    mk0.1/
+    mk0.1/                         # historical/pre-mk0.12 structure
       REVISION.md
       CALCULATIONS.md
       DECISIONS.md
       KNOWN_ISSUES.md
       CHANGELOG.md
-    mk0.2/
-      REVISION.md
-      CALCULATIONS.md
-      DECISIONS.md
+    mk0.12/                        # active mk0.12+ structure
+      README.md
+      ENGINEERING_SPEC.md
+      PARTS_SPEC.md
+      INTERFACES.md
+      VALIDATION_GATES.md
+      PHYSICAL_TEST_PLAN.md
+      AGENT_RULES.md
       KNOWN_ISSUES.md
-      CHANGELOG.md
 ```
 
 Для каждой значимой CAD-ревизии должна создаваться отдельная git-ветка или git-тег.
 
 Ветка `master` хранит актуальную стабильную ревизию проекта. Рабочие ветки ревизий вида `cad/mkX.Y` должны попадать в `master` только через Pull Request после инженерной проверки. Нельзя вручную переносить изменения ревизии в `master` в обход PR-процесса.
 
-Документация каждой ревизии должна храниться в `revisions/mkX.Y/` и включать:
+Документация каждой ревизии должна храниться в `revisions/mkX.Y/`.
+
+Historical/pre-`mk0.12` revisions commonly used:
 
 - `REVISION.md` - общее описание состояния ревизии;
 - `CALCULATIONS.md` - расчеты, допущения, проверки размеров, жесткости, охлаждения и компоновки;
 - `DECISIONS.md` - принятые инженерные решения и причины;
 - `KNOWN_ISSUES.md` - известные проблемы и ограничения ревизии;
 - `CHANGELOG.md` - список изменений относительно предыдущей ревизии.
+
+For `mk0.12` and later, the active required structure is defined in `Required revision document structure` above.
 
 История ревизий не должна изменяться задним числом.
 
@@ -233,15 +340,18 @@ homelab_modular_tower/
 ```text
 1. Создать git-ветку для ревизии.
 2. Создать папку revisions/mkX.Y/.
-3. Создать файлы REVISION.md, CALCULATIONS.md, DECISIONS.md, KNOWN_ISSUES.md, CHANGELOG.md.
-4. Внести изменения в cad/.
-5. Проверить параметричность config.py.
-6. Обновить exports/ и renders/ при необходимости.
-7. Зафиксировать инженерные решения в revisions/mkX.Y/.
-8. Сделать git commit.
-9. Открыть Pull Request из ветки ревизии в master.
-10. После review и стабилизации смержить ревизию в master.
-11. После merge поставить git tag mkX.Y на стабильное состояние.
+3. Создать обязательный document set для этой ревизии.
+4. Проверить структуру спецификации.
+5. Проверить внутреннюю согласованность спецификации.
+6. Только после валидной спецификации перейти к CAD planning.
+7. Только после CAD planning вносить изменения в `cad/`.
+8. Проверить параметричность `cad/config.py`.
+9. Обновить `exports/` и `renders/` только при необходимости и только после CAD validation gates.
+10. Зафиксировать инженерные решения в `revisions/mkX.Y/`.
+11. Сделать git commit.
+12. Открыть Pull Request из ветки ревизии в `master`.
+13. После review и стабилизации смержить ревизию в `master`.
+14. После merge поставить git tag `mkX.Y` на стабильное состояние.
 ```
 
 Пример документации ревизий:
@@ -254,12 +364,15 @@ revisions/
     DECISIONS.md
     KNOWN_ISSUES.md
     CHANGELOG.md
-  mk0.2/
-    REVISION.md
-    CALCULATIONS.md
-    DECISIONS.md
+  mk0.12/
+    README.md
+    ENGINEERING_SPEC.md
+    PARTS_SPEC.md
+    INTERFACES.md
+    VALIDATION_GATES.md
+    PHYSICAL_TEST_PLAN.md
+    AGENT_RULES.md
     KNOWN_ISSUES.md
-    CHANGELOG.md
 ```
 
 Текущая веточная схема:

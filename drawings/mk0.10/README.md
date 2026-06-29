@@ -6,10 +6,11 @@
 > workflow iteration. That workflow has been cancelled.
 >
 > **Do not continue iterating these drawings.**
-> **Do not use these drawings as the source for mk0.11 CAD decisions.**
+> **Do not use these drawings as the source for active CAD decisions.**
 >
 > See `revisions/mk0.11/DECISIONS.md` — Decision D-001 for the full rationale.
-> See `revisions/mk0.11/README.md` for the current mk0.11 subsystem-first workflow.
+> See `revisions/mk0.11/README.md` for the historical mk0.11 subsystem-first workflow.
+> For current mk0.12 work, use `revisions/mk0.12/README.md` and root `AGENTS.md`.
 
 ---
 

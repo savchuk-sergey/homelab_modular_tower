@@ -1,108 +1,134 @@
 # Homelab Modular Tower
 
-Parametric CadQuery engineering project for a compact 3D-printed mini-blade
-tower homelab stack.
+Parametric CadQuery engineering project for a compact 3D-printed homelab stack.
 
-The design is engineering-first: removable modules, four M5 vertical rods,
-rear service spine, low-voltage DC power bus, UPS/power module placeholder,
-and a priority airflow duct for the Mini PC module.
+The project is engineering-first: revision-scoped specifications, explicit validation gates, serviceable module architecture, four M5 through-rods where applicable, rear service routing, low-voltage DC power planning, and Mini PC cooling priority.
+
+Do not start CAD implementation from root `README.md` alone. Always validate the active revision-scoped specification first.
 
 ---
 
-## Current revision: mk0.11 — subsystem-first workflow
+## Current active engineering focus: mk0.12
 
-The previous mk0.10 drawing-first workflow has been cancelled.
+Active revision: `mk0.12 MVP-2M stack-through-rod`
 
-The current active workflow is **subsystem-first / testable CAD-first**:
+`mk0.12` is an MVP-2M revision, not a full final tower and not a hot-swappable blade chassis. The active real modules are:
 
-1. Validate the generic removable module (shell + carriage + rail interface).
-2. Only after physical validation of a single module bay: integrate into full tower.
+- Raspberry Pi + SSD
+- Mini PC
 
-### Where to start
+The active architecture is stack-through-rod:
 
-| Where to look | What you'll find |
-|---|---|
-| `revisions/mk0.11/README.md` | mk0.11 scope, decisions, frozen constraints |
-| `revisions/mk0.11/VALIDATION_PLAN.md` | Step-by-step physical validation checklist |
-| `revisions/mk0.11/DECISIONS.md` | Engineering decisions (D-001 through D-008) |
-| `cad/legacy/README.md` | Which files are legacy and why |
-| `cad/current/mk0.11/` | Placeholder directories for future mk0.11 additions |
-| `docs/workflow/subsystem_first_workflow.md` | Workflow stages and rules |
+- modules are stacked on four M5 rods;
+- top and bottom washers/nuts compress the stack;
+- a middle module cannot be removed without loosening the stack;
+- this is an accepted MVP limitation documented in the revision-scoped specification;
+- primary device installation and cable routing happen before final stack compression.
 
-### Active mk0.11 CAD files
+### Current mk0.12 status
 
-| File | Role |
-|---|---|
-| `cad/config.py` | All parametric dimensions — source of truth |
-| `cad/parts/generic_module.py` | Generic removable module shell |
-| `cad/parts/module_carriage.py` | Generic module carriage (POM-C shoe mounts) |
-| `cad/parts/pom_shoe.py` | POM-C shoe reference geometry |
-| `cad/parts/rail_profile.py` | U-channel rail reference geometry |
-| `cad/jigs/rail_carriage_fit_test.py` | Rail / carriage / shoe fit test jig |
-| `cad/assembly/generic_module_assembly.py` | Module + carriage combined assembly |
-| `cad/assembly/single_module_bay_assembly.py` | Full single-bay validation assembly |
+```text
+SPECIFICATION: PASS FOR CAD SKELETON V3 INPUT
+CAD IMPLEMENTATION: NOT STARTED
+COUPON PARTS: BLOCKED
+FULL PRINT: BLOCKED
+NEXT STEP: mk0.12 CAD skeleton cleanup v3
+```
+
+The next engineering step remains `mk0.12 CAD skeleton cleanup v3`, but only after the cleanup/spec workflow is accepted. Documentation-only work must not advance `CAD IMPLEMENTATION` beyond `NOT STARTED`.
+
+### mk0.12 read order
+
+1. `revisions/mk0.12/README.md`
+2. `revisions/mk0.12/ENGINEERING_SPEC.md`
+3. `revisions/mk0.12/PARTS_SPEC.md`
+4. `revisions/mk0.12/INTERFACES.md`
+5. `revisions/mk0.12/VALIDATION_GATES.md`
+6. `revisions/mk0.12/AGENT_RULES.md`
+7. `revisions/mk0.12/PHYSICAL_TEST_PLAN.md`
+8. `revisions/mk0.12/KNOWN_ISSUES.md`
+
+If those documents are missing, incomplete, contradictory, or structurally invalid, CAD work is blocked.
+
+---
+
+## Source-of-truth policy
+
+For active engineering work, source-of-truth precedence is:
+
+1. Revision-scoped documents under `revisions/<revision>/`.
+2. Root `AGENTS.md` workflow rules.
+3. Legacy/reference snapshots.
+4. Derived artifacts such as STEP, STL, PNG, screenshots, slicer previews, and renders.
+
+CadQuery source files in `cad/` are the CAD source of truth. STEP/STL exports, renders, drawings, screenshots, and slicer previews are generated artifacts and must not override CadQuery source or revision-scoped specifications.
 
 ---
 
 ## Repository structure
 
-```
+```text
 homelab_modular_tower/
-  AGENTS.md                        ← LLM agent working rules
-  README.md                        ← this file
+  AGENTS.md                        # LLM agent workflow and hard gates
+  README.md                        # repository orientation
 
-  cad/
-    config.py                      ← ALL dimensions (source of truth)
-    parts/                         ← all part source files (active + legacy)
-    assembly/                      ← assembly files
-    jigs/                          ← fit test jigs
-    exporters/                     ← STEP/STL export infrastructure
-    utils/                         ← geometry helper utilities
-    legacy/
-      README.md                    ← legacy file classification
-    current/
-      mk0.11/
-        parts/README.md            ← placeholder for new mk0.11 part files
-        assemblies/README.md       ← placeholder for mk0.11 integration assemblies
-        jigs/README.md             ← placeholder for additional mk0.11 jigs
-
-  drawings/
-    mk0.10/                        ← LEGACY/CANCELLED SVG planning drawings
-
-  exports/
-    mk0.11/                        ← current active exports
-    mk0.7/ … mk0.9.3/              ← historical exports (reference only)
-
-  renders/
-    mk0.7/ … mk0.9.2/              ← historical renders (reference only)
+  cad/                             # active CadQuery source
+    config.py                      # parametric dimensions and revision constants
+    parts/                         # part builders
+    assembly/                      # assembly builders
+    exporters/                     # export infrastructure
+    utils/                         # geometry helpers
 
   revisions/
-    mk0.11/                        ← active revision documentation
-    mk0.1/ … mk0.9.3/              ← historical revision documentation
-
-  scripts/
-    export_revision.py             ← export pipeline
-    analyze_revision.py            ← geometry analysis
-    render_views.py                ← render generator
-    package_review.py              ← review package builder
-    run_revision_pipeline.py       ← full pipeline runner
-    generate_architecture_drawings.py  ← LEGACY/CANCELLED mk0.10 SVG generator
-    analysis/                      ← analysis utility modules
+    mk0.12/                        # active revision-scoped specification
+      README.md
+      ENGINEERING_SPEC.md
+      PARTS_SPEC.md
+      INTERFACES.md
+      VALIDATION_GATES.md
+      PHYSICAL_TEST_PLAN.md
+      AGENT_RULES.md
+      KNOWN_ISSUES.md
+    mk0.11/                        # historical/superseded subsystem-first workflow
+    mk0.1/ ... mk0.9.3/            # historical revision documentation
 
   docs/
     workflow/
-      subsystem_first_workflow.md  ← current active workflow description
+      subsystem_first_workflow.md  # mk0.11 historical/superseded workflow reference
+    KIMI_AGENTS_SWARM_PROMPT_GUIDE.md
     ARCHITECTURE.md
     BOM.md
     POWER.md
     PRINTING.md
+
+  reviews/                         # historical review reports and agent outputs
+  drawings/                        # drawing/reference artifacts
+  exports/                         # generated STEP/STL artifacts
+  renders/                         # generated render artifacts
+  scripts/                         # validation/export/render/review helpers
 ```
+
+---
+
+## Historical workflow note
+
+`mk0.11` used a subsystem-first / testable CAD-first workflow. That workflow is now historical/superseded for active work unless a future revision explicitly promotes it again.
+
+Useful historical references:
+
+- `revisions/mk0.11/README.md`
+- `revisions/mk0.11/VALIDATION_PLAN.md`
+- `revisions/mk0.11/DECISIONS.md`
+- `docs/workflow/subsystem_first_workflow.md`
+- `drawings/mk0.10/README.md` for the cancelled drawing-first planning context
+
+Historical documents must not be treated as active `mk0.12` requirements when they conflict with the revision-scoped `mk0.12` specification. The stricter interpretation wins until the ambiguity is resolved.
 
 ---
 
 ## Install
 
-CadQuery is the only non-standard dependency.
+CadQuery is the only non-standard CAD dependency.
 
 ```powershell
 python -m pip install cadquery
@@ -117,74 +143,30 @@ conda activate cadquery
 
 ---
 
-## Export
+## Safe documentation checks
 
-Run from the project root:
-
-```powershell
-python scripts/export_revision.py --revision mk0.11
-```
-
-Or for the mk0.11 subsystem only (faster):
+For documentation-only cleanup, use safe git/markdown checks only:
 
 ```powershell
-python -m cad.export --revision mk0.11
+git diff --stat
+git diff -- README.md AGENTS.md revisions/mk0.12
 ```
 
-Generated files land in `exports/mk0.11/`:
-
-```
-exports/mk0.11/
-  printed/
-    plastic_modules/     ← generic_module.step / .stl
-    plastic_subparts/    ← generic_module_shell, generic_module_carriage
-  reference_non_printed/
-    metal/               ← u_channel_rail reference
-    wear_parts/          ← pom_c_shoe reference
-  assemblies/            ← generic_module_assembly, single_module_bay_assembly
-  jigs/                  ← rail_carriage_fit_test
-```
-
----
-
-## Syntax check
-
-```powershell
-python -m compileall cad scripts
-```
+Do not run the CAD export pipeline, render generation, STEP/STL generation, or coupon-part generation as part of documentation cleanup.
 
 ---
 
 ## CAD revision workflow
 
-The source of truth is:
-1. CadQuery code in `cad/`;
-2. git history;
-3. engineering revision documentation in `revisions/`.
+The hard gate is defined in `AGENTS.md`:
 
-STEP/STL files and renders are derived artifacts. They are not the source of truth.
+1. Complete the revision-scoped specification.
+2. Validate required document structure.
+3. Validate internal consistency.
+4. Mark conflicts, assumptions, and unverifiable requirements explicitly.
+5. Only after valid specification: allow CAD planning.
+6. Only after CAD planning: allow CadQuery implementation.
+7. Only after CAD validation gates: allow coupon parts.
+8. Only after coupon and physical tests: allow full print.
 
-Each stable revision has:
-- a git branch (`cad/mk0.11`) or git tag (`mk0.11`);
-- a documentation folder `revisions/mkX.Y/`;
-- generated exports recreated from CadQuery code when needed.
-
-Required revision documentation (per AGENTS.md):
-- `REVISION.md` or `README.md`
-- `DECISIONS.md`
-- `VALIDATION_PLAN.md` (for mk0.11+)
-- `KNOWN_ISSUES.md`
-- `CHANGELOG.md`
-
-Do not copy the whole `cad/` tree into version-named subdirectories.
-Revision history lives in git.
-
----
-
-## Full tower integration: out of scope until mk0.11 single-bay validation
-
-The full tower assembly (`cad/assembly/tower_assembly.py`) is frozen for mk0.11.
-Full tower integration is explicitly out of scope until the single module bay
-physical validation passes all steps in `revisions/mk0.11/VALIDATION_PLAN.md`.
-
-See `revisions/mk0.11/DECISIONS.md` — Decision D-006.
+No CAD development is allowed until the active revision specification is structurally complete and internally consistent.

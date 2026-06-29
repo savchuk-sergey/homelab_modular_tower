@@ -1,8 +1,14 @@
 # Subsystem-First / Testable CAD-First Workflow
 
+> HISTORICAL/SUPERSEDED WORKFLOW:
+> This document describes the mk0.11 subsystem-first workflow.
+> It is preserved as legacy reference and is not the active workflow for mk0.12.
+> For mk0.12 and later active work, use root `AGENTS.md` plus the revision-scoped documents under `revisions/mk0.12/`.
+> Do not start mk0.12 CAD implementation from this workflow document.
+
 ## Overview
 
-Starting with mk0.11, this project uses a **subsystem-first / testable CAD-first**
+Starting with mk0.11, this project used a **subsystem-first / testable CAD-first**
 engineering workflow.
 
 This replaces the mk0.10 drawing-first workflow, which was cancelled because
